@@ -1,0 +1,14 @@
+@import url('https://giscus.app/themes/noborder_light.css');
+
+main {
+  /* Override the default green primary button with Lavender */
+  --color-btn-primary-bg: #b8a9d4 !important;
+  --color-btn-primary-border: #b8a9d4 !important;
+  --color-btn-primary-hover-bg: #a695c5 !important;
+  --color-btn-primary-hover-border: #a695c5 !important;
+  --color-btn-primary-selected-bg: #9481b6 !important;
+  
+  /* Also slightly tint the standard buttons on hover to pink */
+  --color-btn-hover-bg: #fdf6f9 !important;
+  --color-btn-hover-border: #e8b4cb !important;
+}
