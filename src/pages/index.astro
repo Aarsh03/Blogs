@@ -8,7 +8,7 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout title="Home — My Blog">
+<BaseLayout title="Aarsh's Blog">
   <section class="page-header">
     <h1 class="page-header__title">Latest Posts</h1>
     <p class="page-header__subtitle">Thoughts on coding, life, and everything in between.</p>
