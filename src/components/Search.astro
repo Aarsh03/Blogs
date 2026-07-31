@@ -1,0 +1,22 @@
+---
+---
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script is:inline src="/pagefind/pagefind-ui.js"></script>
+
+<div id="search" class="search-container"></div>
+
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      showImages: false,
+    });
+  });
+</script>
+<style>
+  .search-container {
+    max-width: var(--max-width, 768px);
+    margin: 0 auto;
+  }
+</style>

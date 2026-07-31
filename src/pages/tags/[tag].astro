@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import readingTime from 'reading-time';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+  const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+
+  return allTags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: allPosts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title={`Posts tagged "${tag}" — My Blog`} description={`All posts tagged with "${tag}"`}>
+  <section class="page-header">
+    <a href={`${base}tags`} class="back-link">← All tags</a>
+    <h1 class="page-header__title">#{tag}</h1>
+    <p class="page-header__subtitle">{posts.length} post{posts.length !== 1 ? 's' : ''} tagged with "{tag}"</p>
+  </section>
+
+  <section class="posts-grid">
+    {posts.map((post) => {
+      const readTime = readingTime(post.body ?? '').text;
+      return (
+        <PostCard
+          title={post.data.title}
+          date={post.data.date}
+          description={post.data.description}
+          tags={post.data.tags}
+          readingTime={readTime}
+          slug={post.data.slug || post.id}
+        />
+      );
+    })}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-top: 2rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--color-accent-2);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-text);
+  }
+
+  .page-header__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-accent-2);
+  }
+
+  .page-header__subtitle {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+  }
+
+  .posts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+</style>

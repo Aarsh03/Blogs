@@ -1,0 +1,162 @@
+---
+const pathname = Astro.url.pathname;
+const base = import.meta.env.BASE_URL;
+const links = [
+  { label: 'Home', href: base },
+  { label: 'Tags', href: `${base}tags` },
+  { label: 'Search', href: `${base}search` },
+  { label: 'About', href: `${base}about` }
+];
+---
+<nav class="navbar">
+  <div class="navbar__inner container">
+    <a class="navbar__logo" href={base}>blog<span class="dot">.</span></a>
+    
+    <ul class="navbar__links desktop-links">
+      {links.map(link => (
+        <li>
+          <a class={`navbar__link ${pathname === link.href || (pathname.startsWith('/blog') && link.href === '/') ? 'active' : ''}`} href={link.href}>
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <button class="hamburger" id="mobile-menu-btn" aria-label="Toggle menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+  
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-links">
+      {links.map(link => (
+        <li>
+          <a class={`navbar__link ${pathname === link.href ? 'active' : ''}`} href={link.href}>
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if(btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('open');
+      btn.classList.toggle('open');
+    });
+  }
+</script>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height, 70px);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 100;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .navbar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+  .navbar__logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .navbar__logo .dot {
+    color: var(--color-accent-1);
+  }
+  .desktop-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .navbar__link {
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .navbar__link:hover, .navbar__link.active {
+    color: var(--color-accent-1);
+  }
+  
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 201;
+  }
+  .hamburger-line {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--color-text);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+  }
+  
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--color-bg);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  .mobile-menu.open {
+    display: flex;
+    transform: translateY(0);
+  }
+  .mobile-links {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .mobile-links .navbar__link {
+    font-size: 2rem;
+  }
+
+  @media (min-width: 769px) {
+    .hamburger { display: none; }
+    .mobile-menu { display: none !important; }
+  }
+  @media (max-width: 768px) {
+    .desktop-links { display: none; }
+    .hamburger { display: flex; }
+  }
+</style>

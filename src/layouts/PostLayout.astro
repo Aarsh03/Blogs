@@ -1,0 +1,68 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TagChip from '../components/TagChip.astro';
+import LikeButton from '../components/LikeButton.astro';
+import Comments from '../components/Comments.astro';
+
+interface Props {
+  title: string;
+  date: Date;
+  tags: string[];
+  description: string;
+  readingTime: string;
+  slug: string;
+}
+
+const { title, date, tags, description, readingTime, slug } = Astro.props;
+const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<BaseLayout title={title} description={description}>
+  <div class="container--narrow">
+    <header class="post-header">
+      <h1>{title}</h1>
+      <div class="post-meta">
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+        <span class="separator">&middot;</span>
+        <span>{readingTime}</span>
+        <span class="separator">&middot;</span>
+        <div class="post-tags">
+          {tags.map((tag) => <TagChip tag={tag} />)}
+        </div>
+      </div>
+    </header>
+    <article class="prose" data-pagefind-body>
+      <slot />
+    </article>
+    <LikeButton slug={slug} />
+    <Comments />
+  </div>
+</BaseLayout>
+<style>
+  .container--narrow {
+    max-width: 768px;
+    margin: 0 auto;
+  }
+  .post-header {
+    margin-bottom: 2.5rem;
+  }
+  .post-header h1 {
+    margin-bottom: 0.75rem;
+    font-size: 2.25rem;
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+  .separator {
+    margin: 0 0.5rem;
+  }
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+</style>

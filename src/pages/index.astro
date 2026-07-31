@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import readingTime from 'reading-time';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Home — My Blog">
+  <section class="page-header">
+    <h1 class="page-header__title">Latest Posts</h1>
+    <p class="page-header__subtitle">Thoughts on coding, life, and everything in between.</p>
+  </section>
+
+  <section class="posts-grid">
+    {allPosts.map((post) => {
+      const readTime = readingTime(post.body ?? '').text;
+      return (
+        <PostCard
+          title={post.data.title}
+          date={post.data.date}
+          description={post.data.description}
+          tags={post.data.tags}
+          readingTime={readTime}
+          slug={post.data.slug || post.id}
+        />
+      );
+    })}
+  </section>
+
+  {allPosts.length === 0 && (
+    <div class="empty-state">
+      <p>No posts yet. Drop a <code>.md</code> file into <code>src/content/posts/</code> to get started!</p>
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-top: 2rem;
+  }
+
+  .page-header__title {
+    font-size: 2.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-2), var(--color-accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-header__subtitle {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+  }
+
+  .posts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+  }
+
+  .empty-state code {
+    background: var(--color-bg-code);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  @media (max-width: 768px) {
+    .page-header__title {
+      font-size: 2rem;
+    }
+  }
+</style>

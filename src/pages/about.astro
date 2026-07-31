@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About">
+  <div class="container--narrow">
+    <div class="about-content prose">
+      <h1>About</h1>
+      
+      <p>Hi, I'm a developer and designer passionate about crafting seamless user experiences and exploring the bleeding edge of web technologies. I spend most of my time tinkering with new frameworks, optimizing performance, and thinking about design systems.</p>
+      
+      <p>This blog serves as my digital garden—a place where I share my learnings, document my projects, and occasionally write about things that interest me outside of tech.</p>
+
+      <h2>What I write about</h2>
+      <ul>
+        <li><strong>Web Development:</strong> Modern frameworks like Astro, React, and Svelte.</li>
+        <li><strong>UI/UX Design:</strong> Creating accessible, beautiful, and intuitive interfaces.</li>
+        <li><strong>Architecture:</strong> Building scalable systems and writing clean code.</li>
+      </ul>
+
+      <h2>Get in touch</h2>
+      <p>I'm always open to discussing new opportunities, collaborating on projects, or just having a chat about the web.</p>
+      
+      <div class="contact-links">
+        <a href="mailto:hello@example.com" class="contact-btn">Email Me</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="contact-btn">GitHub</a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="contact-btn">Twitter</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-content {
+    padding: 2rem 0;
+  }
+  .about-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .about-content h2 {
+    font-size: 1.8rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .about-content p, .about-content ul {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    margin-bottom: 1.25rem;
+  }
+  .about-content ul {
+    padding-left: 1.5rem;
+  }
+  .about-content li {
+    margin-bottom: 0.5rem;
+  }
+  .contact-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: 9999px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid var(--color-border);
+  }
+  .contact-btn:hover {
+    background-color: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+</style>

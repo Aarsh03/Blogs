@@ -1,0 +1,13 @@
+---
+interface Props {
+  tag: string;
+  linked?: boolean;
+}
+const { tag, linked = true } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+{linked ? (
+  <a href={`${base}tags/${tag}`} class="tag">{tag}</a>
+) : (
+  <span class="tag">{tag}</span>
+)}

@@ -1,0 +1,7 @@
+name = "blog-likes"
+main = "likes-worker.js"
+compatibility_date = "2026-07-01"
+
+[[kv_namespaces]]
+binding = "LIKES_KV"
+id = "YOUR_KV_NAMESPACE_ID"
