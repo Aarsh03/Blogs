@@ -32,4 +32,11 @@ const base = import.meta.env.BASE_URL;
   .footer-links a:hover {
     color: var(--color-accent-1);
   }
+  @media (max-width: 600px) {
+    .footer-inner {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+  }
 </style>
