@@ -40,8 +40,9 @@ function isActive(linkHref: string) {
       <span class="hamburger-line"></span>
     </button>
   </div>
-  
-  <div class="mobile-overlay" id="mobile-overlay"></div>
+</nav>
+
+<div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-menu" id="mobile-menu">
     <ul class="mobile-links">
       {links.map(link => (
@@ -56,7 +57,6 @@ function isActive(linkHref: string) {
       ))}
     </ul>
   </div>
-</nav>
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
@@ -83,7 +83,7 @@ function isActive(linkHref: string) {
     left: 0;
     width: 100%;
     height: var(--nav-height, 64px);
-    z-index: 100;
+    z-index: 200;
     background: rgba(253, 246, 249, 0.75);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -98,8 +98,6 @@ function isActive(linkHref: string) {
     max-width: var(--max-width-wide, 960px);
     margin: 0 auto;
     padding: 0 1.5rem;
-    position: relative;
-    z-index: 200;
   }
 
   /* ─── Logo ─── */
@@ -214,7 +212,7 @@ function isActive(linkHref: string) {
     inset: 0;
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(4px);
-    z-index: 149;
+    z-index: 190;
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -232,13 +230,13 @@ function isActive(linkHref: string) {
     right: 0;
     background: rgba(253, 246, 249, 0.97);
     backdrop-filter: blur(20px);
-    z-index: 150;
+    z-index: 195;
     padding: 1rem 1.5rem 1.5rem;
     border-bottom: 1px solid var(--color-border);
-    transform: translateY(calc(-100% - var(--nav-height, 64px)));
+    transform: translateY(-16px);
     opacity: 0;
     visibility: hidden;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, visibility 0.35s;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   }
 

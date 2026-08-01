@@ -1,43 +1,80 @@
-# Astro Starter Kit: Minimal
+# Aarsh's Blog
 
-```sh
-npm create astro@latest -- --template minimal
+Personal blog built with Astro, hosted on GitHub Pages.
+
+🌐 **Live site:** https://aarsh03.github.io/Blogs/
+
+---
+
+## Writing a New Post
+
+1. Create a `.md` file in `src/content/posts/`:
+
+```yaml
+---
+title: "My Post Title"
+date: 2026-08-01
+tags: ["tag1", "tag2"]
+description: "A short summary shown on post cards."
+draft: false
+---
+
+Your post content here...
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+2. Push to `main`:
+```bash
+git add .
+git commit -m "Add post: my-post-title"
+git push
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+That's it — GitHub Actions builds and deploys automatically in ~60 seconds.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+---
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Local Development
 
-## 🧞 Commands
+```bash
+npm install
+npm run dev        # → http://localhost:4321/Blogs/
+```
 
-All commands are run from the root of the project, from a terminal:
+| Command | Action |
+|---|---|
+| `npm run dev` | Start dev server |
+| `npm run build` | Build + generate Pagefind index |
+| `npx astro dev stop` | Stop background dev server |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
+## Project Structure
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```
+src/
+  content/posts/    ← drop .md files here to publish
+  pages/            ← routing (index, blog/[slug], tags, search, about)
+  components/       ← Navbar, Footer, PostCard, LikeButton, Comments, Search, TagChip
+  layouts/          ← BaseLayout (head, nav, footer wrapper)
+  styles/           ← global.css (design tokens, typography, utilities)
+public/
+  favicon.png
+  giscus-theme.css  ← custom Giscus comment box theme
+workers/
+  likes-worker.js   ← Cloudflare Worker for like counts
+  wrangler.toml
+.github/workflows/
+  deploy.yml        ← GitHub Actions CI/CD
+```
+
+---
+
+## Services
+
+| Service | Status | Details |
+|---|---|---|
+| GitHub Pages | ✅ Live | Auto-deploys from `main` via GitHub Actions |
+| Cloudflare Worker (Likes) | ✅ Live | `https://blog-likes.aarsh-blog-likes.workers.dev` |
+| Giscus (Comments) | ✅ Live | GitHub Discussions on `Aarsh03/Blogs` |
+
+See [DEPLOY.md](./DEPLOY.md) for Cloudflare Worker details.

@@ -1,16 +1,18 @@
-# Product Spec: Markdown Blog Site (GitHub Pages)
+# Product Spec: Aarsh's Blog (GitHub Pages)
 
 ## 1. Overview
-A personal blog site hosted on **GitHub Pages**. Blog posts are authored as Markdown (`.md`) files with frontmatter metadata. Dropping a new `.md` file into a designated folder and pushing to GitHub should automatically build and publish it as a new blog post — no manual index editing, no local build step required.
+A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Blogs/`. Blog posts are authored as Markdown (`.md`) files with frontmatter metadata. Dropping a new `.md` file into `src/content/posts/` and pushing to `main` automatically builds and publishes it — no manual index editing, no local build step required.
 
-## 2. Tech Stack (recommended)
-- **Site generator:** [Astro](https://astro.build) — static site generator with native Markdown/MDX + frontmatter support, fast output, easy content collections API. Chosen over Jekyll (Ruby toolchain, clunkier plugin ecosystem) and over raw HTML/JS (would require reinventing routing/templating).
-- **Styling:** Plain CSS (or Tailwind, optional) — no heavy UI framework needed.
-- **Syntax highlighting:** Astro's built-in Shiki integration (zero extra config).
-- **Search:** Client-side search using a prebuilt JSON index (e.g. Pagefind or a simple custom Fuse.js index) generated at build time — no backend needed for search.
-- **Comments:** [Giscus](https://giscus.app) (GitHub Discussions-backed, free, no backend to maintain) recommended as the default. If a fully custom look is wanted instead, fallback is a small serverless API (see §6).
-- **Likes:** Small serverless backend (see §6), since GitHub Pages is static and can't persist like-counts on its own.
-- **CI/CD:** GitHub Actions workflow — builds the Astro site and deploys to GitHub Pages automatically on every push to `main`.
+## 2. Tech Stack (Implemented)
+| Concern | Choice | Reason |
+|---|---|---|
+| Site generator | Astro v7 (static output) | Native Content Collections, Shiki, fast build |
+| Styling | Vanilla CSS with custom properties | Full control, no framework overhead |
+| Syntax highlighting | Astro built-in Shiki (`github-light` theme) | Zero config, beautiful output |
+| Search | Pagefind (post-build index) | Zero backend, fully static |
+| Comments | Giscus (GitHub Discussions) | Free, no backend, repo: `Aarsh03/Blogs` |
+| Likes | Cloudflare Workers + Workers KV | Free tier, serverless, persistent |
+| CI/CD | GitHub Actions (`withastro/action@v6`, Node 22) | Auto-deploy on push to `main` |
 
 ## 3. Content Model
 
@@ -19,116 +21,138 @@ A personal blog site hosted on **GitHub Pages**. Blog posts are authored as Mark
 /src
   /content
     /posts
-      my-first-post.md
-      another-post.md
+      my-post.md        ← drop any .md file here to publish
   /pages
+    index.astro         ← home / post list
+    about.astro         ← static about page
+    search.astro        ← Pagefind search UI
+    /blog
+      [...slug].astro   ← individual post template
+    /tags
+      index.astro       ← tag cloud
+      [tag].astro       ← filtered post list
   /components
+    Navbar.astro
+    Footer.astro
+    PostCard.astro
+    TagChip.astro
+    LikeButton.astro
+    Comments.astro
+    Search.astro
+  /layouts
+    BaseLayout.astro
+  /styles
+    global.css
 /public
-astro.config.mjs
+  favicon.png
+  giscus-theme.css      ← custom Giscus lavender theme
+/workers
+  likes-worker.js       ← Cloudflare Worker source
+  wrangler.toml         ← Cloudflare deployment config
+/.github/workflows
+  deploy.yml            ← GitHub Actions CI/CD
 ```
-New posts = drop a `.md` file into `/src/content/posts/`. Astro's Content Collections auto-detect every file in that folder at build time — no manual registration.
 
 ### 3.2 Frontmatter schema (required at top of every `.md` file)
 ```yaml
 ---
-title: "My First Post"
+title: "My Post Title"
 date: 2026-07-31
-tags: ["life", "coding"]
-description: "A short one-line summary shown on the blog list/preview cards."
-slug: "my-first-post"       # optional; auto-generated from filename if omitted
-draft: false                 # optional; true = excluded from build
+tags: ["tag1", "tag2"]
+description: "A short summary shown on post cards and meta tags."
+slug: "my-post-title"   # optional; auto-generated from filename if omitted
+draft: false            # optional; true = excluded from build
 ---
 ```
-- `title` (string, required)
-- `date` (ISO date, required) — used for sorting posts newest-first
-- `tags` (array of strings, required — can be empty array)
-- `description` (string, required) — used in list view and meta tags
-- `slug` (string, optional)
-- `draft` (boolean, optional, default `false`)
 
-Astro Content Collections should define a **Zod schema** to validate this frontmatter at build time, so a malformed post fails the build with a clear error instead of silently breaking the site.
+Fields validated at build time via Zod schema in `src/content.config.ts`. A malformed post fails the build with a clear error.
 
 ## 4. Pages & Navigation
 
-**Navbar (present on every page):**
-- Home / Blog list
-- Tags
-- Search
-- About
+**Navbar:** Home · Tags · Search · About (pill-shaped segmented control, active page highlighted in lavender, frosted glass background, mobile hamburger menu)
 
-### 4.1 Home / Blog List page
-- Lists all posts, newest first, as cards: title, date, description, tags, estimated read time.
-- Pagination or "load more" if post count grows large.
+### 4.1 Home / Blog List
+- Lists all non-draft posts newest-first as cards
+- Each card: title, date, estimated reading time, description, tag chips
+- Empty state message when no posts exist
 
-### 4.2 Individual Post page
-- Renders full markdown content with syntax-highlighted code blocks.
-- Shows title, date, tags, reading time at top.
-- **Likes**: a like button + count, persisted via backend (§6).
-- **Comments**: embedded Giscus widget at the bottom.
-- Tag chips are clickable → go to filtered tag view.
+### 4.2 Individual Post (`/blog/[slug]`)
+- Full Markdown render with Shiki syntax highlighting
+- Header: title, date, tags, reading time
+- Like button → Cloudflare Worker (`https://blog-likes.aarsh-blog-likes.workers.dev`)
+- Comments → Giscus widget (repo: `Aarsh03/Blogs`, category: Announcements, theme: custom lavender `giscus-theme.css`)
 
-### 4.3 Tags / Filter page
-- Shows all tags as a cloud/list.
-- Clicking a tag filters the post list to just that tag.
+### 4.3 Tags
+- `/tags` → cloud of all tags, colour-coded by position (pink/lavender/mint/peach cycle)
+- `/tags/[tag]` → filtered post list for that tag
 
-### 4.4 Search
-- Search bar (in navbar or dedicated page) that filters posts client-side by title/description/tags/content using a prebuilt search index generated at build time.
+### 4.4 Search (`/search`)
+- Pagefind UI, index built at end of every build (`astro build && pagefind --site dist`)
+- Styled via Pagefind CSS variables to match pastel theme
 
-### 4.5 About page
-- Static page, manually written content (bio, links, contact info, etc.) — not sourced from the posts folder.
+### 4.5 About (`/about`)
+- Static page with bio, what I write about, contact buttons (Email, GitHub, LinkedIn)
 
-## 5. Design / Visual Style
-- **Aesthetic:** Minimal and clean — generous whitespace, simple readable typography, uncluttered layout.
-- **Color palette:** Soft pastel tones (pinks, lavenders, light blues/mints) used subtly — pastel accents on a mostly white/light background, not bold or saturated colors. Keep it tasteful and understated; do not label or reference the palette's inspiration anywhere in the code, copy, or comments — just implement it as "pastel accent theme."
-- **Typography:** Clean sans-serif for UI, comfortable serif or sans-serif for post body — favor readability.
-- **Dark mode:** Not required (declined in scoping).
-- **Responsive:** Should work well on mobile and desktop.
+## 5. Design System
+- **Aesthetic:** Minimal, clean, generous whitespace — pastel accent theme
+- **Color palette** (defined in `src/styles/global.css` as CSS custom properties):
+  - `--color-accent-1`: `#e8b4cb` (soft pink)
+  - `--color-accent-2`: `#b8a9d4` (lavender)
+  - `--color-accent-3`: `#a7d5d2` (mint)
+  - `--color-accent-4`: `#f2c4a0` (peach)
+  - `--color-bg`: `#fdf6f9`
+- **Typography:** Inter (UI), Lora (post body), JetBrains Mono (code) — all from Google Fonts
+- **Dark mode:** Not implemented (out of scope)
+- **Responsive:** Fully responsive — mobile hamburger menu, fluid typography, responsive cards and footer
 
-## 6. Likes & Comments Backend
+## 6. Infrastructure
 
-Since GitHub Pages only serves static files, likes/comments need external persistence.
+### 6.1 Comments (Giscus) — ✅ Live
+- Repo: `Aarsh03/Blogs`
+- Repo ID: `R_kgDOTgdeGA`
+- Category: Announcements
+- Category ID: `DIC_kwDOTgdeGM4DCaJT`
+- Theme: `https://aarsh03.github.io/Blogs/giscus-theme.css` (lavender button override)
 
-### 6.1 Comments
-- Use **Giscus** (GitHub Discussions-backed comment widget). Free, no custom backend needed, just requires enabling Discussions on the repo and adding the Giscus script/config to the post template.
-
-### 6.2 Likes
-- Small serverless backend, e.g.:
-  - **Cloudflare Workers + Workers KV (or D1)** — free tier is generous, simple key-value increment per post slug.
-  - Endpoints needed:
-    - `GET /likes/:slug` → returns current like count
-    - `POST /likes/:slug` → increments like count (consider basic rate-limiting/anti-spam, e.g. 1 like per browser via localStorage flag + IP-based throttling on the worker)
-  - Frontend calls this API from the post page to display/update the count.
-- This is the only piece of infrastructure outside of GitHub Pages + GitHub Actions.
+### 6.2 Likes (Cloudflare Worker) — ✅ Live
+- Worker URL: `https://blog-likes.aarsh-blog-likes.workers.dev`
+- KV Namespace ID: `0560a131bd22403b9b8053b57db6606a`
+- Routes: `GET /likes/:slug` · `POST /likes/:slug`
+- Anti-spam: 1 like per browser via `localStorage`, IP throttling on worker
 
 ## 7. Build & Deploy Pipeline
-- **GitHub Actions workflow** (`.github/workflows/deploy.yml`):
-  1. Trigger on push to `main`.
-  2. Install dependencies, run `astro build`.
-  3. Build step auto-discovers all `.md` files in `/src/content/posts/`, validates frontmatter, generates the search index, and outputs static HTML.
-  4. Deploy the build output to GitHub Pages (via `actions/deploy-pages` or `peaceiris/actions-gh-pages`).
-- No local build step required — pushing a new `.md` file to the repo is the entire publishing workflow.
 
-## 8. Feature Checklist Summary
+### GitHub Actions (`deploy.yml`)
+- Trigger: push to `main` or manual `workflow_dispatch`
+- Node: 22 (explicitly set via `withastro/action@v6 with: node-version: 22`)
+- Steps: checkout → install → `astro build && pagefind --site dist` → upload artifact → deploy to GitHub Pages
+- Source in Pages settings: **GitHub Actions** (not "Deploy from a branch")
+
+### Publishing a new post
+1. Create `src/content/posts/my-new-post.md` with valid frontmatter
+2. `git add . && git commit -m "Add post: my-new-post" && git push`
+3. GitHub Actions builds and deploys automatically (~60s)
+4. Live at `https://aarsh03.github.io/Blogs/blog/my-new-post`
+
+## 8. Feature Checklist
 - [x] Auto-detect new `.md` posts on build (no manual index)
-- [x] Frontmatter metadata (title, date, tags, description, slug, draft)
-- [x] Minimal, clean design with subtle pastel accent theme
-- [x] Tag-based filtering
-- [x] Client-side search bar
-- [x] Syntax highlighting for code blocks
-- [x] Likes per post (serverless backend)
-- [x] Comments per post (Giscus)
-- [x] About page accessible from navbar
-- [x] Reading time estimate on posts
+- [x] Frontmatter schema validated with Zod
+- [x] Minimal design with pastel accent theme
+- [x] Pill-shaped navbar with active-state highlight
+- [x] Mobile responsive (hamburger menu, fluid layout)
+- [x] Tag cloud + tag-filtered post lists
+- [x] Client-side Pagefind search
+- [x] Shiki syntax highlighting
+- [x] Reading time estimate on posts and cards
+- [x] Like button (Cloudflare Worker + KV)
+- [x] Giscus comments (GitHub Discussions)
+- [x] Favicon (custom anime character icon)
 - [x] GitHub Actions auto-build & deploy on push
+- [x] Custom Giscus theme (lavender button)
+- [x] BASE_URL prefix throughout for `/Blogs/` subpath
 
-## 9. Out of Scope / Explicitly Declined
-- Dark/light mode toggle — not requested.
-- RSS feed — not requested.
-- Manual post listing/config file — auto-detection chosen instead.
-
-## 10. Open Implementation Notes for the Building LLM
-- Use Astro Content Collections (`src/content/config.ts`) with a Zod schema matching §3.2.
-- Reading time: compute at build time from word count (e.g. `reading-time` npm package or a simple word-count/200wpm calculation) and inject into post frontmatter/props.
-- Search index: generate a JSON file at build time containing `{ slug, title, description, tags }` for all posts; load and filter client-side with vanilla JS or Fuse.js.
-- Keep the likes backend minimal — a single Cloudflare Worker file with two routes is sufficient; document the deploy steps for it separately from the main GitHub Pages site since it deploys to Cloudflare, not GitHub Pages.
-- Store the pastel color palette as CSS custom properties (`--color-accent-1`, `--color-bg`, etc.) in a single theme file for easy tweaking, with no naming or comments referencing its inspiration.
+## 9. Out of Scope / Declined
+- Dark/light mode toggle
+- RSS feed
+- Manual post listing/config file
+- Pagination (posts are few; revisit if needed)
