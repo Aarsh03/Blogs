@@ -184,9 +184,9 @@ function isActive(linkHref: string) {
   }
 
   /* Dark mode: pill needs a visible tinted bg, not transparent */
-  [data-theme="dark"] .navbar__links {
-    background: rgba(196, 181, 232, 0.12);
-    border-color: rgba(196, 181, 232, 0.25);
+  :global([data-theme="dark"]) .navbar__links {
+    background: rgba(196, 181, 232, 0.15);
+    border-color: rgba(196, 181, 232, 0.3);
   }
 
   .navbar__link {
@@ -203,8 +203,8 @@ function isActive(linkHref: string) {
   }
 
   /* Dark mode: muted text is too dark on dark bg, brighten it */
-  [data-theme="dark"] .navbar__link {
-    color: rgba(240, 234, 244, 0.65);
+  :global([data-theme="dark"]) .navbar__link {
+    color: rgba(240, 234, 244, 0.75);
   }
 
   .navbar__link:hover {
