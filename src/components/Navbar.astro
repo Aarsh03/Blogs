@@ -183,6 +183,12 @@ function isActive(linkHref: string) {
     transition: background 0.3s ease, border-color 0.3s ease;
   }
 
+  /* Dark mode: pill needs a visible tinted bg, not transparent */
+  [data-theme="dark"] .navbar__links {
+    background: rgba(196, 181, 232, 0.12);
+    border-color: rgba(196, 181, 232, 0.25);
+  }
+
   .navbar__link {
     display: block;
     text-decoration: none;
@@ -196,6 +202,11 @@ function isActive(linkHref: string) {
     white-space: nowrap;
   }
 
+  /* Dark mode: muted text is too dark on dark bg, brighten it */
+  [data-theme="dark"] .navbar__link {
+    color: rgba(240, 234, 244, 0.65);
+  }
+
   .navbar__link:hover {
     color: var(--color-text);
     background: var(--color-bg-card);
@@ -205,7 +216,7 @@ function isActive(linkHref: string) {
   .navbar__link.active {
     color: var(--color-accent-2);
     background: var(--color-bg-card);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   }
 
   /* ─── Actions (theme toggle + hamburger) ─── */
@@ -239,11 +250,12 @@ function isActive(linkHref: string) {
     transform: rotate(20deg);
   }
 
-  /* Icons toggled via JS — both hidden by default until JS runs */
+  /* Both icons visible by default; JS immediately hides the right one on load.
+     Using opacity+width trick so layout doesn't shift before JS runs. */
   .icon-moon { display: block; }
-  .icon-sun  { display: none; }
-  .icon-moon[hidden] { display: none; }
-  .icon-sun[hidden]  { display: none; }
+  .icon-sun  { display: block; }
+  .icon-moon[hidden] { display: none !important; }
+  .icon-sun[hidden]  { display: none !important; }
 
   /* ─── Hamburger ─── */
   .hamburger {

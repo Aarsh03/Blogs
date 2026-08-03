@@ -271,39 +271,47 @@ h4 { font-size: 1.125rem; }
 }
 
 .tag:nth-child(4n+1) {
-  background-color: rgba(232, 180, 203, 0.18);
-  color: #a75d81;
+  background-color: rgba(232, 180, 203, 0.2);
+  color: #c0527a;
+  border: 1px solid rgba(232, 180, 203, 0.35);
 }
 [data-theme="dark"] .tag:nth-child(4n+1) {
-  background-color: rgba(232, 160, 191, 0.18);
-  color: #e8a0bf;
+  background-color: rgba(232, 160, 191, 0.2);
+  color: #f0a0c8;
+  border: 1px solid rgba(232, 160, 191, 0.3);
 }
 
 .tag:nth-child(4n+2) {
-  background-color: rgba(184, 169, 212, 0.18);
-  color: #725a9b;
+  background-color: rgba(184, 169, 212, 0.2);
+  color: #7a5fa8;
+  border: 1px solid rgba(184, 169, 212, 0.35);
 }
 [data-theme="dark"] .tag:nth-child(4n+2) {
-  background-color: rgba(196, 181, 232, 0.18);
+  background-color: rgba(196, 181, 232, 0.2);
   color: #c4b5e8;
+  border: 1px solid rgba(196, 181, 232, 0.3);
 }
 
 .tag:nth-child(4n+3) {
-  background-color: rgba(167, 213, 210, 0.18);
-  color: #559692;
+  background-color: rgba(167, 213, 210, 0.2);
+  color: #3d8a87;
+  border: 1px solid rgba(167, 213, 210, 0.35);
 }
 [data-theme="dark"] .tag:nth-child(4n+3) {
-  background-color: rgba(150, 213, 210, 0.18);
+  background-color: rgba(150, 213, 210, 0.2);
   color: #96d5d2;
+  border: 1px solid rgba(150, 213, 210, 0.3);
 }
 
 .tag:nth-child(4n) {
-  background-color: rgba(242, 196, 160, 0.18);
-  color: #ba7c4b;
+  background-color: rgba(242, 196, 160, 0.2);
+  color: #c07040;
+  border: 1px solid rgba(242, 196, 160, 0.35);
 }
 [data-theme="dark"] .tag:nth-child(4n) {
-  background-color: rgba(242, 196, 154, 0.18);
+  background-color: rgba(242, 196, 154, 0.2);
   color: #f2c49a;
+  border: 1px solid rgba(242, 196, 154, 0.3);
 }
 
 .tag:hover {
