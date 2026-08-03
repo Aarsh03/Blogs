@@ -45,10 +45,8 @@ const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   .page-header__title {
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--color-accent-2), var(--color-accent-3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-family: var(--font-heading);
+    color: var(--color-text);
   }
 
   .page-header__subtitle {

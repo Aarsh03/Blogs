@@ -96,19 +96,28 @@ function isActive(linkHref: string) {
   const toggleBtn = document.getElementById('theme-toggle');
   const html = document.documentElement;
 
-  function applyTheme(theme: string) {
+  function applyTheme(theme) {
     html.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
+    // Update icon: show sun when dark (to switch to light), moon when light (to switch to dark)
+    const sunIcon = toggleBtn?.querySelector('.icon-sun');
+    const moonIcon = toggleBtn?.querySelector('.icon-moon');
+    if (theme === 'dark') {
+      sunIcon?.removeAttribute('hidden');
+      moonIcon?.setAttribute('hidden', '');
+    } else {
+      sunIcon?.setAttribute('hidden', '');
+      moonIcon?.removeAttribute('hidden');
+    }
   }
 
-  // Sync initial icon state (theme already set by inline script in <head>)
-  const currentTheme = html.getAttribute('data-theme') || 'light';
-  if (currentTheme === 'dark') html.classList.add('dark-active');
+  // Sync icon on initial load
+  const initialTheme = html.getAttribute('data-theme') || 'light';
+  applyTheme(initialTheme);
 
   toggleBtn?.addEventListener('click', () => {
     const isDark = html.getAttribute('data-theme') === 'dark';
     applyTheme(isDark ? 'light' : 'dark');
-    html.classList.toggle('dark-active', !isDark);
   });
 </script>
 
@@ -152,15 +161,12 @@ function isActive(linkHref: string) {
     font-weight: 700;
     font-style: italic;
     letter-spacing: -0.01em;
-    background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: opacity 0.2s ease;
+    color: var(--color-text);
+    transition: color 0.2s ease;
   }
 
   .navbar__logo:hover .logo-text {
-    opacity: 0.8;
+    color: var(--color-accent-2);
     text-decoration: none;
   }
 
@@ -171,14 +177,10 @@ function isActive(linkHref: string) {
     gap: 0.25rem;
     margin: 0;
     padding: 0.25rem;
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.55);
     border: 1px solid var(--color-border);
     border-radius: 999px;
-    transition: background 0.3s ease;
-  }
-
-  [data-theme="dark"] .navbar__links {
-    background: rgba(255, 255, 255, 0.06);
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
 
   .navbar__link {
@@ -196,12 +198,8 @@ function isActive(linkHref: string) {
 
   .navbar__link:hover {
     color: var(--color-text);
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--color-bg-card);
     text-decoration: none;
-  }
-
-  [data-theme="dark"] .navbar__link:hover {
-    background: rgba(255, 255, 255, 0.1);
   }
 
   .navbar__link.active {
@@ -241,12 +239,11 @@ function isActive(linkHref: string) {
     transform: rotate(20deg);
   }
 
-  /* Show sun in dark mode, moon in light mode */
+  /* Icons toggled via JS — both hidden by default until JS runs */
   .icon-moon { display: block; }
   .icon-sun  { display: none; }
-
-  [data-theme="dark"] .icon-moon { display: none; }
-  [data-theme="dark"] .icon-sun  { display: block; }
+  .icon-moon[hidden] { display: none; }
+  .icon-sun[hidden]  { display: none; }
 
   /* ─── Hamburger ─── */
   .hamburger {
