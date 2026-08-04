@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import { SITE } from '../config';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -34,6 +35,10 @@ const imageURL = new URL(image, Astro.site).href;
   <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}favicon.png`} />
   <link rel="canonical" href={canonicalURL} />
   <meta name="robots" content="index, follow" />
+  <link rel="alternate" type="application/rss+xml" href={`${import.meta.env.BASE_URL}rss.xml`} />
+  <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
+  
+  <ClientRouter />
 
   <!-- Open Graph -->
   <meta property="og:title" content={title} />
@@ -76,7 +81,7 @@ const imageURL = new URL(image, Astro.site).href;
   </main>
   <Footer />
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('astro:page-load', () => {
       const blocks = document.querySelectorAll('.prose pre');
       blocks.forEach((block) => {
         // Ensure the pre block is positioned relative for absolute positioning of the button

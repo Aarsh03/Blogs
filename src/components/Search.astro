@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL;
 <div id="search" class="search-container"></div>
 
 <script is:inline define:vars={{ base }}>
-  window.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('astro:page-load', () => {
     new PagefindUI({
       element: "#search",
       showSubResults: true,

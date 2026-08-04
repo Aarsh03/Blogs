@@ -74,48 +74,50 @@ function isActive(linkHref: string) {
 </div>
 
 <script>
-  /* ── Mobile menu ── */
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  const overlay = document.getElementById('mobile-overlay');
+  document.addEventListener('astro:page-load', () => {
+    /* ── Mobile menu ── */
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-overlay');
 
-  function toggleMenu() {
-    const isOpen = menu?.classList.toggle('open');
-    overlay?.classList.toggle('open');
-    btn?.classList.toggle('open');
-    btn?.setAttribute('aria-expanded', String(isOpen));
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  }
-
-  btn?.addEventListener('click', toggleMenu);
-  overlay?.addEventListener('click', toggleMenu);
-
-  /* ── Theme toggle ── */
-  const toggleBtn = document.getElementById('theme-toggle');
-  const html = document.documentElement;
-
-  function applyTheme(theme) {
-    html.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    // Update icon: show sun when dark (to switch to light), moon when light (to switch to dark)
-    const sunIcon = toggleBtn?.querySelector('.icon-sun');
-    const moonIcon = toggleBtn?.querySelector('.icon-moon');
-    if (theme === 'dark') {
-      sunIcon?.removeAttribute('hidden');
-      moonIcon?.setAttribute('hidden', '');
-    } else {
-      sunIcon?.setAttribute('hidden', '');
-      moonIcon?.removeAttribute('hidden');
+    function toggleMenu() {
+      const isOpen = menu?.classList.toggle('open');
+      overlay?.classList.toggle('open');
+      btn?.classList.toggle('open');
+      btn?.setAttribute('aria-expanded', String(isOpen));
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     }
-  }
 
-  // Sync icon on initial load
-  const initialTheme = html.getAttribute('data-theme') || 'light';
-  applyTheme(initialTheme);
+    btn?.addEventListener('click', toggleMenu);
+    overlay?.addEventListener('click', toggleMenu);
 
-  toggleBtn?.addEventListener('click', () => {
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    applyTheme(isDark ? 'light' : 'dark');
+    /* ── Theme toggle ── */
+    const toggleBtn = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    function applyTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      // Update icon: show sun when dark (to switch to light), moon when light (to switch to dark)
+      const sunIcon = toggleBtn?.querySelector('.icon-sun');
+      const moonIcon = toggleBtn?.querySelector('.icon-moon');
+      if (theme === 'dark') {
+        sunIcon?.removeAttribute('hidden');
+        moonIcon?.setAttribute('hidden', '');
+      } else {
+        sunIcon?.setAttribute('hidden', '');
+        moonIcon?.removeAttribute('hidden');
+      }
+    }
+
+    // Sync icon on initial load
+    const initialTheme = html.getAttribute('data-theme') || 'light';
+    applyTheme(initialTheme);
+
+    toggleBtn?.addEventListener('click', () => {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      applyTheme(isDark ? 'light' : 'dark');
+    });
   });
 </script>
 

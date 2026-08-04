@@ -1,10 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+import sitemap from '@astrojs/sitemap';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://aarsh03.github.io',
   base: '/Blogs/',
+
   markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: {
@@ -16,4 +19,6 @@ export default defineConfig({
       defaultColor: false,
     },
   },
+
+  integrations: [sitemap()],
 });
