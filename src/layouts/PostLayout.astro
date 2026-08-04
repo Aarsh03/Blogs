@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import TagChip from '../components/TagChip.astro';
 import LikeButton from '../components/LikeButton.astro';
 import Comments from '../components/Comments.astro';
+import { SITE } from '../config';
 
 interface Props {
   title: string;
@@ -15,8 +16,27 @@ interface Props {
 
 const { title, date, tags, description, readingTime, slug } = Astro.props;
 const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "datePublished": date.toISOString(),
+  "author": {
+    "@type": "Person",
+    "name": SITE.author
+  },
+  "description": description,
+  "keywords": tags
+};
 ---
-<BaseLayout title={title} description={description}>
+<BaseLayout 
+  title={title} 
+  description={description}
+  ogType="article"
+  articleDate={date.toISOString()}
+  articleTags={tags}
+>
   <article class="post-wrapper container--narrow">
     <header class="post-header">
       <div class="post-tags-top">
@@ -39,6 +59,7 @@ const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month:
     <LikeButton slug={slug} />
     <Comments />
   </article>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </BaseLayout>
 
 <style>
