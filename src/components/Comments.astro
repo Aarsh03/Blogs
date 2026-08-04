@@ -4,27 +4,32 @@ const baseUrl = import.meta.env.BASE_URL;
 ---
 <section class="comments-section">
   <h2 class="comments-section__title">Comments</h2>
-  <div class="giscus-container"></div>
-  <script is:inline define:vars={{ SITE, baseUrl }}>
-    function getGiscusTheme() {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const themeBase = window.location.origin + baseUrl;
-      return isDark ? `${themeBase}giscus-dark.css` : `${themeBase}giscus-theme.css`;
-    }
+  <div class="giscus-container" data-repo={SITE.giscus.repo} data-repo-id={SITE.giscus.repoId} data-category={SITE.giscus.category} data-category-id={SITE.giscus.categoryId} data-base-url={baseUrl}></div>
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const container = document.querySelector('.giscus-container') as HTMLElement;
+      if (!container) return;
 
-    // Lazy load using Intersection Observer
-    const container = document.querySelector('.giscus-container');
-    
-    if (container) {
+      // Prevent duplicate loading if already loaded
+      if (container.hasChildNodes()) return;
+
+      const { repo, repoId, category, categoryId, baseUrl } = container.dataset;
+
+      function getGiscusTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const themeBase = window.location.origin + (baseUrl || '/');
+        return isDark ? `${themeBase}giscus-dark.css` : `${themeBase}giscus-theme.css`;
+      }
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
-            script.setAttribute('data-repo', SITE.giscus.repo);
-            script.setAttribute('data-repo-id', SITE.giscus.repoId);
-            script.setAttribute('data-category', SITE.giscus.category);
-            script.setAttribute('data-category-id', SITE.giscus.categoryId);
+            script.setAttribute('data-repo', repo!);
+            script.setAttribute('data-repo-id', repoId!);
+            script.setAttribute('data-category', category!);
+            script.setAttribute('data-category-id', categoryId!);
             script.setAttribute('data-mapping', 'pathname');
             script.setAttribute('data-strict', '0');
             script.setAttribute('data-reactions-enabled', '1');
@@ -36,30 +41,29 @@ const baseUrl = import.meta.env.BASE_URL;
             script.async = true;
             container.appendChild(script);
             
-            // Stop observing once loaded
             observer.disconnect();
           }
         });
       }, { rootMargin: '200px' });
       
       observer.observe(container);
-    }
 
-    // Listen for theme changes to update iframe dynamically
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'data-theme') {
-          const iframe = document.querySelector('iframe.giscus-frame');
-          if (iframe) {
-            iframe.contentWindow?.postMessage(
-              { giscus: { setConfig: { theme: getGiscusTheme() } } },
-              'https://giscus.app'
-            );
+      // Listen for theme changes to update iframe dynamically
+      const themeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme') {
+            const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
+            if (iframe && iframe.contentWindow) {
+              iframe.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: getGiscusTheme() } } },
+                'https://giscus.app'
+              );
+            }
           }
-        }
+        });
       });
+      themeObserver.observe(document.documentElement, { attributes: true });
     });
-    observer.observe(document.documentElement, { attributes: true });
   </script>
 </section>
 <style>

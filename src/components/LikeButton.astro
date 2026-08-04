@@ -33,54 +33,60 @@ const base = import.meta.env.BASE_URL;
 <script>
   import { SITE } from '../config';
   const LIKES_API_URL = SITE.likesApiUrl;
-  const btn = document.getElementById('like-btn') as HTMLButtonElement | null;
-  const countSpan = document.getElementById('like-count');
 
-  if (btn && countSpan) {
-    const slug = btn.dataset.slug;
+  document.addEventListener('astro:page-load', () => {
+    const btn = document.getElementById('like-btn') as HTMLButtonElement | null;
+    const countSpan = document.getElementById('like-count');
 
-    // Restore liked state on load
-    if (localStorage.getItem(`liked-${slug}`)) {
-      btn.classList.add('like-btn--liked');
-    }
+    if (btn && countSpan) {
+      const slug = btn.dataset.slug;
 
-    const fetchLikes = async () => {
-      try {
-        const res = await fetch(`${LIKES_API_URL}/likes/${slug}`);
-        if (res.ok) {
-          const data = await res.json();
-          countSpan.textContent = data.count ?? '0';
-        } else {
-          countSpan.textContent = '0';
-        }
-      } catch (e) {
-        console.error('Error fetching likes', e);
-      }
-    };
-    fetchLikes();
-
-    btn.addEventListener('click', async () => {
+      // Restore liked state on load
       if (localStorage.getItem(`liked-${slug}`)) {
-        // Already liked — wiggle
-        btn.classList.add('wiggle');
-        setTimeout(() => {
-          btn.classList.remove('wiggle');
-        }, 500);
-        return;
+        btn.classList.add('like-btn--liked');
       }
 
-      const current = parseInt(countSpan.textContent || '0', 10);
-      countSpan.textContent = (current + 1).toString();
-      btn.classList.add('like-btn--liked');
-      localStorage.setItem(`liked-${slug}`, 'true');
+      const fetchLikes = async () => {
+        try {
+          const res = await fetch(`${LIKES_API_URL}/likes/${slug}`);
+          if (res.ok) {
+            const data = await res.json();
+            countSpan.textContent = data.count ?? '0';
+          } else {
+            countSpan.textContent = '0';
+          }
+        } catch (e) {
+          console.error('Error fetching likes', e);
+        }
+      };
+      fetchLikes();
 
-      try {
-        await fetch(`${LIKES_API_URL}/likes/${slug}`, { method: 'POST' });
-      } catch (e) {
-        console.error('Error posting like', e);
-      }
-    });
-  }
+      // Remove any existing listeners by cloning (if needed, but page-load runs after DOM swap so btn is fresh)
+      // Actually, since Astro swaps the DOM, `btn` is a new element every time, 
+      // so we don't need to worry about duplicate event listeners.
+      btn.addEventListener('click', async () => {
+        if (localStorage.getItem(`liked-${slug}`)) {
+          // Already liked — wiggle
+          btn.classList.add('wiggle');
+          setTimeout(() => {
+            btn.classList.remove('wiggle');
+          }, 500);
+          return;
+        }
+
+        const current = parseInt(countSpan.textContent || '0', 10);
+        countSpan.textContent = (current + 1).toString();
+        btn.classList.add('like-btn--liked');
+        localStorage.setItem(`liked-${slug}`, 'true');
+
+        try {
+          await fetch(`${LIKES_API_URL}/likes/${slug}`, { method: 'POST' });
+        } catch (e) {
+          console.error('Error posting like', e);
+        }
+      });
+    }
+  });
 </script>
 
 <style>

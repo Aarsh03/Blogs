@@ -6,13 +6,14 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
 ## 2. Tech Stack (Implemented)
 | Concern | Choice | Reason |
 |---|---|---|
-| Site generator | Astro v7 (static output) | Native Content Collections, Shiki, fast build |
+| Site generator | Astro v7 (static output) | Native Content Collections, Shiki, fast build, View Transitions |
 | Styling | Vanilla CSS with custom properties | Full control, no framework overhead |
-| Syntax highlighting | Astro built-in Shiki (`github-light` theme) | Zero config, beautiful output |
+| Syntax highlighting | Astro built-in Shiki | Zero config, beautiful output in both themes |
 | Search | Pagefind (post-build index) | Zero backend, fully static |
 | Comments | Giscus (GitHub Discussions) | Free, no backend, repo: `Aarsh03/Blogs` |
 | Likes | Cloudflare Workers + Workers KV | Free tier, serverless, persistent |
 | CI/CD | GitHub Actions (`withastro/action@v6`, Node 22) | Auto-deploy on push to `main` |
+| Fonts | `@fontsource` packages | Self-hosted, no render-blocking requests |
 
 ## 3. Content Model
 
@@ -39,8 +40,12 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
     LikeButton.astro
     Comments.astro
     Search.astro
+    ReadingProgress.astro
+    ShareButtons.astro
+    TableOfContents.astro
   /layouts
     BaseLayout.astro
+    PostLayout.astro
   /styles
     global.css
 /public
@@ -79,8 +84,12 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 ### 4.2 Individual Post (`/blog/[slug]`)
 - Full Markdown render with Shiki syntax highlighting
 - Header: title, date, tags, reading time
+- Table of Contents: Auto-generated from headings, collapsible, sleek frosted glass design
+- Reading Progress Bar: Fixed at the top, fills as you read
+- Prev/Next Post navigation at the bottom
 - Like button → Cloudflare Worker (`https://blog-likes.aarsh-blog-likes.workers.dev`)
-- Comments → Giscus widget (repo: `Aarsh03/Blogs`, category: Announcements, theme: custom lavender `giscus-theme.css`)
+- Share buttons: Twitter, LinkedIn, and Copy Link to clipboard
+- Comments → Lazy-loaded Giscus widget (repo: `Aarsh03/Blogs`, category: Announcements, custom themes dynamically adapt to dark/light mode)
 
 ### 4.3 Tags
 - `/tags` → cloud of all tags, colour-coded by position (pink/lavender/mint/peach cycle)
@@ -101,8 +110,8 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
   - `--color-accent-3`: `#a7d5d2` (mint)
   - `--color-accent-4`: `#f2c4a0` (peach)
   - `--color-bg`: `#fdf6f9`
-- **Typography:** Inter (UI), Lora (post body), JetBrains Mono (code) — all from Google Fonts
-- **Dark mode:** Not implemented (out of scope)
+- **Typography:** Self-hosted via `@fontsource` — DM Sans (UI), Playfair Display (headings), DM Serif Display (body), JetBrains Mono (code)
+- **Dark mode:** Fully implemented. Users can toggle themes via the Navbar. Code blocks, Giscus comments, and Pagefind search adapt dynamically.
 - **Responsive:** Fully responsive — mobile hamburger menu, fluid typography, responsive cards and footer
 
 ## 6. Infrastructure
@@ -138,21 +147,25 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Auto-detect new `.md` posts on build (no manual index)
 - [x] Frontmatter schema validated with Zod
 - [x] Minimal design with pastel accent theme
+- [x] Dark/light mode toggle with dynamic theme sync
 - [x] Pill-shaped navbar with active-state highlight
+- [x] View Transitions (smooth page loads without hard refreshes)
 - [x] Mobile responsive (hamburger menu, fluid layout)
 - [x] Tag cloud + tag-filtered post lists
 - [x] Client-side Pagefind search
-- [x] Shiki syntax highlighting
+- [x] Shiki syntax highlighting (adapts to light/dark mode)
 - [x] Reading time estimate on posts and cards
+- [x] Table of Contents & Reading progress bar
+- [x] Prev/Next post navigation & Social share buttons
 - [x] Like button (Cloudflare Worker + KV)
-- [x] Giscus comments (GitHub Discussions)
+- [x] Lazy-loaded Giscus comments (GitHub Discussions)
+- [x] Full SEO (JSON-LD, OG tags, canonical URLs, Twitter Cards)
+- [x] Auto-generated Sitemap (`sitemap-index.xml`) and RSS Feed (`rss.xml`)
 - [x] Favicon (custom anime character icon)
 - [x] GitHub Actions auto-build & deploy on push
-- [x] Custom Giscus theme (lavender button)
+- [x] Self-hosted fonts (zero render-blocking requests)
 - [x] BASE_URL prefix throughout for `/Blogs/` subpath
 
 ## 9. Out of Scope / Declined
-- Dark/light mode toggle
-- RSS feed
 - Manual post listing/config file
 - Pagination (posts are few; revisit if needed)

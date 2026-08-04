@@ -54,11 +54,12 @@ npm run dev        # → http://localhost:4321/Blogs/
 src/
   content/posts/    ← drop .md files here to publish
   pages/            ← routing (index, blog/[slug], tags, search, about)
-  components/       ← Navbar, Footer, PostCard, LikeButton, Comments, Search, TagChip
-  layouts/          ← BaseLayout (head, nav, footer wrapper)
+  components/       ← Navbar, Footer, PostCard, LikeButton, Comments, Search, TagChip, ReadingProgress, ShareButtons, TableOfContents
+  layouts/          ← BaseLayout, PostLayout
   styles/           ← global.css (design tokens, typography, utilities)
 public/
   favicon.png
+  og-image.png      ← Default SEO Open Graph image
   giscus-theme.css  ← custom Giscus comment box theme
 workers/
   likes-worker.js   ← Cloudflare Worker for like counts
