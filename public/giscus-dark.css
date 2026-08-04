@@ -1,0 +1,14 @@
+@import url('https://giscus.app/themes/transparent_dark.css');
+
+main {
+  /* Override the default primary button with Dark Lavender */
+  --color-btn-primary-bg: #9481b6 !important;
+  --color-btn-primary-border: #9481b6 !important;
+  --color-btn-primary-hover-bg: #a695c5 !important;
+  --color-btn-primary-hover-border: #a695c5 !important;
+  --color-btn-primary-selected-bg: #b8a9d4 !important;
+  
+  /* Also slightly tint the standard buttons on hover to dark pink */
+  --color-btn-hover-bg: rgba(232, 180, 203, 0.15) !important;
+  --color-btn-hover-border: rgba(232, 180, 203, 0.3) !important;
+}

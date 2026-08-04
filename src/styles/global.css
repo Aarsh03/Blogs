@@ -185,6 +185,15 @@ h4 { font-size: 1.125rem; }
   border: 1px solid var(--color-border);
 }
 
+[data-theme="dark"] .prose pre {
+  background-color: var(--shiki-dark-bg) !important;
+  color: var(--shiki-dark) !important;
+}
+
+[data-theme="dark"] .prose pre span {
+  color: var(--shiki-dark) !important;
+}
+
 .prose pre code {
   background-color: transparent;
   padding: 0;
