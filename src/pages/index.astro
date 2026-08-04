@@ -44,6 +44,11 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     })}
   </section>
 
+  <div id="empty-filter-state" class="empty-state" style="display: none;">
+    <p>No posts found for this tag.</p>
+    <button class="tag-filter-btn active" style="margin-top: 1rem;" onclick="document.querySelector('.tag-filter-btn[data-tag=\'all\']').click()">Show all posts</button>
+  </div>
+
   {allPosts.length === 0 && (
     <div class="empty-state">
       <p>No posts yet. Drop a <code>.md</code> file into <code>src/content/posts/</code> to get started!</p>
@@ -65,15 +70,22 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
           btn.classList.toggle('active', btn.getAttribute('data-tag') === selectedTag);
         });
 
+        let visibleCount = 0;
         // Update posts visibility with animation
         posts.forEach(post => {
           const postTags = (post.getAttribute('data-tags') || '').split(',');
           if (selectedTag === 'all' || postTags.includes(selectedTag)) {
             post.classList.remove('hidden');
+            visibleCount++;
           } else {
             post.classList.add('hidden');
           }
         });
+
+        const emptyState = document.getElementById('empty-filter-state');
+        if (emptyState) {
+          emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
       }
 
       // Initialize if URL has tag
@@ -142,6 +154,17 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     margin: 1.5rem 0 3rem;
     position: relative;
   }
+  
+  .tags-filter::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2rem;
+    background: linear-gradient(to right, transparent, var(--color-bg));
+    pointer-events: none;
+  }
 
   .tags-filter__scroll {
     display: flex;
@@ -150,6 +173,9 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     padding-bottom: 0.5rem;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
+    touch-action: pan-x;
+    -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, black 90%, transparent 100%);
   }
   
   .tags-filter__scroll::-webkit-scrollbar {

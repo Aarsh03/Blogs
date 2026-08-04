@@ -109,6 +109,15 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ═══════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════ */
+:focus-visible {
+  outline: 2px solid var(--color-accent-2);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -202,6 +211,38 @@ h4 { font-size: 1.125rem; }
   color: inherit;
 }
 
+.copy-code-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.prose pre:hover .copy-code-btn, .copy-code-btn:focus-visible {
+  opacity: 1;
+}
+
+.copy-code-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-accent-2);
+}
+
+.copy-code-btn.copied {
+  color: #10b981;
+  border-color: #10b981;
+}
+
 .prose hr {
   border: none;
   height: 1px;
@@ -231,6 +272,23 @@ h4 { font-size: 1.125rem; }
 .prose strong {
   color: var(--color-text);
   font-weight: 700;
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5em 0;
+  border-collapse: collapse;
+}
+
+.prose th, .prose td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+}
+
+.prose th {
+  background: rgba(184, 169, 212, 0.08);
 }
 
 /* ═══════════════════════════════════════
@@ -270,7 +328,7 @@ h4 { font-size: 1.125rem; }
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 0.25em 0.85em;
+  padding: 0.4em 1em;
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 600;
