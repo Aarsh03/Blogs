@@ -200,12 +200,24 @@ const base = import.meta.env.BASE_URL;
     animation: wiggle 0.5s ease;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 600px) {
     .post-actions {
-      gap: 1rem;
+      flex-direction: column-reverse;
+      align-items: stretch;
+      gap: 1.5rem;
     }
+    .actions-right {
+      justify-content: space-between;
+      width: 100%;
+    }
+    .back-btn {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
     .back-btn span, .like-btn__count {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
   }
 </style>
