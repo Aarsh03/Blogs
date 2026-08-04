@@ -1,0 +1,104 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to h2 and h3 only
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{toc.length > 0 && (
+  <details class="toc-container">
+    <summary class="toc-summary">
+      <span class="toc-title">Table of Contents</span>
+      <svg class="toc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="toc-content">
+      <ul class="toc-list">
+        {toc.map((heading) => (
+          <li class={`toc-item toc-depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </details>
+)}
+
+<style>
+  .toc-container {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    margin: 2rem 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .toc-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    color: var(--color-text);
+    user-select: none;
+    background: rgba(184, 169, 212, 0.05);
+    transition: background 0.2s ease;
+  }
+
+  .toc-summary:hover {
+    background: rgba(184, 169, 212, 0.1);
+  }
+
+  .toc-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  details[open] .toc-icon {
+    transform: rotate(180deg);
+  }
+
+  .toc-content {
+    padding: 0 1.25rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toc-item a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+
+  .toc-item a:hover {
+    color: var(--color-accent-2);
+    text-decoration: none;
+  }
+
+  .toc-depth-3 {
+    padding-left: 1.5rem;
+    font-size: 0.9em;
+  }
+</style>

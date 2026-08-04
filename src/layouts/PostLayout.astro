@@ -4,6 +4,7 @@ import TagChip from '../components/TagChip.astro';
 import LikeButton from '../components/LikeButton.astro';
 import Comments from '../components/Comments.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { SITE } from '../config';
 
 interface Props {
@@ -13,9 +14,12 @@ interface Props {
   description: string;
   readingTime: string;
   slug: string;
+  prevPost?: any;
+  nextPost?: any;
+  headings?: any[];
 }
 
-const { title, date, tags, description, readingTime, slug } = Astro.props;
+const { title, date, tags, description, readingTime, slug, prevPost, nextPost, headings = [] } = Astro.props;
 const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
 const schema = {
@@ -54,11 +58,32 @@ const schema = {
       <div class="post-header__divider"></div>
     </header>
 
+    <TableOfContents headings={headings} />
+
     <div class="prose" data-pagefind-body>
       <slot />
     </div>
 
-    <LikeButton slug={slug} />
+    <LikeButton slug={slug} title={title} />
+    
+    { (prevPost || nextPost) && (
+      <div class="post-nav">
+        {prevPost ? (
+          <a href={`${import.meta.env.BASE_URL}blog/${prevPost.id}/`} class="post-nav-card prev">
+            <span class="post-nav-label">← Previous Post</span>
+            <span class="post-nav-title">{prevPost.data.title}</span>
+          </a>
+        ) : <div class="post-nav-empty"></div>}
+        
+        {nextPost ? (
+          <a href={`${import.meta.env.BASE_URL}blog/${nextPost.id}/`} class="post-nav-card next">
+            <span class="post-nav-label">Next Post →</span>
+            <span class="post-nav-title">{nextPost.data.title}</span>
+          </a>
+        ) : <div class="post-nav-empty"></div>}
+      </div>
+    )}
+
     <Comments />
   </article>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
@@ -120,8 +145,72 @@ const schema = {
     border-radius: 1px;
   }
 
+  /* ─── Post Navigation ─── */
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 3rem 0;
+  }
+
+  .post-nav-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .post-nav-card:hover {
+    border-color: var(--color-accent-2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+    text-decoration: none;
+  }
+
+  .post-nav-card.next {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .post-nav-label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-nav-title {
+    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-weight: 700;
+    transition: color 0.2s ease;
+  }
+
+  .post-nav-card:hover .post-nav-title {
+    color: var(--color-accent-2);
+  }
+
+  .post-nav-empty {
+    visibility: hidden;
+  }
+
   @media (max-width: 768px) {
     .post-wrapper { padding-top: 1.5rem; }
     .post-title { font-size: 1.75rem; }
+    .post-nav {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .post-nav-card.next {
+      align-items: flex-start;
+      text-align: left;
+    }
   }
 </style>

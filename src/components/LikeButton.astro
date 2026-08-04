@@ -1,8 +1,11 @@
 ---
+import ShareButtons from './ShareButtons.astro';
+
 interface Props {
   slug: string;
+  title: string;
 }
-const { slug } = Astro.props;
+const { slug, title } = Astro.props;
 const base = import.meta.env.BASE_URL;
 ---
 <div class="post-actions">
@@ -15,13 +18,16 @@ const base = import.meta.env.BASE_URL;
     All Posts
   </a>
 
-  <!-- Like button -->
-  <button class="like-btn" id="like-btn" data-slug={slug} aria-label="Like this post">
-    <svg class="like-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </svg>
-    <span class="like-btn__count" id="like-count">—</span>
-  </button>
+  <div class="actions-right">
+    <ShareButtons title={title} />
+    <!-- Like button -->
+    <button class="like-btn" id="like-btn" data-slug={slug} aria-label="Like this post">
+      <svg class="like-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span class="like-btn__count" id="like-count">—</span>
+    </button>
+  </div>
 </div>
 
 <script>
@@ -85,6 +91,12 @@ const base = import.meta.env.BASE_URL;
     padding: 1.75rem 0;
     border-top: 1px solid var(--color-border);
     margin-top: 3rem;
+  }
+  
+  .actions-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   /* ── Back button ── */

@@ -4,15 +4,21 @@ import { getCollection, render } from 'astro:content';
 import readingTime from 'reading-time';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
-  return posts.map((post) => ({
+  const posts = (await getCollection('posts', ({ data }) => !data.draft))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+    
+  return posts.map((post, index) => ({
     params: { slug: post.id },
-    props: { post },
+    props: { 
+      post,
+      prevPost: index + 1 < posts.length ? posts[index + 1] : null,
+      nextPost: index > 0 ? posts[index - 1] : null,
+    },
   }));
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { post, prevPost, nextPost } = Astro.props;
+const { Content, headings } = await render(post);
 const readTime = readingTime(post.body ?? '').text;
 ---
 
@@ -23,6 +29,9 @@ const readTime = readingTime(post.body ?? '').text;
   description={post.data.description}
   readingTime={readTime}
   slug={post.id}
+  prevPost={prevPost}
+  nextPost={nextPost}
+  headings={headings}
 >
   <Content />
 </PostLayout>
