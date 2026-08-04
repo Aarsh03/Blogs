@@ -6,7 +6,7 @@ import readingTime from 'reading-time';
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   return posts.map((post) => ({
-    params: { slug: post.data.slug || post.id },
+    params: { slug: post.id },
     props: { post },
   }));
 }
@@ -22,7 +22,7 @@ const readTime = readingTime(post.body ?? '').text;
   tags={post.data.tags}
   description={post.data.description}
   readingTime={readTime}
-  slug={post.data.slug || post.id}
+  slug={post.id}
 >
   <Content />
 </PostLayout>

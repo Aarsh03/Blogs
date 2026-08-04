@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# implementation plans
+*PLAN*.md
+implementation_plan.md

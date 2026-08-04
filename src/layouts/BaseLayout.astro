@@ -2,19 +2,20 @@
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { SITE } from '../config';
 
 interface Props {
   title: string;
   description?: string;
 }
-const { title, description = 'A personal blog about coding, life, and everything in between.' } = Astro.props;
+const { title, description = SITE.description } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title} — Aarsh's Blog</title>
+  <title>{title === 'Home' ? SITE.title : `${title} — ${SITE.title}`}</title>
   <meta name="description" content={description} />
   <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}favicon.png`} />
 

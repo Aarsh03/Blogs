@@ -1,21 +1,24 @@
 ---
+import { SITE } from '../config';
+const baseUrl = import.meta.env.BASE_URL;
 ---
 <section class="comments-section">
   <h2 class="comments-section__title">Comments</h2>
   <div class="giscus-container"></div>
-  <script>
+  <script is:inline define:vars={{ SITE, baseUrl }}>
     function getGiscusTheme() {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      return isDark ? 'https://aarsh03.github.io/Blogs/giscus-dark.css' : 'https://aarsh03.github.io/Blogs/giscus-theme.css';
+      const themeBase = window.location.origin + baseUrl;
+      return isDark ? `${themeBase}giscus-dark.css` : `${themeBase}giscus-theme.css`;
     }
 
     // Initial load
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
-    script.setAttribute('data-repo', 'Aarsh03/Blogs');
-    script.setAttribute('data-repo-id', 'R_kgDOTgdeGA');
-    script.setAttribute('data-category', 'Announcements');
-    script.setAttribute('data-category-id', 'DIC_kwDOTgdeGM4DCaJT');
+    script.setAttribute('data-repo', SITE.giscus.repo);
+    script.setAttribute('data-repo-id', SITE.giscus.repoId);
+    script.setAttribute('data-category', SITE.giscus.category);
+    script.setAttribute('data-category-id', SITE.giscus.categoryId);
     script.setAttribute('data-mapping', 'pathname');
     script.setAttribute('data-strict', '0');
     script.setAttribute('data-reactions-enabled', '1');

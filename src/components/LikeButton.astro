@@ -25,7 +25,8 @@ const base = import.meta.env.BASE_URL;
 </div>
 
 <script>
-  const LIKES_API_URL = 'https://blog-likes.aarsh-blog-likes.workers.dev';
+  import { SITE } from '../config';
+  const LIKES_API_URL = SITE.likesApiUrl;
   const btn = document.getElementById('like-btn') as HTMLButtonElement | null;
   const countSpan = document.getElementById('like-count');
 
