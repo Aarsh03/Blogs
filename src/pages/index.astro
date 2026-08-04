@@ -1,11 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
+import SearchComponent from '../components/Search.astro';
 import { getCollection } from 'astro:content';
 import readingTime from 'reading-time';
 
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 ---
 
 <BaseLayout title="Aarsh's Blog">
@@ -13,6 +16,17 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
     <h1 class="page-header__title">Latest Posts</h1>
     <p class="page-header__subtitle">Thoughts on coding, life, and everything in between.</p>
   </section>
+
+  <SearchComponent />
+
+  <div class="tags-filter">
+    <div class="tags-filter__scroll">
+      <button class="tag-filter-btn active" data-tag="all">All Posts</button>
+      {allTags.map(tag => (
+        <button class="tag-filter-btn" data-tag={tag}>{tag}</button>
+      ))}
+    </div>
+  </div>
 
   <section class="posts-grid">
     {allPosts.map((post) => {
@@ -35,6 +49,65 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
       <p>No posts yet. Drop a <code>.md</code> file into <code>src/content/posts/</code> to get started!</p>
     </div>
   )}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterBtns = document.querySelectorAll('.tag-filter-btn');
+      const posts = document.querySelectorAll('.post-card');
+      
+      // Check URL for tag parameter
+      const params = new URLSearchParams(window.location.search);
+      const initialTag = params.get('tag');
+
+      function filterPosts(selectedTag) {
+        // Update active button
+        filterBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-tag') === selectedTag);
+        });
+
+        // Update posts visibility with animation
+        posts.forEach(post => {
+          const postTags = (post.getAttribute('data-tags') || '').split(',');
+          if (selectedTag === 'all' || postTags.includes(selectedTag)) {
+            post.classList.remove('hidden');
+          } else {
+            post.classList.add('hidden');
+          }
+        });
+      }
+
+      // Initialize if URL has tag
+      if (initialTag) {
+        const btnExists = Array.from(filterBtns).some(btn => btn.getAttribute('data-tag') === initialTag);
+        if (btnExists) {
+          filterPosts(initialTag);
+          // Auto-scroll to tags to show we are filtering
+          setTimeout(() => {
+            document.querySelector('.tags-filter')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      }
+
+      // Click listeners
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tag = btn.getAttribute('data-tag');
+          if (tag) {
+            // Update URL without reload
+            const url = new URL(window.location.href);
+            if (tag === 'all') {
+              url.searchParams.delete('tag');
+            } else {
+              url.searchParams.set('tag', tag);
+            }
+            window.history.pushState({}, '', url);
+            
+            filterPosts(tag);
+          }
+        });
+      });
+    });
+  </script>
 </BaseLayout>
 
 <style>
@@ -61,6 +134,81 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  /* Tag Filter UI */
+  .tags-filter {
+    margin: 1.5rem 0 3rem;
+    position: relative;
+  }
+
+  .tags-filter__scroll {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  
+  .tags-filter__scroll::-webkit-scrollbar {
+    height: 4px;
+  }
+  .tags-filter__scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .tags-filter__scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 4px;
+  }
+
+  .tag-filter-btn {
+    background: rgba(184, 169, 212, 0.08);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .tag-filter-btn:hover {
+    background: rgba(184, 169, 212, 0.15);
+    color: var(--color-text);
+  }
+
+  .tag-filter-btn.active {
+    background: var(--color-accent-2);
+    border-color: var(--color-accent-2);
+    color: var(--color-bg);
+    font-weight: 600;
+  }
+
+  [data-theme="dark"] .tag-filter-btn.active {
+    color: #1a1520; /* Ensure text is dark and readable on the bright lavender pill */
+  }
+
+  /* Filtering Animation */
+  :global(.post-card) {
+    transition: opacity 0.3s ease, transform 0.3s ease, margin 0.3s ease, height 0.3s ease;
+    transform-origin: top;
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  :global(.post-card.hidden) {
+    opacity: 0;
+    transform: scaleY(0.9);
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    height: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
   }
 
   .empty-state {
