@@ -61,6 +61,29 @@ export default {
       });
     }
     
+    // --- VIEWS ENDPOINT ---
+    const viewMatch = path.match(/^\/views\/([a-z0-9-]+)$/);
+    if (viewMatch) {
+      const viewSlug = viewMatch[1];
+      
+      if (request.method === 'GET') {
+        const count = parseInt(await env.LIKES_KV.get(`views:${viewSlug}`) || '0');
+        return new Response(JSON.stringify({ slug: viewSlug, count }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      if (request.method === 'POST') {
+        // Increment count unconditionally for views (or could add basic rate limit, but it's fine for now)
+        const current = parseInt(await env.LIKES_KV.get(`views:${viewSlug}`) || '0');
+        const newCount = current + 1;
+        await env.LIKES_KV.put(`views:${viewSlug}`, newCount.toString());
+        return new Response(JSON.stringify({ slug: viewSlug, count: newCount }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+    
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },

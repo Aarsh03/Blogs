@@ -8,7 +8,7 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 ## Writing a New Post
 
-1. Create a `.md` file in `src/content/posts/`:
+1. Create a `.md` or `.mdx` file in `src/content/posts/`:
 
 ```yaml
 ---
@@ -20,6 +20,12 @@ draft: false
 ---
 
 Your post content here...
+
+### Image Optimization
+To take advantage of Astro's automatic image optimization (WebP/AVIF generation, resizing, lazy-loading), place your images in `src/assets/` and use relative paths in your markdown:
+```markdown
+![My Image](../../assets/my-image.jpg)
+```
 ```
 
 2. Push to `main`:

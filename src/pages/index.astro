@@ -51,7 +51,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 
   {allPosts.length === 0 && (
     <div class="empty-state">
-      <p>No posts yet. Drop a <code>.md</code> file into <code>src/content/posts/</code> to get started!</p>
+      <p>No posts yet. Drop a <code>.md</code> or <code>.mdx</code> file into <code>src/content/posts/</code> to get started!</p>
     </div>
   )}
 

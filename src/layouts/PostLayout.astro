@@ -5,6 +5,7 @@ import LikeButton from '../components/LikeButton.astro';
 import Comments from '../components/Comments.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TableOfContents from '../components/TableOfContents.astro';
+import ViewCounter from '../components/ViewCounter.astro';
 import { SITE } from '../config';
 
 interface Props {
@@ -54,6 +55,8 @@ const schema = {
         <time datetime={date.toISOString()} class="post-meta__date">{formattedDate}</time>
         <span class="post-meta__dot">·</span>
         <span class="post-meta__reading">{readingTime}</span>
+        <span class="post-meta__dot">·</span>
+        <ViewCounter slug={slug} />
       </div>
       <div class="post-header__divider"></div>
     </header>
@@ -87,6 +90,16 @@ const schema = {
     <Comments />
   </article>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script>
+    import mediumZoom from 'medium-zoom';
+    
+    document.addEventListener('astro:page-load', () => {
+      mediumZoom('.prose img', {
+        margin: 24,
+        background: 'var(--color-bg)',
+      });
+    });
+  </script>
 </BaseLayout>
 
 <style>

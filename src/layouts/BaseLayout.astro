@@ -80,8 +80,9 @@ const imageURL = new URL(image, Astro.site).href;
   </script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
   <Navbar />
-  <main class="page-content">
+  <main id="main-content" class="page-content">
     <div class="container">
       <slot />
     </div>
@@ -125,5 +126,23 @@ const imageURL = new URL(image, Astro.site).href;
 <style>
   .page-content {
     padding-top: var(--nav-height, 64px);
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    padding: 8px 16px;
+    z-index: 1000;
+    transition: top 0.2s ease;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom-right-radius: var(--radius-sm);
+  }
+
+  .skip-link:focus {
+    top: 0;
   }
 </style>
