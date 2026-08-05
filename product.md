@@ -159,7 +159,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Prev/Next post navigation & Social share buttons
 - [x] Like button & Page View Counter (Cloudflare Worker + KV)
 - [x] Lazy-loaded Giscus comments (GitHub Discussions)
-- [x] Full SEO (JSON-LD, OG tags, canonical URLs, Twitter Cards)
+- [x] Full SEO (JSON-LD, dynamic OG tags via `astro-og-canvas`, canonical URLs, Twitter Cards)
 - [x] Auto-generated Sitemap (`sitemap-index.xml`) and RSS Feed (`rss.xml`)
 - [x] Favicon (custom anime character icon)
 - [x] GitHub Actions auto-build & deploy on push
@@ -169,7 +169,11 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Image zoom capabilities with `medium-zoom`
 - [x] Astro Image Optimization enabled
 - [x] Skip-to-Content button for accessibility
+- [x] Scroll-to-Top Floating Action Button (FAB)
+- [x] Algorithmic "Related Posts" (via tag intersection)
+- [x] Multi-part "Series" Support (auto-linking parts)
+- [x] Infinite Scroll (Continuous Feed) on the homepage
 
 ## 9. Out of Scope / Declined
 - Manual post listing/config file
-- Pagination (posts are few; revisit if needed)
+- Backend database for posts (strictly static markdown)

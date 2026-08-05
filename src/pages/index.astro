@@ -118,6 +118,41 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
           }
         });
       });
+
+      // Infinite Scroll Logic
+      let currentLimit = 10;
+      function applyPagination() {
+        const activeTag = document.querySelector('.tag-filter-btn.active')?.getAttribute('data-tag') || 'all';
+        let visibleCount = 0;
+        
+        posts.forEach(post => {
+          const postTags = (post.getAttribute('data-tags') || '').split(',');
+          if (activeTag === 'all' || postTags.includes(activeTag)) {
+            visibleCount++;
+            if (visibleCount <= currentLimit) {
+              post.classList.remove('hidden');
+            } else {
+              post.classList.add('hidden');
+            }
+          } else {
+            post.classList.add('hidden');
+          }
+        });
+      }
+
+      // Initial pagination
+      applyPagination();
+
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          currentLimit += 5;
+          applyPagination();
+        }
+      }, { rootMargin: '200px' });
+
+      const trigger = document.getElementById('infinite-scroll-trigger');
+      if (trigger) observer.observe(trigger);
+
     });
   </script>
 </BaseLayout>

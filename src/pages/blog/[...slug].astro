@@ -32,6 +32,7 @@ const readTime = readingTime(post.body ?? '').text;
   prevPost={prevPost}
   nextPost={nextPost}
   headings={headings}
+  series={post.data.series}
 >
   <Content />
 </PostLayout>

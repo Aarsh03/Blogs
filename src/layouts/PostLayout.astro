@@ -6,6 +6,8 @@ import Comments from '../components/Comments.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import ViewCounter from '../components/ViewCounter.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
+import SeriesBox from '../components/SeriesBox.astro';
 import { SITE } from '../config';
 
 interface Props {
@@ -18,9 +20,10 @@ interface Props {
   prevPost?: any;
   nextPost?: any;
   headings?: any[];
+  series?: string;
 }
 
-const { title, date, tags, description, readingTime, slug, prevPost, nextPost, headings = [] } = Astro.props;
+const { title, date, tags, description, readingTime, slug, prevPost, nextPost, headings = [], series } = Astro.props;
 const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
 const schema = {
@@ -42,6 +45,7 @@ const schema = {
   ogType="article"
   articleDate={date.toISOString()}
   articleTags={tags}
+  image={`${import.meta.env.BASE_URL}open-graph/${slug}.png`}
 >
   <ReadingProgress />
   <article class="post-wrapper container--narrow">
@@ -60,6 +64,8 @@ const schema = {
       </div>
       <div class="post-header__divider"></div>
     </header>
+
+    {series && <SeriesBox seriesName={series} currentSlug={slug} />}
 
     <TableOfContents headings={headings} />
 
@@ -86,6 +92,8 @@ const schema = {
         ) : <div class="post-nav-empty"></div>}
       </div>
     )}
+
+    <RelatedPosts currentSlug={slug} currentTags={tags} />
 
     <Comments />
   </article>

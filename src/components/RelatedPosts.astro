@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from './PostCard.astro';
+import readingTime from 'reading-time';
+
+interface Props {
+  currentSlug: string;
+  currentTags: string[];
+}
+const { currentSlug, currentTags } = Astro.props;
+
+const allPosts = await getCollection('posts', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Filter out current post and calculate intersection scores
+const scoredPosts = allPosts
+  .filter(post => post.slug !== currentSlug)
+  .map(post => {
+    const commonTags = post.data.tags.filter(tag => currentTags.includes(tag));
+    return {
+      post,
+      score: commonTags.length
+    };
+  })
+  // Keep only those with at least 1 common tag, or just return them all and sort
+  .sort((a, b) => {
+    // Sort by score descending
+    if (a.score !== b.score) {
+      return b.score - a.score;
+    }
+    // Tie breaker: newest first
+    return b.post.data.date.valueOf() - a.post.data.date.valueOf();
+  });
+
+// Grab top 3
+const relatedPosts = scoredPosts.slice(0, 3).map(s => s.post);
+
+if (relatedPosts.length === 0) {
+  // If no related posts, we don't render anything
+}
+---
+
+{relatedPosts.length > 0 && (
+  <section class="related-posts">
+    <h3 class="related-posts__title">Related Posts</h3>
+    <div class="related-posts__grid">
+      {relatedPosts.map(post => (
+        <PostCard 
+          title={post.data.title}
+          date={post.data.date}
+          description={post.data.description}
+          tags={post.data.tags}
+          readingTime={readingTime(post.body || '').text}
+          slug={post.id}
+        />
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .related-posts {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  :global(.theme-dark) .related-posts {
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .related-posts__title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+  }
+
+  .related-posts__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Make related post cards slightly more compact if needed, but PostCard styling is fine by default */
+</style>

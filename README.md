@@ -17,6 +17,7 @@ date: 2026-08-01
 tags: ["tag1", "tag2"]
 description: "A short summary shown on post cards."
 draft: false
+series: "My Optional Series" # Optional: Links multi-part posts together
 ---
 
 Your post content here...
@@ -59,8 +60,8 @@ npm run dev        # → http://localhost:4321/Blogs/
 ```
 src/
   content/posts/    ← drop .md files here to publish
-  pages/            ← routing (index, blog/[slug], tags, search, about)
-  components/       ← Navbar, Footer, PostCard, LikeButton, Comments, Search, TagChip, ReadingProgress, ShareButtons, TableOfContents
+  pages/            ← routing (index, blog/[slug], tags, search, about, open-graph)
+  components/       ← Navbar, PostCard, Comments, Search, RelatedPosts, SeriesBox, ScrollToTop, ViewCounter, etc.
   layouts/          ← BaseLayout, PostLayout
   styles/           ← global.css (design tokens, typography, utilities)
 public/
