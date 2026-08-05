@@ -15,7 +15,7 @@ const allPosts = await getCollection('posts', ({ data }) => {
 
 // Filter out current post and calculate intersection scores
 const scoredPosts = allPosts
-  .filter(post => post.slug !== currentSlug)
+  .filter(post => post.id !== currentSlug && post.slug !== currentSlug)
   .map(post => {
     const commonTags = post.data.tags.filter(tag => currentTags.includes(tag));
     return {
