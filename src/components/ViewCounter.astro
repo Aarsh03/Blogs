@@ -26,22 +26,23 @@ const { slug } = Astro.props;
       const hasViewed = sessionStorage.getItem(`viewed-${slug}`);
       
       try {
+        let res;
         if (!hasViewed) {
           sessionStorage.setItem(`viewed-${slug}`, 'true');
-          const res = await fetch(`${LIKES_API_URL}/views/${slug}`, { method: 'POST' });
-          if (res.ok) {
-            const data = await res.json();
-            countSpan.textContent = data.count + ' views';
-          }
+          res = await fetch(`${LIKES_API_URL}/views/${slug}`, { method: 'POST' });
         } else {
-          const res = await fetch(`${LIKES_API_URL}/views/${slug}`);
-          if (res.ok) {
-            const data = await res.json();
-            countSpan.textContent = data.count + ' views';
-          }
+          res = await fetch(`${LIKES_API_URL}/views/${slug}`);
+        }
+        
+        if (res && res.ok) {
+          const data = await res.json();
+          countSpan.textContent = (data.count || 0) + ' views';
+        } else {
+          countSpan.textContent = '0 views';
         }
       } catch (e) {
         console.error('Error fetching views', e);
+        countSpan.textContent = '0 views';
       }
     });
   });

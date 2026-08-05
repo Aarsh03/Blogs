@@ -144,7 +144,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 4. Live at `https://aarsh03.github.io/Blogs/blog/my-new-post`
 
 ## 8. Feature Checklist
-- [x] Auto-detect new `.md` posts on build (no manual index)
+- [x] Auto-detect new `.md` and `.mdx` posts on build
 - [x] Frontmatter schema validated with Zod
 - [x] Minimal design with pastel accent theme
 - [x] Dark/light mode toggle with dynamic theme sync
@@ -157,7 +157,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Reading time estimate on posts and cards
 - [x] Table of Contents & Reading progress bar
 - [x] Prev/Next post navigation & Social share buttons
-- [x] Like button (Cloudflare Worker + KV)
+- [x] Like button & Page View Counter (Cloudflare Worker + KV)
 - [x] Lazy-loaded Giscus comments (GitHub Discussions)
 - [x] Full SEO (JSON-LD, OG tags, canonical URLs, Twitter Cards)
 - [x] Auto-generated Sitemap (`sitemap-index.xml`) and RSS Feed (`rss.xml`)
@@ -165,6 +165,10 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] GitHub Actions auto-build & deploy on push
 - [x] Self-hosted fonts (zero render-blocking requests)
 - [x] BASE_URL prefix throughout for `/Blogs/` subpath
+- [x] MDX integration for rendering components inside posts
+- [x] Image zoom capabilities with `medium-zoom`
+- [x] Astro Image Optimization enabled
+- [x] Skip-to-Content button for accessibility
 
 ## 9. Out of Scope / Declined
 - Manual post listing/config file
