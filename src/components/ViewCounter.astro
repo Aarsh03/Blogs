@@ -9,7 +9,7 @@ const { slug } = Astro.props;
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
     <circle cx="12" cy="12" r="3"></circle>
   </svg>
-  <span class="view-count">—</span>
+  <span class="view-count loading">—</span>
 </span>
 
 <script>
@@ -43,6 +43,8 @@ const { slug } = Astro.props;
       } catch (e) {
         console.error('Error fetching views', e);
         countSpan.textContent = '0 views';
+      } finally {
+        countSpan.classList.remove('loading');
       }
     });
   });
@@ -56,5 +58,14 @@ const { slug } = Astro.props;
   }
   .view-counter svg {
     opacity: 0.7;
+  }
+  .view-count.loading {
+    animation: pulse 1.5s infinite;
+    opacity: 0.5;
+  }
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
   }
 </style>
