@@ -171,9 +171,9 @@ function isActive(linkHref: string) {
     /* ── Font toggle ── */
     const fontBtn = document.getElementById('font-toggle');
     const fontToast = document.getElementById('font-toast');
-    let toastTimeout: ReturnType<typeof setTimeout>;
+    let toastTimeout;
     
-    function showToast(message: string) {
+    function showToast(message) {
       if (!fontToast) return;
       fontToast.textContent = message;
       fontToast.setAttribute('aria-hidden', 'false');
@@ -183,7 +183,7 @@ function isActive(linkHref: string) {
       }, 2000);
     }
     
-    function applyFont(font: string, showMsg = false) {
+    function applyFont(font, showMsg = false) {
       html.setAttribute('data-font', font);
       localStorage.setItem('font', font);
       if (showMsg) {
