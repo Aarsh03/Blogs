@@ -161,6 +161,12 @@ h4 { font-size: 1.125rem; }
   font-size: 1.1rem;
   line-height: 1.85;
   color: var(--color-text);
+  transition: font-family 0.1s ease;
+}
+
+[data-font="sans"] .prose {
+  font-family: var(--font-ui);
+  font-size: 1.05rem;
 }
 
 .prose p {
@@ -175,9 +181,15 @@ h4 { font-size: 1.125rem; }
 }
 
 .prose h2 {
-  font-size: 1.6rem;
-  padding-bottom: 0.4em;
+  font-size: 1.65rem;
+  margin-top: 2.5em;
+  padding-bottom: 0.5em;
   border-bottom: 1px solid var(--color-border);
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+  margin-top: 2em;
 }
 
 .prose blockquote {

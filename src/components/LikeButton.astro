@@ -183,13 +183,14 @@ const base = import.meta.env.BASE_URL;
 
   .like-btn--liked {
     border-color: var(--color-accent-1);
-    color: var(--color-accent-1);
-    background: rgba(232, 180, 203, 0.12);
+    color: var(--color-bg);
+    background: var(--color-accent-1);
+    box-shadow: 0 4px 12px rgba(232, 180, 203, 0.4);
   }
 
   .like-btn--liked .like-btn__icon {
-    fill: var(--color-accent-1);
-    stroke: var(--color-accent-1);
+    fill: var(--color-bg);
+    stroke: var(--color-bg);
     animation: heart-burst 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
