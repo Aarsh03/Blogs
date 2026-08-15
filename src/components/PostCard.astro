@@ -23,10 +23,9 @@ const base = import.meta.env.BASE_URL;
   <p class="post-card__description">{description}</p>
   <div class="post-card__meta">
     <span class="post-card__date">{formattedDate}</span>
-    <span class="post-card__dot">·</span>
-    <span class="post-card__reading">{readingTime}</span>
     <span class="post-card__arrow">→</span>
   </div>
+  <div class="post-card__tooltip">{readingTime}</div>
 </a>
 
 <style>
@@ -121,5 +120,49 @@ const base = import.meta.env.BASE_URL;
   .post-card:hover .post-card__arrow {
     opacity: 1;
     transform: translateX(0);
+  }
+
+  .post-card__tooltip {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--color-bg-code);
+    color: var(--color-text);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+
+  /* Triangle pointer */
+  .post-card__tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: var(--color-bg-code);
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* We override overflow: hidden from earlier so the tooltip can overflow out of the card */
+  .post-card {
+    overflow: visible;
+  }
+
+  /* Show tooltip on hover */
+  .post-card:hover .post-card__tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 </style>

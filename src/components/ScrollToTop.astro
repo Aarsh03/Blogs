@@ -1,33 +1,112 @@
 ---
 ---
-<button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top" title="Scroll to top">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 19V5M5 12l7-7 7 7"/>
-  </svg>
-</button>
+<div id="fab-container" class="fab-container">
+  <div id="fab-menu" class="fab-menu" aria-hidden="true">
+    <button id="fab-top" class="fab-action" aria-label="Scroll to top" title="Scroll to top">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+    <button id="fab-share" class="fab-action" aria-label="Share" title="Share">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    </button>
+    <button id="fab-comments" class="fab-action" aria-label="Comments" title="Comments">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </button>
+  </div>
+  <button id="fab-main" class="fab-main" aria-label="Menu" aria-expanded="false">
+    <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+    <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <div id="fab-toast" class="fab-toast">Link copied!</div>
+</div>
 
 <script>
-  // Track listener to prevent leaks
   let _scrollListener = null;
 
   document.addEventListener('astro:page-load', () => {
-    const scrollBtn = document.getElementById('scroll-to-top');
-    if (!scrollBtn) return;
+    const container = document.getElementById('fab-container');
+    const mainBtn = document.getElementById('fab-main');
+    const menu = document.getElementById('fab-menu');
+    const btnTop = document.getElementById('fab-top');
+    const btnShare = document.getElementById('fab-share');
+    const btnComments = document.getElementById('fab-comments');
+    const toast = document.getElementById('fab-toast');
 
+    if (!container || !mainBtn) return;
+
+    // Toggle menu
+    mainBtn.addEventListener('click', () => {
+      const isExpanded = mainBtn.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    function openMenu() {
+      mainBtn.setAttribute('aria-expanded', 'true');
+      menu?.setAttribute('aria-hidden', 'false');
+      container?.classList.add('active');
+    }
+
+    function closeMenu() {
+      mainBtn.setAttribute('aria-expanded', 'false');
+      menu?.setAttribute('aria-hidden', 'true');
+      container?.classList.remove('active');
+    }
+
+    // Scroll to Top
+    btnTop?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeMenu();
+    });
+
+    // Share
+    btnShare?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        showToast();
+      } catch(e) {}
+      closeMenu();
+    });
+
+    function showToast() {
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      }
+    }
+
+    // Comments
+    btnComments?.addEventListener('click', () => {
+      const commentsSection = document.getElementById('comments');
+      if (commentsSection) {
+        commentsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      closeMenu();
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (container && !container.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    // Show/hide based on scroll
     if (_scrollListener) {
       window.removeEventListener('scroll', _scrollListener);
     }
-
+    
     let ticking = false;
-
     _scrollListener = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (window.scrollY > 300) {
-            scrollBtn.classList.add('visible');
+            container.classList.add('visible');
           } else {
-            scrollBtn.classList.remove('visible');
-            scrollBtn.classList.remove('tapped');
+            container.classList.remove('visible');
+            closeMenu();
           }
           ticking = false;
         });
@@ -36,18 +115,6 @@
     };
 
     window.addEventListener('scroll', _scrollListener, { passive: true });
-    
-    // Initial check
-
-    scrollBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Flash a "tapped" class for tactile feedback, then remove it
-      scrollBtn.classList.add('tapped');
-      setTimeout(() => scrollBtn.classList.remove('tapped'), 200);
-      scrollBtn.blur();
-    });
-    
-    // Initial check (after click listener setup)
     _scrollListener();
   });
 
@@ -60,83 +127,158 @@
 </script>
 
 <style is:global>
-  .scroll-to-top {
+  .fab-container {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    /* Light mode normal: lavender filled */
-    background: var(--color-accent-2);
-    color: var(--color-bg);
-    border: 1px solid var(--color-accent-2);
+    z-index: 99;
     display: flex;
+    flex-direction: column-reverse;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    gap: 0.75rem;
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease,
-                background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    z-index: 99;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    outline: none;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   }
 
-  /* Visible state */
-  .scroll-to-top.visible {
+  .fab-container.visible {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
 
-  /* Light mode hover: flowing gradient */
-  .scroll-to-top.visible:hover {
-    background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-2), var(--color-accent-1));
-    background-size: 200% 100%;
-    animation: flowGradient 3s linear infinite;
-    border-color: transparent;
-    color: var(--color-bg);
-    transform: translateY(0) scale(1.08);
-  }
-
-  @keyframes flowGradient {
-    0% { background-position: 100% 0; }
-    100% { background-position: -100% 0; }
-  }
-
-  /* JS-controlled tap flash (replaces :active so it always resets) */
-  .scroll-to-top.tapped {
-    transform: translateY(0) scale(0.93);
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
-  }
-
-  /* Dark mode normal: lavender filled */
-  [data-theme="dark"] .scroll-to-top {
+  .fab-main {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
     background: var(--color-accent-2);
     color: var(--color-bg);
-    border-color: var(--color-accent-2);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
   }
 
-  /* Dark mode hover: flowing gradient */
-  [data-theme="dark"] .scroll-to-top:hover {
+  [data-theme="dark"] .fab-main {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .fab-main:hover {
     background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-2), var(--color-accent-1));
     background-size: 200% 100%;
     animation: flowGradient 3s linear infinite;
-    border-color: transparent;
-    color: var(--color-bg);
-    transform: translateY(0) scale(1.08);
+    transform: scale(1.08);
+  }
+
+  .fab-icon-menu, .fab-icon-close {
+    position: absolute;
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .fab-icon-close {
+    opacity: 0;
+    transform: scale(0) rotate(-90deg);
+  }
+
+  .fab-container.active .fab-icon-menu {
+    opacity: 0;
+    transform: scale(0) rotate(90deg);
+  }
+
+  .fab-container.active .fab-icon-close {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  
+  .fab-container.active .fab-main {
+    background: var(--color-accent-1);
+    transform: scale(1);
+  }
+
+  .fab-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px);
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.25s ease;
+    pointer-events: none;
+  }
+
+  .fab-container.active .fab-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .fab-action {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .fab-action:hover {
+    color: var(--color-accent-2);
+    border-color: var(--color-accent-2);
+    background: rgba(184, 169, 212, 0.08);
+    transform: scale(1.1);
+  }
+  
+  .fab-toast {
+    position: absolute;
+    right: 4rem;
+    bottom: 0.5rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-ui);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .fab-toast.show {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   @media (max-width: 768px) {
-    .scroll-to-top {
+    .fab-container {
       bottom: 1.5rem;
       right: 1.5rem;
-      width: 2.75rem;
-      height: 2.75rem;
+    }
+    
+    .fab-main {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .fab-action {
+      width: 2.5rem;
+      height: 2.5rem;
     }
   }
 </style>
