@@ -87,7 +87,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 ### 4.1 Home / Blog List
 - Lists all non-draft posts newest-first as cards
 - Interactive tag filtering pills to filter posts directly on the homepage
-- Search functionality via `Ctrl+K` Quick Search Modal overlay
+- **Glassmorphism Search Modal (`SearchModal.astro`):** Full-screen frosted backdrop (`backdrop-filter: blur(20px) saturate(180%)`) with an isolated translucent card layer to prevent browser backdrop rendering conflicts. Features full keyboard navigation (`Ctrl+K`/`Cmd+K` toggle, `Esc` dismiss, `↑`/`↓` result traversal, `Enter` to select first hit).
 - Infinite scroll / pagination (`IntersectionObserver` loading 10 initial posts + 6 posts per scroll)
 - Each card: title, date, estimated reading time, description, tag chips
 - Hover reading-time tooltip on post cards with cubic-bezier float animation
@@ -115,6 +115,15 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 ### 4.3 About (`/about`)
 - Static page with bio, what I write about, contact buttons (Email, GitHub, LinkedIn)
 
+### 4.4 Circular Animated FAB (`ScrollToTop.astro`)
+- Fixed bottom-right speed-dial menu activated when scrolled past 300px (rAF throttled).
+- Features spring physics expansion (`cubic-bezier(0.175, 0.885, 0.32, 1.275)`) and morphing menu/close icon.
+- Provides 3 radial action buttons:
+  1. **Scroll to Top:** Smooth scroll to page top.
+  2. **Jump to Comments:** Smooth scroll directly to the `#comments` Giscus section.
+  3. **Quick Share:** Copies current page URL to clipboard with an animated confirmation toast ("Link copied!").
+- Includes click-outside dismissal and cleanup on `astro:before-swap`.
+
 ## 5. Design System
 - **Aesthetic:** Minimal, clean, generous whitespace — pastel accent theme
 - **Color palette** (defined in `src/styles/global.css` as CSS custom properties):
@@ -126,8 +135,13 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - **Typography:** Self-hosted via `@fontsource` — DM Sans (UI), Playfair Display (headings), Lora and Source Serif 4 (selectable body fonts), JetBrains Mono (code)
 - **Dark mode:** Fully implemented. Users can toggle themes via the Navbar. Code blocks, Giscus comments, and Pagefind search adapt dynamically. Features specific dark mode tag colors, frosted glass UI, and subtle glow effects.
 - **Frosted Glass UI:** Applied via `backdrop-filter: blur(...)` across the Navbar, Settings Panel, Mobile Drawer, Table of Contents, and Search Modal.
+- **Mobile Touch & Hover Protection:** All interactive hover states (card lift effects, FAB speed-dial expansions, like buttons, tooltips) are strictly wrapped inside `@media (hover: hover)` media queries to eliminate persistent sticky hover bugs on touch/mobile devices.
 - **Performance (120fps):** Uses `requestAnimationFrame` debouncing and `{ passive: true }` listeners for scroll handlers. View Transitions manage memory with strict `astro:before-swap` cleanups.
 - **Responsive:** Fully responsive — mobile hamburger menu, fluid typography, responsive cards and footer
+
+### 5.1 Theme & Layout Initialization
+- **FOUC Prevention & Critical CSS:** To eliminate Flash of Unstyled Content and theme/icon flickering before external CSS bundles finish loading, `BaseLayout.astro` uses a synchronous `<script is:inline>` in `<head>` that immediately applies `data-theme`, `data-font`, and `data-eye-comfort`, while injecting a critical inline `<style id="theme-icon-critical">` element for theme icons. Theme and font states are synchronized on `astro:after-swap` during View Transitions.
+
 
 ## 6. Infrastructure
 

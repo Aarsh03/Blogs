@@ -23,6 +23,9 @@ Consult these guides before working on related tasks:
 
 ## Architecture & Lifecycle Rules
 
+- **FOUC Prevention & Critical Theme CSS:** `BaseLayout.astro` uses a synchronous inline script (`is:inline`) in `<head>` to set `data-theme` and inject critical `#theme-icon-critical` CSS before body paint. When modifying theme toggles or layouts, ensure no async stylesheets block first paint icons and sync attributes on `astro:after-swap`.
+- **Mobile Sticky Hover Prevention:** Always wrap interactive `:hover` styling in `@media (hover: hover)` to prevent sticky hover artifacts on iOS/Android touchscreen devices.
+- **Glassmorphism & Backdrop Filters:** Keep `backdrop-filter` on dedicated overlay backdrop elements rather than scrollable or `overflow: hidden` content containers to avoid browser composite clipping bugs.
 - **Client Scripts & View Transitions:** Client-side scripts must attach to `astro:page-load` rather than `DOMContentLoaded` because the site uses Astro `ClientRouter`.
 - **Memory Leaks & Event Listeners:** Always clean up scroll listeners, observers (`IntersectionObserver`, `MutationObserver`), and global `window`/`document` listeners on `astro:before-swap` to prevent memory leaks during client-side navigation.
 - **Performance:** Use `requestAnimationFrame` debouncing and `{ passive: true }` on window scroll listeners to maintain 120fps smooth scrolling.

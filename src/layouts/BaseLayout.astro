@@ -95,7 +95,6 @@ const imageURL = new URL(image, Astro.site).href;
       document.documentElement.setAttribute('data-eye-comfort', savedEyeComfort);
 
       // On View Transition swap, re-apply theme/font/comfort attributes.
-      // Icons are handled by ThemeToggle's astro:page-load via setIconVisibility().
       document.addEventListener('astro:after-swap', function() {
         var t = localStorage.getItem('theme');
         var pd = window.matchMedia('(prefers-color-scheme: dark)').matches;

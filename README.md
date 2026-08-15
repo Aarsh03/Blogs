@@ -18,9 +18,9 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 ## Features
 
-- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads. Features 120fps smooth scrolling with `requestAnimationFrame` debouncing and passive event listeners.
-- **Design:** Modern minimal design with pastel accent themes, frosted glass UI, multi-layered shadows, dynamic fonts, Eye Comfort mode, and a complete Dark/Light mode implementation (with dynamic Giscus comment themes).
-- **Navigation:** Auto-hiding navbar with sliding Settings panel, interactive tag filtering pills, infinite scrolling, table of contents, reading progress bar, a multi-action Speed Dial FAB, and a sleek `Ctrl+K` Quick Search Modal overlay via Pagefind.
+- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads. Features 120fps smooth scrolling with `requestAnimationFrame` debouncing, passive event listeners, FOUC prevention via critical inline theme CSS, and native CSS View Transition directional animations (`slide-from-right`/`slide-to-left`).
+- **Design:** Modern minimal design with pastel accent themes, frosted glass UI, multi-layered shadows, dynamic fonts, Eye Comfort mode, and a complete Dark/Light mode implementation (with dynamic Giscus comment themes). Includes mobile sticky-hover fixes via `@media (hover: hover)` for a flawless touchscreen experience.
+- **Navigation:** Auto-hiding navbar with sliding Settings panel, interactive tag filtering pills, infinite scrolling, table of contents, reading progress bar, a circular animated FAB speed-dial (Scroll to Top, Share URL with toast, Jump to Comments), and a sleek `Ctrl+K` Quick Search Modal overlay with keyboard navigation.
 - **Content:** MDX support, algorithmic related posts, multi-part series navigation, Markdown callouts (`> [!NOTE]`), IDE-style language badges for code blocks, mobile-visible copy buttons, heading anchor copy buttons, image zoom capabilities, Author Bio cards, and hover reading-time tooltips.
 - **Social & Engagement:** Like button & view counter (Cloudflare Workers + KV), GitHub Discussions comments via Giscus, social share buttons.
 - **SEO & Publishing:** Auto-generated RSS feed, JSON-LD schema, dynamic Open Graph images (`astro-og-canvas`), auto-generated sitemap, and automatic CI/CD deployment via GitHub Actions.

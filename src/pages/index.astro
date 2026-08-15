@@ -27,7 +27,6 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     {allPosts.map((post) => {
       const { title, date, description, tags = [] } = post.data;
       const readTime = getReadingTime(post.body);
-      const slug = post.slug;
       return (
         <PostCard
           title={title}

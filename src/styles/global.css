@@ -501,22 +501,6 @@ h4 { font-size: 1.125rem; }
   max-width: var(--max-width);
 }
 
-/* ═══════════════════════════════════════
-   CARD
-   ═══════════════════════════════════════ */
-.card {
-  background-color: var(--color-bg-card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  padding: 1.75rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, var(--transition-theme);
-  border: 1px solid var(--color-border);
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card-hover);
-}
 
 /* ═══════════════════════════════════════
    TAGS
@@ -571,7 +555,6 @@ h4 { font-size: 1.125rem; }
   h1 { font-size: 2rem; }
   h2 { font-size: 1.5rem; }
   .container { padding: 0 1rem; }
-  .card { padding: 1.25rem; }
   .prose { font-size: 1rem; }
 }
 

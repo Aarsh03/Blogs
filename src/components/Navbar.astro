@@ -324,7 +324,7 @@ function isActive(linkHref: string) {
       syncSettingsThemeToggle(html.getAttribute('data-theme') || 'light');
     });
 
-    // lastScroll was duplicated, removing here.
+
   });
 
   document.addEventListener('astro:before-swap', () => {
@@ -612,8 +612,9 @@ function isActive(linkHref: string) {
     color: var(--color-text);
   }
 
-  /* Toggle switch */
-  .eye-comfort-toggle {
+  /* Toggle switch (Eye Comfort & Dark Mode) */
+  .eye-comfort-toggle,
+  .settings-theme-toggle {
     position: relative;
     width: 36px;
     height: 20px;
@@ -630,40 +631,11 @@ function isActive(linkHref: string) {
     background: #e8a838;
   }
 
-  .eye-comfort-thumb {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #fff;
-    transition: transform 0.2s ease;
-    pointer-events: none;
-  }
-
-  .eye-comfort-toggle.on .eye-comfort-thumb {
-    transform: translateX(16px);
-  }
-
-  /* Dark mode toggle switch (same style as eye-comfort) */
-  .settings-theme-toggle {
-    position: relative;
-    width: 36px;
-    height: 20px;
-    border-radius: 999px;
-    border: none;
-    background: var(--color-border);
-    cursor: pointer;
-    padding: 0;
-    transition: background 0.2s ease;
-    flex-shrink: 0;
-  }
-
   .settings-theme-toggle.on {
     background: var(--color-accent-2);
   }
 
+  .eye-comfort-thumb,
   .settings-theme-thumb {
     position: absolute;
     top: 3px;
@@ -676,6 +648,7 @@ function isActive(linkHref: string) {
     pointer-events: none;
   }
 
+  .eye-comfort-toggle.on .eye-comfort-thumb,
   .settings-theme-toggle.on .settings-theme-thumb {
     transform: translateX(16px);
   }
@@ -822,12 +795,11 @@ function isActive(linkHref: string) {
   }
 
   /* settings-toggle needs relative positioning for the panel */
-  .settings-toggle {
+  .settings-wrapper {
     position: relative;
   }
 
-  /* Wrap settings button + panel together */
-  .settings-wrapper {
+  .settings-toggle {
     position: relative;
   }
 </style>
