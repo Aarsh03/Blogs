@@ -141,6 +141,14 @@ function isActive(linkHref: string) {
       navbar?.classList.remove('navbar--hidden');
     } else if (currentScroll > lastScroll) {
       navbar?.classList.add('navbar--hidden');
+      // Close settings panel when navbar hides
+      const panel = document.getElementById('settings-panel');
+      const btn = document.getElementById('settings-toggle');
+      if (panel?.getAttribute('aria-hidden') === 'false') {
+        panel.setAttribute('aria-hidden', 'true');
+        btn?.setAttribute('aria-expanded', 'false');
+        btn?.classList.remove('active');
+      }
     } else if (currentScroll < lastScroll) {
       navbar?.classList.remove('navbar--hidden');
     }

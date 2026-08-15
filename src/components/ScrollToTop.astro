@@ -33,8 +33,17 @@
         top: 0,
         behavior: 'smooth'
       });
+      // Blur immediately so active/focus state doesn't persist
       scrollBtn.blur();
     });
+
+    // Reset any lingering active styles when button becomes hidden again
+    const observer = new MutationObserver(() => {
+      if (!scrollBtn.classList.contains('visible')) {
+        scrollBtn.blur();
+      }
+    });
+    observer.observe(scrollBtn, { attributes: true, attributeFilter: ['class'] });
   });
 </script>
 
@@ -92,26 +101,26 @@
     transition: none;
   }
 
-  /* Dark mode normal state — filled with pink */
+  /* Dark mode normal state — filled with lavender */
   [data-theme="dark"] .scroll-to-top {
-    background: var(--color-accent-1);
+    background: var(--color-accent-2);
     color: var(--color-bg);
-    border-color: var(--color-accent-1);
+    border-color: var(--color-accent-2);
     backdrop-filter: none;
   }
 
-  /* Dark mode hover — switches to lavender */
+  /* Dark mode hover — switches to pink */
   [data-theme="dark"] .scroll-to-top:hover {
-    background: var(--color-accent-2);
-    border-color: var(--color-accent-2);
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
   }
 
   /* Dark mode active */
   [data-theme="dark"] .scroll-to-top:active {
-    background: var(--color-accent-2);
-    border-color: var(--color-accent-2);
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
     color: var(--color-bg);
     transform: translateY(0) scale(0.95);
     transition: none;
