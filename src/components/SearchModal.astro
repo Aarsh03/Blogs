@@ -355,11 +355,12 @@ const base = import.meta.env.BASE_URL;
   .pagefind-ui__search-clear {
     color: var(--color-text-muted) !important;
     background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     border-radius: 999px !important;
     padding: 0 1rem !important;
+    outline: none !important;
   }
-
-  .pagefind-ui__search-clear:focus { outline: none !important; }
 
   @media (hover: hover) {
     .pagefind-ui__search-clear:hover { color: var(--color-accent-2) !important; }

@@ -94,20 +94,13 @@ const imageURL = new URL(image, Astro.site).href;
       var savedEyeComfort = localStorage.getItem('eye-comfort') || 'off';
       document.documentElement.setAttribute('data-eye-comfort', savedEyeComfort);
 
-      // On View Transition swap, re-apply (theme persists in html attr but font/comfort may reset)
+      // On View Transition swap, re-apply theme/font/comfort attributes.
+      // Icons are handled by ThemeToggle's astro:page-load via setIconVisibility().
       document.addEventListener('astro:after-swap', function() {
         var t = localStorage.getItem('theme');
         var pd = window.matchMedia('(prefers-color-scheme: dark)').matches;
         t = t || (pd ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
-
-        // Update injected icon CSS to match current theme
-        var existing = document.getElementById('theme-icon-critical');
-        if (existing) {
-          existing.textContent = t === 'dark'
-            ? '.icon-sun{display:block!important}.icon-moon{display:none!important}'
-            : '.icon-sun{display:none!important}.icon-moon{display:block!important}';
-        }
 
         var f = localStorage.getItem('font') || 'serif';
         document.documentElement.setAttribute('data-font', f);
