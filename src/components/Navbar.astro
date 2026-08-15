@@ -345,6 +345,13 @@ function isActive(linkHref: string) {
     background: var(--color-bg-card);
     color: var(--color-accent-2);
     border-color: var(--color-accent-2);
+  }
+
+  .theme-toggle svg, .font-toggle svg, .search-toggle svg {
+    transition: transform 0.25s ease;
+  }
+
+  .theme-toggle:hover svg, .font-toggle:hover svg, .search-toggle:hover svg {
     transform: rotate(20deg);
   }
 
