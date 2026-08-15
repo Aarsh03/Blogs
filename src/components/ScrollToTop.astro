@@ -52,7 +52,7 @@
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     z-index: 99;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
@@ -89,30 +89,31 @@
     transition: none;
   }
 
-  /* Hover styles only for true mouse devices */
-  @media (hover: hover) and (pointer: fine) {
-    /* Light mode hover */
-    .scroll-to-top:hover {
-      background: var(--color-accent-2);
-      color: var(--color-bg);
-      transform: translateY(0) scale(1.08); /* More tactile pop */
-      box-shadow: 0 4px 16px rgba(184, 169, 212, 0.4); /* Lavender glow */
-    }
-
-    /* Dark mode hover */
-    :global([data-theme="dark"]) .scroll-to-top:hover {
-      background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
-      border-color: var(--color-accent-1);
-      color: var(--color-bg);
-      transform: translateY(0) scale(1.08);
-      box-shadow: 0 4px 16px rgba(232, 180, 203, 0.4); /* Pink glow */
-    }
-  }
-
+  /* Visible state */
   .scroll-to-top.visible {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+  }
+
+  /* Hover styles only for true mouse devices */
+  @media (hover: hover) and (pointer: fine) {
+    /* Light mode hover */
+    .scroll-to-top.visible:hover {
+      background: var(--color-accent-2);
+      color: var(--color-bg);
+      transform: translateY(0) scale(1.08); /* More tactile pop */
+      box-shadow: 0 4px 16px rgba(184, 169, 212, 0.6); /* Lavender glow */
+    }
+
+    /* Dark mode hover */
+    :global([data-theme="dark"]) .scroll-to-top.visible:hover {
+      background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
+      border-color: var(--color-accent-1);
+      color: var(--color-bg);
+      transform: translateY(0) scale(1.08);
+      box-shadow: 0 4px 16px rgba(232, 180, 203, 0.6); /* Pink glow */
+    }
   }
 
   @media (max-width: 768px) {
