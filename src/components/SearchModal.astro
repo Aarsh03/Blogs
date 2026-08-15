@@ -99,6 +99,37 @@ const base = import.meta.env.BASE_URL;
       if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
         closeModal();
       }
+
+      // Arrow up/down and Enter navigation for results
+      if (modal.getAttribute('aria-hidden') === 'false') {
+        const active = document.activeElement as HTMLElement;
+
+        if (e.key === 'Enter') {
+          if (active && active.classList.contains('pagefind-ui__search-input')) {
+            e.preventDefault();
+            const firstResult = modal.querySelector<HTMLElement>('.pagefind-ui__result-link');
+            if (firstResult) {
+              firstResult.click();
+            }
+          }
+        }
+
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const focusable = Array.from(modal.querySelectorAll<HTMLElement>('.pagefind-ui__search-input, .pagefind-ui__result-link, .pagefind-ui__search-clear'));
+          let index = focusable.indexOf(active);
+          
+          if (e.key === 'ArrowDown') {
+            index = index + 1 < focusable.length ? index + 1 : 0;
+          } else {
+            index = index - 1 >= 0 ? index - 1 : focusable.length - 1;
+          }
+          
+          if (focusable[index]) {
+            focusable[index].focus();
+          }
+        }
+      }
     });
   });
 </script>

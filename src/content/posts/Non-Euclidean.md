@@ -18,12 +18,11 @@ Beyond being a mathematical prodigy who mastered calculus by age 13, Bolyai was 
 
 - **The Legendary Duel:** While stationed as a military engineer, 13 cavalry officers in his garrison challenged him to duels consecutively—expecting to wear him down. Bolyai accepted all 13 challenges on one condition: he be allowed to play a short piece on his violin between each bout. He fought all 13 officers in succession, defeated every single one without taking a scratch, and serenaded them with his violin after each victory.
 - **Linguistic Genius:** He was fluent in nine languages, including Chinese and Turkish.
-- **The Father's Warning:** His father, Farkas Bolyai (himself a famous mathematician and close friend of Carl Friedrich Gauss), desperately begged János not to study parallel lines, writing: *"For God’s sake, I beseech you, give it up. It will deprive you of your health, peace of mind, and happiness in life."*
+
+> [!WARNING]
+> **The Father's Warning:** His father, Farkas Bolyai (himself a famous mathematician and close friend of Carl Friedrich Gauss), desperately begged János not to study parallel lines, writing: *"For God’s sake, I beseech you, give it up. It will deprive you of your health, peace of mind, and happiness in life."*
 
 János ignored his father's warning anyway and revolutionized geometry forever.
-
-> [!NOTE]
-> This is a beautifully styled markdown callout that was just added in Phase 5!
 
 His work (along with Lobachevsky) paved the way for Einstein's General Relativity.
 
