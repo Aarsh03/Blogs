@@ -127,7 +127,8 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 
       filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-          const tag = (e.target as HTMLElement).getAttribute('data-tag');
+          const target = e.target;
+          const tag = target ? target.getAttribute('data-tag') : null;
           if (tag) {
             const url = new URL(window.location.href);
             if (tag === 'all') {

@@ -7,10 +7,10 @@ const baseUrl = import.meta.env.BASE_URL;
   <div class="giscus-container" data-repo={SITE.giscus.repo} data-repo-id={SITE.giscus.repoId} data-category={SITE.giscus.category} data-category-id={SITE.giscus.categoryId} data-base-url={baseUrl}></div>
   <script>
     // Track observers at module level to clean up on re-navigation
-    let _giscusThemeObserver: MutationObserver | null = null;
+    let _giscusThemeObserver = null;
 
     document.addEventListener('astro:page-load', () => {
-      const container = document.querySelector('.giscus-container') as HTMLElement;
+      const container = document.querySelector('.giscus-container');
       if (!container) return;
 
       // Disconnect previous observer if it exists
@@ -33,10 +33,10 @@ const baseUrl = import.meta.env.BASE_URL;
           if (entry.isIntersecting) {
             const script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
-            script.setAttribute('data-repo', repo!);
-            script.setAttribute('data-repo-id', repoId!);
-            script.setAttribute('data-category', category!);
-            script.setAttribute('data-category-id', categoryId!);
+            script.setAttribute('data-repo', repo || '');
+            script.setAttribute('data-repo-id', repoId || '');
+            script.setAttribute('data-category', category || '');
+            script.setAttribute('data-category-id', categoryId || '');
             script.setAttribute('data-mapping', 'pathname');
             script.setAttribute('data-strict', '0');
             script.setAttribute('data-reactions-enabled', '1');
@@ -59,7 +59,7 @@ const baseUrl = import.meta.env.BASE_URL;
       _giscusThemeObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.attributeName === 'data-theme') {
-            const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
+            const iframe = document.querySelector('iframe.giscus-frame');
             if (iframe && iframe.contentWindow) {
               iframe.contentWindow.postMessage(
                 { giscus: { setConfig: { theme: getGiscusTheme() } } },

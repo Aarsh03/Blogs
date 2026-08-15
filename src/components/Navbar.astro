@@ -131,44 +131,52 @@ function isActive(linkHref: string) {
 
 <script>
   // Module-level scroll handler (runs once, never stacks)
-  let lastScroll = 0;
-
-  function handleNavbarScroll() {
-    const navbar = document.querySelector('.navbar');
-    const currentScroll = window.scrollY;
-
-    if (currentScroll <= 0) {
-      navbar?.classList.remove('navbar--hidden');
-    } else if (currentScroll > lastScroll) {
-      navbar?.classList.add('navbar--hidden');
-      // Close settings panel when navbar hides
-      const panel = document.getElementById('settings-panel');
-      const btn = document.getElementById('settings-toggle');
-      if (panel?.getAttribute('aria-hidden') === 'false') {
-        panel.setAttribute('aria-hidden', 'true');
-        btn?.setAttribute('aria-expanded', 'false');
-        btn?.classList.remove('active');
-      }
-    } else if (currentScroll < lastScroll) {
-      navbar?.classList.remove('navbar--hidden');
-    }
-
-    if (currentScroll > 20) {
-      navbar?.classList.add('navbar--scrolled');
-    } else {
-      navbar?.classList.remove('navbar--scrolled');
-    }
-
-    lastScroll = currentScroll;
-  }
-
-  // Attach once at module level — never duplicated
-  window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+  // Track listener to prevent leaks
+  let _navScrollListener = null;
 
   // Page-load handles DOM-specific bindings (buttons, menus)
   document.addEventListener('astro:page-load', () => {
+    
+    // Clean up previous if any
+    if (_navScrollListener) {
+      window.removeEventListener('scroll', _navScrollListener);
+    }
+    
+    let lastScroll = window.scrollY;
+    
+    _navScrollListener = () => {
+      const navbar = document.querySelector('.navbar');
+      const currentScroll = window.scrollY;
+
+      if (currentScroll <= 0) {
+        navbar?.classList.remove('navbar--hidden');
+      } else if (currentScroll > lastScroll) {
+        navbar?.classList.add('navbar--hidden');
+        // Close settings panel when navbar hides
+        const panel = document.getElementById('settings-panel');
+        const btn = document.getElementById('settings-toggle');
+        if (panel?.getAttribute('aria-hidden') === 'false') {
+          panel.setAttribute('aria-hidden', 'true');
+          btn?.setAttribute('aria-expanded', 'false');
+          btn?.classList.remove('active');
+        }
+      } else if (currentScroll < lastScroll) {
+        navbar?.classList.remove('navbar--hidden');
+      }
+
+      if (currentScroll > 20) {
+        navbar?.classList.add('navbar--scrolled');
+      } else {
+        navbar?.classList.remove('navbar--scrolled');
+      }
+
+      lastScroll = currentScroll;
+    };
+
+    window.addEventListener('scroll', _navScrollListener, { passive: true });
+    
     // Initial check for shadow
-    handleNavbarScroll();
+    _navScrollListener();
 
     /* ── Mobile menu ── */
     const btn = document.getElementById('mobile-menu-btn');
@@ -190,7 +198,7 @@ function isActive(linkHref: string) {
     const toggleBtn = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
-    function applyTheme(theme: string) {
+    function applyTheme(theme) {
       html.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       const sunIcon = toggleBtn?.querySelector('.icon-sun');
@@ -301,6 +309,13 @@ function isActive(linkHref: string) {
 
     // Reset scroll tracking on navigation
     lastScroll = window.scrollY;
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    if (_navScrollListener) {
+      window.removeEventListener('scroll', _navScrollListener);
+      _navScrollListener = null;
+    }
   });
 </script>
 

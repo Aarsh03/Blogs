@@ -217,6 +217,45 @@ h4 { font-size: 1.125rem; }
   margin-top: 2em;
 }
 
+.heading-link-btn {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  opacity: 0;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: opacity 0.2s, color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prose h2:hover .heading-link-btn,
+.prose h3:hover .heading-link-btn,
+.heading-link-btn:focus {
+  opacity: 1;
+}
+
+.heading-link-btn:hover {
+  color: var(--color-accent-2);
+  background: var(--color-bg-code);
+}
+
+.heading-link-btn.copied {
+  color: var(--color-success);
+}
+
+@media (max-width: 768px) {
+  .heading-link-btn {
+    display: none;
+  }
+}
+
 .prose blockquote {
   border-left: 3px solid var(--color-accent-1);
   padding: 0.5em 1.25em;

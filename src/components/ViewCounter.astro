@@ -19,7 +19,7 @@ const { slug } = Astro.props;
   document.addEventListener('astro:page-load', () => {
     const counters = document.querySelectorAll('.view-counter');
     counters.forEach(async (el) => {
-      const slug = (el as HTMLElement).dataset.slug;
+      const slug = el.dataset.slug;
       const countSpan = el.querySelector('.view-count');
       if (!slug || !countSpan) return;
       

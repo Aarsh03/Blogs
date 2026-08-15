@@ -8,6 +8,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import ViewCounter from '../components/ViewCounter.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import SeriesBox from '../components/SeriesBox.astro';
+import AuthorBio from '../components/AuthorBio.astro';
 import { SITE } from '../config';
 import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
@@ -76,6 +77,8 @@ const schema = {
     </div>
 
     <LikeButton slug={slug} title={title} />
+    
+    <AuthorBio />
     
     { (prevPost || nextPost) && (
       <div class="post-nav">

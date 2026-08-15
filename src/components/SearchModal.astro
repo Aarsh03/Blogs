@@ -44,7 +44,7 @@ const base = import.meta.env.BASE_URL;
     
     if (!modal || !searchDiv) return;
 
-    let pagefindInstance: any = null;
+    let pagefindInstance = null;
 
     // Initialize Pagefind exactly once
     if (!searchDiv.hasChildNodes()) {
@@ -67,7 +67,7 @@ const base = import.meta.env.BASE_URL;
       document.body.style.overflow = 'hidden';
       // Focus the input inside the shadow DOM if possible, or wait a tick
       setTimeout(() => {
-        const input = document.querySelector('.pagefind-ui__search-input') as HTMLInputElement;
+        const input = document.querySelector('.pagefind-ui__search-input');
         if (input) input.focus();
       }, 100);
     }
@@ -102,12 +102,12 @@ const base = import.meta.env.BASE_URL;
 
       // Arrow up/down and Enter navigation for results
       if (modal.getAttribute('aria-hidden') === 'false') {
-        const active = document.activeElement as HTMLElement;
+        const active = document.activeElement;
 
         if (e.key === 'Enter') {
           if (active && active.classList.contains('pagefind-ui__search-input')) {
             e.preventDefault();
-            const firstResult = modal.querySelector<HTMLElement>('.pagefind-ui__result-link');
+            const firstResult = modal.querySelector('.pagefind-ui__result-link');
             if (firstResult) {
               firstResult.click();
             }
@@ -116,7 +116,7 @@ const base = import.meta.env.BASE_URL;
 
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
-          const focusable = Array.from(modal.querySelectorAll<HTMLElement>('.pagefind-ui__search-input, .pagefind-ui__result-link, .pagefind-ui__search-clear'));
+          const focusable = Array.from(modal.querySelectorAll('.pagefind-ui__search-input, .pagefind-ui__result-link, .pagefind-ui__search-clear'));
           let index = focusable.indexOf(active);
           
           if (e.key === 'ArrowDown') {

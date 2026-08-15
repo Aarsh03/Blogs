@@ -41,28 +41,28 @@ const { title } = Astro.props;
     const cleanUrl = window.location.origin + window.location.pathname;
     const encodedUrl = encodeURIComponent(cleanUrl);
     
-    document.querySelectorAll('.twitter-share').forEach((a: Element) => {
-      const anchor = a as HTMLAnchorElement;
+    document.querySelectorAll('.twitter-share').forEach((a) => {
+      const anchor = a;
       const title = anchor.dataset.shareTitle || '';
       anchor.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodedUrl}`;
     });
     
-    document.querySelectorAll('.linkedin-share').forEach((a: Element) => {
-      const anchor = a as HTMLAnchorElement;
+    document.querySelectorAll('.linkedin-share').forEach((a) => {
+      const anchor = a;
       anchor.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
     });
 
     const copyBtn = document.getElementById('copy-link-btn');
     if (copyBtn) {
       // Re-attach listener cleanly
-      const newCopyBtn = copyBtn.cloneNode(true) as HTMLElement;
+      const newCopyBtn = copyBtn.cloneNode(true);
       copyBtn.parentNode?.replaceChild(newCopyBtn, copyBtn);
       
       newCopyBtn.addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText(cleanUrl);
-          const copyIcon = newCopyBtn.querySelector('.copy-icon') as HTMLElement;
-          const checkIcon = newCopyBtn.querySelector('.check-icon') as HTMLElement;
+          const copyIcon = newCopyBtn.querySelector('.copy-icon');
+          const checkIcon = newCopyBtn.querySelector('.check-icon');
           
           if (copyIcon && checkIcon) {
             copyIcon.style.display = 'none';

@@ -7,27 +7,29 @@
 </button>
 
 <script>
-  // Module-level scroll handler (runs once, never stacks)
-  function handleScrollToTopVisibility() {
-    const scrollBtn = document.getElementById('scroll-to-top');
-    if (!scrollBtn) return;
-    if (window.scrollY > 300) {
-      scrollBtn.classList.add('visible');
-    } else {
-      scrollBtn.classList.remove('visible');
-      // Ensure no stuck tap style when hidden
-      scrollBtn.classList.remove('tapped');
-    }
-  }
+  // Track listener to prevent leaks
+  let _scrollListener = null;
 
-  window.addEventListener('scroll', handleScrollToTopVisibility, { passive: true });
-
-  // Page-load handles click binding (fresh DOM element each navigation)
   document.addEventListener('astro:page-load', () => {
     const scrollBtn = document.getElementById('scroll-to-top');
     if (!scrollBtn) return;
 
-    handleScrollToTopVisibility();
+    if (_scrollListener) {
+      window.removeEventListener('scroll', _scrollListener);
+    }
+
+    _scrollListener = () => {
+      if (window.scrollY > 300) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+        scrollBtn.classList.remove('tapped');
+      }
+    };
+
+    window.addEventListener('scroll', _scrollListener, { passive: true });
+    
+    // Initial check
 
     scrollBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -36,6 +38,16 @@
       setTimeout(() => scrollBtn.classList.remove('tapped'), 200);
       scrollBtn.blur();
     });
+    
+    // Initial check (after click listener setup)
+    _scrollListener();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    if (_scrollListener) {
+      window.removeEventListener('scroll', _scrollListener);
+      _scrollListener = null;
+    }
   });
 </script>
 

@@ -81,7 +81,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 
 ## 4. Pages & Navigation
 
-**Navbar:** Home · About (pill-shaped segmented control, active page highlighted in lavender, frosted glass background, mobile hamburger menu). Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Dark/Light Theme toggle.
+**Navbar:** Home · About (pill-shaped segmented control, active page highlighted in lavender, frosted glass background, mobile hamburger menu). Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel (Font selection, Eye Comfort mode, Dark/Light Theme toggle).
 
 ### 4.1 Home / Blog List
 - Lists all non-draft posts newest-first as cards
