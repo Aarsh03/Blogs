@@ -9,6 +9,7 @@ import ViewCounter from '../components/ViewCounter.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import SeriesBox from '../components/SeriesBox.astro';
 import AuthorBio from '../components/AuthorBio.astro';
+import { formatDate } from '../utils/posts';
 import { SITE } from '../config';
 import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
@@ -27,7 +28,7 @@ interface Props {
 }
 
 const { title, date, tags, description, readingTime, slug, prevPost, nextPost, headings = [], series } = Astro.props;
-const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const formattedDate = formatDate(date);
 
 const schema = {
   "@context": "https://schema.org",

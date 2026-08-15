@@ -130,9 +130,10 @@ function isActive(linkHref: string) {
 </div>
 
 <script>
-  // Module-level scroll handler (runs once, never stacks)
-  // Track listener to prevent leaks
+  // Module-level handlers to track listeners and prevent leaks
   let _navScrollListener = null;
+  let _navSettingsClickListener = null;
+  let _navSettingsKeydownListener = null;
 
   // Page-load handles DOM-specific bindings (buttons, menus)
   document.addEventListener('astro:page-load', () => {
@@ -255,8 +256,17 @@ function isActive(linkHref: string) {
 
     settingsPanel?.addEventListener('click', (e) => e.stopPropagation());
 
-    document.addEventListener('click', () => closeSettings());
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
+    if (_navSettingsClickListener) {
+      document.removeEventListener('click', _navSettingsClickListener);
+    }
+    _navSettingsClickListener = () => closeSettings();
+    document.addEventListener('click', _navSettingsClickListener);
+
+    if (_navSettingsKeydownListener) {
+      document.removeEventListener('keydown', _navSettingsKeydownListener);
+    }
+    _navSettingsKeydownListener = (e) => { if (e.key === 'Escape') closeSettings(); };
+    document.addEventListener('keydown', _navSettingsKeydownListener);
 
     /* ── Font picker ── */
     function applyFont(font) {
@@ -314,8 +324,7 @@ function isActive(linkHref: string) {
       syncSettingsThemeToggle(html.getAttribute('data-theme') || 'light');
     });
 
-    // Reset scroll tracking on navigation
-    lastScroll = window.scrollY;
+    // lastScroll was duplicated, removing here.
   });
 
   document.addEventListener('astro:before-swap', () => {
@@ -323,7 +332,17 @@ function isActive(linkHref: string) {
       window.removeEventListener('scroll', _navScrollListener);
       _navScrollListener = null;
     }
+    if (_navSettingsClickListener) {
+      document.removeEventListener('click', _navSettingsClickListener);
+      _navSettingsClickListener = null;
+    }
+    if (_navSettingsKeydownListener) {
+      document.removeEventListener('keydown', _navSettingsKeydownListener);
+      _navSettingsKeydownListener = null;
+    }
   });
+
+
 </script>
 
 <style>

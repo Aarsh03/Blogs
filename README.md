@@ -8,10 +8,10 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 ## Features
 
-- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads.
+- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads. Features 120fps smooth scrolling with `requestAnimationFrame` debouncing and passive event listeners.
 - **Design:** Modern minimal design with pastel accent themes, frosted glass UI, multi-layered shadows, dynamic fonts, Eye Comfort mode, and a complete Dark/Light mode implementation (with dynamic Giscus comment themes).
-- **Navigation:** Auto-hiding navbar with sliding Settings panel, interactive tag filtering pills, infinite scrolling, table of contents, reading progress bar, scroll-to-top FAB, and a sleek `Ctrl+K` Quick Search Modal overlay via Pagefind.
-- **Content:** MDX support, algorithmic related posts, multi-part series navigation, Markdown callouts (`> [!NOTE]`), IDE-style language badges for code blocks, mobile-visible copy buttons, image zoom capabilities, and reading time estimation.
+- **Navigation:** Auto-hiding navbar with sliding Settings panel, interactive tag filtering pills, infinite scrolling, table of contents, reading progress bar, a multi-action Speed Dial FAB, and a sleek `Ctrl+K` Quick Search Modal overlay via Pagefind.
+- **Content:** MDX support, algorithmic related posts, multi-part series navigation, Markdown callouts (`> [!NOTE]`), IDE-style language badges for code blocks, mobile-visible copy buttons, heading anchor copy buttons, image zoom capabilities, Author Bio cards, and hover reading-time tooltips.
 - **Social & Engagement:** Like button & view counter (Cloudflare Workers + KV), GitHub Discussions comments via Giscus, social share buttons.
 - **SEO & Publishing:** Auto-generated RSS feed, JSON-LD schema, dynamic Open Graph images (`astro-og-canvas`), auto-generated sitemap, and automatic CI/CD deployment via GitHub Actions.
 
@@ -71,7 +71,7 @@ npm run dev        # → http://localhost:4321/Blogs/
 src/
   content/posts/    ← drop .md files here to publish
   pages/            ← routing (index, blog/[slug], about, open-graph, rss)
-  components/       ← Navbar, PostCard, Comments, SearchModal, RelatedPosts, SeriesBox, ScrollToTop, ViewCounter, etc.
+  components/       ← Navbar, PostCard, Comments, SearchModal, RelatedPosts, SeriesBox, ScrollToTop, ViewCounter, AuthorBio, etc.
   layouts/          ← BaseLayout, PostLayout
   styles/           ← global.css (design tokens, typography, utilities)
 public/

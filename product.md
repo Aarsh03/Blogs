@@ -38,6 +38,7 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
     Footer.astro
     PostCard.astro
     TagChip.astro
+    AuthorBio.astro
     LikeButton.astro
     ViewCounter.astro
     Comments.astro
@@ -89,6 +90,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - Search functionality via `Ctrl+K` Quick Search Modal overlay
 - Infinite scroll / pagination (`IntersectionObserver` loading 10 initial posts + 6 posts per scroll)
 - Each card: title, date, estimated reading time, description, tag chips
+- Hover reading-time tooltip on post cards with cubic-bezier float animation
 - Empty state message when no posts exist
 
 ### 4.2 Individual Post (`/blog/[slug]`)
@@ -99,7 +101,9 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - Reading Progress Bar: Fixed at the top, fills as you read
 - Series Navigation: `SeriesBox.astro` for multi-part posts
 - Code Blocks: IDE-style language badges and mobile-visible copy buttons
+- Headings: Deep link copy buttons on h2/h3 headings
 - Prev/Next Post navigation at the bottom
+- Author Bio card (`AuthorBio.astro`) with animated gradient avatar
 - Jump-to-comments button (`.comment-btn` navigating to `#comments`)
 - Related Posts: Algorithmic recommendations based on tags
 - Like button → Cloudflare Worker (`https://blog-likes.aarsh-blog-likes.workers.dev`)
@@ -119,8 +123,10 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
   - `--color-accent-3`: `#a7d5d2` (mint)
   - `--color-accent-4`: `#f2c4a0` (peach)
   - `--color-bg`: `#fdf6f9`
-- **Typography:** Self-hosted via `@fontsource` — DM Sans (UI), Playfair Display (headings), DM Serif Display (body), JetBrains Mono (code)
+- **Typography:** Self-hosted via `@fontsource` — DM Sans (UI), Playfair Display (headings), Lora and Source Serif 4 (selectable body fonts), JetBrains Mono (code)
 - **Dark mode:** Fully implemented. Users can toggle themes via the Navbar. Code blocks, Giscus comments, and Pagefind search adapt dynamically. Features specific dark mode tag colors, frosted glass UI, and subtle glow effects.
+- **Frosted Glass UI:** Applied via `backdrop-filter: blur(...)` across the Navbar, Settings Panel, Mobile Drawer, Table of Contents, and Search Modal.
+- **Performance (120fps):** Uses `requestAnimationFrame` debouncing and `{ passive: true }` listeners for scroll handlers. View Transitions manage memory with strict `astro:before-swap` cleanups.
 - **Responsive:** Fully responsive — mobile hamburger menu, fluid typography, responsive cards and footer
 
 ## 6. Infrastructure
@@ -178,7 +184,12 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Image zoom capabilities with `medium-zoom`
 - [x] Astro Image Optimization enabled
 - [x] Skip-to-Content button for accessibility
-- [x] Scroll-to-Top Floating Action Button (FAB)
+- [x] Scroll-to-Top Floating Action Menu (FAB with multi-action Speed Dial, Share Toast, and Comments Jump)
+- [x] Reading time hover tooltips on post cards
+- [x] Author Bio component on post pages
+- [x] Heading anchor link copy buttons
+- [x] 120fps performance optimizations (rAF throttled scroll, passive listeners)
+- [x] Frosted glass UI styling across navigation and modals
 - [x] Algorithmic "Related Posts" (via tag intersection)
 - [x] Multi-part "Series" Support (auto-linking parts)
 - [x] Infinite Scroll (Continuous Feed) on the homepage

@@ -21,6 +21,7 @@
 
 <script>
   let _scrollListener = null;
+  let _clickListener = null;
 
   document.addEventListener('astro:page-load', () => {
     const container = document.getElementById('fab-container');
@@ -86,12 +87,15 @@
       closeMenu();
     });
 
-    // Close on outside click
-    document.addEventListener('click', (e) => {
+    if (_clickListener) {
+      document.removeEventListener('click', _clickListener);
+    }
+    _clickListener = (e) => {
       if (container && !container.contains(e.target)) {
         closeMenu();
       }
-    });
+    };
+    document.addEventListener('click', _clickListener);
 
     // Show/hide based on scroll
     if (_scrollListener) {
@@ -123,10 +127,14 @@
       window.removeEventListener('scroll', _scrollListener);
       _scrollListener = null;
     }
+    if (_clickListener) {
+      document.removeEventListener('click', _clickListener);
+      _clickListener = null;
+    }
   });
 </script>
 
-<style is:global>
+<style>
   .fab-container {
     position: fixed;
     bottom: 2rem;

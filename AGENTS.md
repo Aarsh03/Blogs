@@ -20,3 +20,10 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Architecture & Lifecycle Rules
+
+- **Client Scripts & View Transitions:** Client-side scripts must attach to `astro:page-load` rather than `DOMContentLoaded` because the site uses Astro `ClientRouter`.
+- **Memory Leaks & Event Listeners:** Always clean up scroll listeners, observers (`IntersectionObserver`, `MutationObserver`), and global `window`/`document` listeners on `astro:before-swap` to prevent memory leaks during client-side navigation.
+- **Performance:** Use `requestAnimationFrame` debouncing and `{ passive: true }` on window scroll listeners to maintain 120fps smooth scrolling.
+- **Search Index:** Pagefind search index generation is required during builds (`astro build && pagefind --site dist`).

@@ -24,14 +24,16 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   </div>
 
   <section class="posts-grid">
-    {allPosts.map((post, index) => {
+    {allPosts.map((post) => {
+      const { title, date, description, tags = [] } = post.data;
       const readTime = getReadingTime(post.body);
+      const slug = post.slug;
       return (
         <PostCard
-          title={post.data.title}
-          date={post.data.date}
-          description={post.data.description}
-          tags={post.data.tags}
+          title={title}
+          date={date}
+          description={description}
+          tags={tags}
           readingTime={readTime}
           slug={post.id}
         />
@@ -44,7 +46,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 
   <div id="empty-filter-state" class="empty-state" style="display: none;">
     <p>No posts found for this tag.</p>
-    <button class="tag-filter-btn active" style="margin-top: 1rem;" onclick="document.querySelector('.tag-filter-btn[data-tag=\'all\']').click()">Show all posts</button>
+    <button id="reset-filter-btn" class="tag-filter-btn active" style="margin-top: 1rem;">Show all posts</button>
   </div>
 
   {allPosts.length === 0 && (
@@ -56,6 +58,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   <script>
     // Track observer at module level to prevent stacking
     let _scrollObserver: IntersectionObserver | null = null;
+    let _popstateListener: ((e: PopStateEvent) => void) | null = null;
 
     document.addEventListener('astro:page-load', () => {
       // Disconnect previous observer if it exists
@@ -143,7 +146,27 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
         });
       });
 
+      const resetBtn = document.getElementById('reset-filter-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          document.querySelector<HTMLElement>('.tag-filter-btn[data-tag="all"]')?.click();
+        });
+      }
+
+      if (_popstateListener) {
+        window.removeEventListener('popstate', _popstateListener);
+      }
+      _popstateListener = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tag = urlParams.get('tag') || 'all';
+        filterPosts(tag);
+      };
+      window.addEventListener('popstate', _popstateListener);
+
       // Infinite Scroll Logic
+      if (_scrollObserver) {
+        _scrollObserver.disconnect();
+      }
       _scrollObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           currentLimit += 6; // Load 6 more (two rows) on scroll
@@ -154,6 +177,17 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
       const trigger = document.getElementById('infinite-scroll-trigger');
       if (trigger) _scrollObserver.observe(trigger);
 
+    });
+
+    document.addEventListener('astro:before-swap', () => {
+      if (_scrollObserver) {
+        _scrollObserver.disconnect();
+        _scrollObserver = null;
+      }
+      if (_popstateListener) {
+        window.removeEventListener('popstate', _popstateListener);
+        _popstateListener = null;
+      }
     });
   </script>
 </BaseLayout>

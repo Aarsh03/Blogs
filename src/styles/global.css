@@ -11,6 +11,8 @@
   /* Pastel accents */
   --color-accent-1: #e8b4cb;  /* soft pink */
   --color-accent-2: #b8a9d4;  /* lavender */
+  --color-accent-3: #a7d5d2;  /* mint */
+  --color-accent-4: #f2c4a0;  /* peach */
 
   /* Text */
   --color-text: #2a2a2a;
@@ -56,6 +58,8 @@
   /* Slightly more saturated pastels for dark bg */
   --color-accent-1: #e8a0bf;
   --color-accent-2: #c4b5e8;
+  --color-accent-3: #95ded9;
+  --color-accent-4: #fcbd8b;
 
   --color-text: #f0eaf4;
   --color-text-muted: #a89db8;
@@ -616,4 +620,9 @@ h4 { font-size: 1.125rem; }
 }
 ::view-transition-new(root) {
   animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+@keyframes flowGradient {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }

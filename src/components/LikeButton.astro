@@ -83,7 +83,8 @@ const base = import.meta.env.BASE_URL;
           return;
         }
 
-        const current = parseInt(countSpan.textContent || '0', 10);
+        const parsed = parseInt(countSpan.textContent || '0', 10);
+        const current = Number.isNaN(parsed) ? 0 : parsed;
         countSpan.textContent = (current + 1).toString();
         btn.classList.add('like-btn--liked');
         localStorage.setItem(`liked-${slug}`, 'true');

@@ -8,6 +8,7 @@ const baseUrl = import.meta.env.BASE_URL;
   <script>
     // Track observers at module level to clean up on re-navigation
     let _giscusThemeObserver = null;
+    let _giscusIntersectObserver = null;
 
     document.addEventListener('astro:page-load', () => {
       const container = document.querySelector('.giscus-container');
@@ -16,6 +17,8 @@ const baseUrl = import.meta.env.BASE_URL;
       // Disconnect previous observer if it exists
       _giscusThemeObserver?.disconnect();
       _giscusThemeObserver = null;
+      _giscusIntersectObserver?.disconnect();
+      _giscusIntersectObserver = null;
 
       // Prevent duplicate loading if already loaded
       if (container.hasChildNodes()) return;
@@ -28,7 +31,7 @@ const baseUrl = import.meta.env.BASE_URL;
         return isDark ? `${themeBase}giscus-dark.css` : `${themeBase}giscus-theme.css`;
       }
 
-      const observer = new IntersectionObserver((entries) => {
+      _giscusIntersectObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const script = document.createElement('script');
@@ -48,12 +51,12 @@ const baseUrl = import.meta.env.BASE_URL;
             script.async = true;
             container.appendChild(script);
             
-            observer.disconnect();
+            _giscusIntersectObserver.disconnect();
           }
         });
       }, { rootMargin: '200px' });
       
-      observer.observe(container);
+      _giscusIntersectObserver.observe(container);
 
       // Listen for theme changes to update iframe dynamically
       _giscusThemeObserver = new MutationObserver((mutations) => {
@@ -70,6 +73,17 @@ const baseUrl = import.meta.env.BASE_URL;
         });
       });
       _giscusThemeObserver.observe(document.documentElement, { attributes: true });
+    });
+
+    document.addEventListener('astro:before-swap', () => {
+      if (_giscusThemeObserver) {
+        _giscusThemeObserver.disconnect();
+        _giscusThemeObserver = null;
+      }
+      if (_giscusIntersectObserver) {
+        _giscusIntersectObserver.disconnect();
+        _giscusIntersectObserver = null;
+      }
     });
   </script>
 </section>

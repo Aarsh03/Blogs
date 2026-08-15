@@ -36,7 +36,8 @@ const { slug } = Astro.props;
         
         if (res && res.ok) {
           const data = await res.json();
-          countSpan.textContent = (data.count || 0) + ' views';
+          const c = data.count || 0;
+          countSpan.textContent = c + (c === 1 ? ' view' : ' views');
         } else {
           countSpan.textContent = '0 views';
         }
