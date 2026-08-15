@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 
 import sitemap from '@astrojs/sitemap';
 
@@ -21,7 +22,9 @@ export default defineConfig({
       wrap: true,
       defaultColor: false,
     },
-    remarkPlugins: [remarkAlert],
+    processor: unified({
+      remarkPlugins: [remarkAlert],
+    }),
   },
 
   integrations: [sitemap(), mdx()],
