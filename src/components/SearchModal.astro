@@ -5,31 +5,22 @@ const base = import.meta.env.BASE_URL;
 <div id="search-modal" class="search-modal" aria-hidden="true">
   <div class="search-modal__backdrop" id="search-modal-backdrop"></div>
   <div class="search-modal__content">
-    <!-- Inner wrapper handles overflow clipping so backdrop-filter on parent works correctly -->
-    <div class="search-modal__body">
-      <div class="search-modal__header">
-        <span class="search-modal__title">Search Posts</span>
-        <button class="search-modal__close" id="search-modal-close" aria-label="Close search">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      
-      <div id="search" class="search-container" data-base={base}></div>
-      
-      <div class="search-modal__footer">
-        <div class="search-modal__keyhint">
-          <kbd>Esc</kbd> to close
-        </div>
-        <div class="search-modal__keyhint">
-          <kbd>↑</kbd> <kbd>↓</kbd> to navigate
-        </div>
-        <div class="search-modal__keyhint">
-          <kbd>Enter</kbd> to select
-        </div>
-      </div>
+    <div class="search-modal__header">
+      <span class="search-modal__title">Search Posts</span>
+      <button class="search-modal__close" id="search-modal-close" aria-label="Close search">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div id="search" class="search-container" data-base={base}></div>
+    
+    <div class="search-modal__footer">
+      <div class="search-modal__keyhint"><kbd>Esc</kbd> to close</div>
+      <div class="search-modal__keyhint"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</div>
+      <div class="search-modal__keyhint"><kbd>Enter</kbd> to select</div>
     </div>
   </div>
 </div>
@@ -150,6 +141,7 @@ const base = import.meta.env.BASE_URL;
 </script>
 
 <style is:global>
+  /* ── Modal overlay ── */
   .search-modal {
     position: fixed;
     inset: 0;
@@ -168,87 +160,80 @@ const base = import.meta.env.BASE_URL;
     visibility: visible;
   }
 
-  /* Backdrop: tint only — NO blur here so the panel blurs the real page */
+  /* ── Backdrop: full-screen blur of the actual page ── */
   .search-modal__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.25);
+    /* Blur the real page content, not a grey overlay */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(253, 246, 249, 0.25);
     transition: background 0.35s ease;
   }
 
   [data-theme="dark"] .search-modal__backdrop {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(15, 10, 22, 0.45);
   }
 
-  /* Glass panel — must NOT have overflow:hidden for backdrop-filter to work */
+  /* ── Glass panel: transparent card on top of blurred backdrop ──
+     overflow:hidden is safe here because backdrop-filter is on the backdrop,
+     not on this element — no browser conflict. ── */
   .search-modal__content {
     position: relative;
     width: 90%;
     max-width: 650px;
-    /* Glass tint — lower opacity so page shows through */
-    background: rgba(253, 246, 249, 0.55);
-    backdrop-filter: blur(24px) saturate(160%);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-    border-radius: 16px;
-    /* Glass highlight border: lighter on top/left, subtler on sides */
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    border-bottom-color: rgba(255, 255, 255, 0.15);
-    border-right-color: rgba(255, 255, 255, 0.15);
+    /* Light glass: warm white tint, clearly readable */
+    background: rgba(255, 252, 254, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom-color: rgba(200, 190, 210, 0.3);
+    border-right-color: rgba(200, 190, 210, 0.3);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.6),
-      0 20px 60px rgba(0, 0, 0, 0.12);
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 24px 64px rgba(0, 0, 0, 0.14);
+    border-radius: 16px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     max-height: 80vh;
     transform: translateY(-24px) scale(0.96);
     transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* overflow must be visible for backdrop-filter */
-    overflow: visible;
   }
 
   [data-theme="dark"] .search-modal__content {
-    background: rgba(26, 21, 32, 0.52);
+    /* Dark glass: deep purple tint, legible on dark backgrounds */
+    background: rgba(30, 23, 42, 0.82);
     border-color: rgba(255, 255, 255, 0.1);
     border-bottom-color: rgba(255, 255, 255, 0.04);
     border-right-color: rgba(255, 255, 255, 0.04);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 20px 60px rgba(0, 0, 0, 0.45);
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 24px 64px rgba(0, 0, 0, 0.55);
   }
 
   .search-modal[aria-hidden="false"] .search-modal__content {
     transform: translateY(0) scale(1);
   }
 
-  /* Inner body: handles overflow clipping + rounded corners */
-  .search-modal__body {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-radius: 16px;
-    max-height: 80vh;
-    flex: 1;
-  }
-
+  /* ── Header ── */
   .search-modal__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(184, 169, 212, 0.2);
+    border-bottom: 1px solid rgba(184, 169, 212, 0.25);
     flex-shrink: 0;
   }
 
   [data-theme="dark"] .search-modal__header {
-    border-bottom-color: rgba(255, 255, 255, 0.07);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
   }
 
   .search-modal__title {
     font-family: var(--font-heading);
     font-weight: 600;
-    color: var(--color-text);
     font-size: 1rem;
     letter-spacing: 0.01em;
+    color: var(--color-text);
   }
 
   .search-modal__close {
@@ -271,6 +256,7 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
+  /* ── Search container ── */
   .search-container {
     width: 100%;
     padding: 1rem 1.5rem;
@@ -279,19 +265,20 @@ const base = import.meta.env.BASE_URL;
     min-height: 0;
   }
 
+  /* ── Footer ── */
   .search-modal__footer {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 0.65rem 1.5rem;
-    border-top: 1px solid rgba(184, 169, 212, 0.2);
+    border-top: 1px solid rgba(184, 169, 212, 0.25);
     background: transparent;
     flex-wrap: wrap;
     flex-shrink: 0;
   }
 
   [data-theme="dark"] .search-modal__footer {
-    border-top-color: rgba(255, 255, 255, 0.07);
+    border-top-color: rgba(255, 255, 255, 0.08);
   }
 
   .search-modal__keyhint {
@@ -319,25 +306,14 @@ const base = import.meta.env.BASE_URL;
     border-color: rgba(255, 255, 255, 0.12);
   }
 
+  /* ── Responsive ── */
   @media (max-width: 600px) {
-    .search-modal {
-      padding-top: 5vh;
-      align-items: flex-start;
-    }
-    .search-modal__footer {
-      padding: 0.65rem 1rem;
-      gap: 0.4rem;
-      justify-content: center;
-    }
-    .search-modal__content {
-      width: 95%;
-    }
-    .search-modal__body {
-      max-height: 90vh;
-    }
+    .search-modal { padding-top: 5vh; }
+    .search-modal__content { width: 95%; max-height: 90vh; }
+    .search-modal__footer { padding: 0.65rem 1rem; gap: 0.4rem; justify-content: center; }
   }
 
-  /* Core UI Overrides for Pagefind */
+  /* ── Pagefind UI overrides ── */
   :root {
     --pagefind-ui-scale: 0.9;
     --pagefind-ui-primary: var(--color-accent-2);
@@ -348,31 +324,31 @@ const base = import.meta.env.BASE_URL;
     --pagefind-ui-background: transparent;
   }
 
-  /* Glass-friendly search input — visible on both light and dark glass */
+  /* Search input — clearly visible on the glass panel */
   .pagefind-ui__search-input {
-    background: rgba(255, 255, 255, 0.55) !important;
-    border: 1.5px solid rgba(184, 169, 212, 0.4) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    border: 1.5px solid rgba(184, 169, 212, 0.45) !important;
     border-radius: 999px !important;
-    color: var(--color-text) !important;
+    color: #1a1520 !important;
     font-weight: 500 !important;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
   }
 
   [data-theme="dark"] .pagefind-ui__search-input {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
-    color: var(--color-text) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(196, 181, 232, 0.3) !important;
+    color: #f0eaf4 !important;
   }
-  
+
   .pagefind-ui__search-input:focus {
     border-color: var(--color-accent-2) !important;
-    background: rgba(255, 255, 255, 0.85) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
     box-shadow: 0 0 0 4px rgba(184, 169, 212, 0.25) !important;
     outline: none !important;
   }
 
   [data-theme="dark"] .pagefind-ui__search-input:focus {
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
     box-shadow: 0 0 0 4px rgba(196, 181, 232, 0.2) !important;
   }
 
@@ -382,32 +358,46 @@ const base = import.meta.env.BASE_URL;
     border-radius: 999px !important;
     padding: 0 1rem !important;
   }
-  
-  .pagefind-ui__search-clear:focus {
-    outline: none !important;
-  }
+
+  .pagefind-ui__search-clear:focus { outline: none !important; }
 
   @media (hover: hover) {
-    .pagefind-ui__search-clear:hover {
-      color: var(--color-accent-2) !important;
-    }
-
-    .pagefind-ui__result-link:hover {
-      color: var(--color-accent-2) !important;
-    }
+    .pagefind-ui__search-clear:hover { color: var(--color-accent-2) !important; }
+    .pagefind-ui__result-link:hover  { color: var(--color-accent-2) !important; }
   }
 
+  /* Result text — force all Pagefind text to respect theme in dark mode */
   .pagefind-ui__result-link {
     color: var(--color-text) !important;
     text-decoration: none !important;
     font-weight: 600 !important;
   }
-  
+
+  .pagefind-ui__result-excerpt {
+    color: var(--color-text-muted) !important;
+  }
+
+  [data-theme="dark"] .pagefind-ui__result-excerpt {
+    color: #a89db8 !important;
+  }
+
+  /* Force ALL text nodes inside pagefind results to respect dark theme */
+  [data-theme="dark"] .pagefind-ui__result-link,
+  [data-theme="dark"] .pagefind-ui__result-title,
+  [data-theme="dark"] .pagefind-ui__message {
+    color: #f0eaf4 !important;
+  }
+
   .pagefind-ui__result-excerpt mark {
     background-color: rgba(232, 180, 203, 0.3) !important;
     color: var(--color-text) !important;
     padding: 0.1em 0.3em !important;
     border-radius: 4px !important;
+  }
+
+  [data-theme="dark"] .pagefind-ui__result-excerpt mark {
+    background-color: rgba(232, 160, 191, 0.25) !important;
+    color: #f0eaf4 !important;
   }
 
   .pagefind-ui__result {
@@ -419,7 +409,10 @@ const base = import.meta.env.BASE_URL;
     border-bottom-color: rgba(255, 255, 255, 0.07) !important;
   }
 
-  .pagefind-ui__result:last-child {
-    border-bottom: none !important;
+  .pagefind-ui__result:last-child { border-bottom: none !important; }
+
+  /* Message text (e.g. "X results for...") */
+  .pagefind-ui__message {
+    color: var(--color-text-muted) !important;
   }
 </style>
