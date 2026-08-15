@@ -76,6 +76,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 84px; /* Account for sticky navbar height + padding */
 }
 
 body {
