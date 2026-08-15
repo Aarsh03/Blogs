@@ -18,7 +18,7 @@ export default {
     const path = url.pathname;
     
     // Match /likes/:slug
-    const likesMatch = path.match(/^\/likes\/([a-z0-9-]+)$/);
+    const likesMatch = path.match(/^\/likes\/([a-zA-Z0-9_-]+)$/);
     if (likesMatch) {
       const slug = likesMatch[1];
       
@@ -57,7 +57,7 @@ export default {
     }
     
     // Match /views/:slug
-    const viewMatch = path.match(/^\/views\/([a-z0-9-]+)$/);
+    const viewMatch = path.match(/^\/views\/([a-zA-Z0-9_-]+)$/);
     if (viewMatch) {
       const viewSlug = viewMatch[1];
       

@@ -7,34 +7,38 @@
 </button>
 
 <script>
+  // Module-level scroll handler (runs once, never stacks)
+  function handleScrollToTopVisibility() {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+    if (window.scrollY > 300) {
+      scrollBtn.classList.add('visible');
+    } else {
+      scrollBtn.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', handleScrollToTopVisibility, { passive: true });
+
+  // Page-load handles click binding (fresh DOM element each navigation)
   document.addEventListener('astro:page-load', () => {
     const scrollBtn = document.getElementById('scroll-to-top');
     if (!scrollBtn) return;
 
-    const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        scrollBtn.classList.add('visible');
-      } else {
-        scrollBtn.classList.remove('visible');
-      }
-    };
-
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    
     // Initial check
-    toggleVisibility();
+    handleScrollToTopVisibility();
 
     scrollBtn.addEventListener('click', () => {
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
-      scrollBtn.blur(); // Remove focus so hover state doesn't stick
+      scrollBtn.blur();
     });
   });
 </script>
 
-<style>
+<style is:global>
   .scroll-to-top {
     position: fixed;
     bottom: 2rem;
@@ -52,9 +56,10 @@
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     z-index: 99;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    outline: none;
   }
 
   /* Frosted glass effect for light mode */
@@ -63,30 +68,6 @@
       background: rgba(253, 246, 249, 0.7);
       backdrop-filter: blur(8px);
     }
-  }
-
-  /* Dark mode normal state */
-  :global([data-theme="dark"]) .scroll-to-top {
-    background: var(--color-accent-2);
-    color: var(--color-bg);
-    border-color: var(--color-accent-2);
-    backdrop-filter: none; /* Solid color */
-  }
-
-  /* Active state for tap feedback (applies instantly when touched) */
-  .scroll-to-top:active {
-    background: var(--color-accent-2);
-    color: var(--color-bg);
-    transform: translateY(0) scale(0.95); /* Shrinks slightly when pressed */
-    transition: none; /* Instant feedback */
-  }
-
-  :global([data-theme="dark"]) .scroll-to-top:active {
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
-    color: var(--color-bg);
-    transform: translateY(0) scale(0.95);
-    transition: none;
   }
 
   /* Visible state */
@@ -98,19 +79,44 @@
 
   /* Light mode hover */
   .scroll-to-top:hover {
-    background: var(--color-accent-2) !important;
-    color: var(--color-bg) !important;
-    transform: translateY(0) scale(1.08) !important; /* Force tactile pop */
-    box-shadow: 0 4px 16px rgba(184, 169, 212, 0.6) !important; /* Lavender glow */
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    transform: translateY(0) scale(1.08);
+    box-shadow: 0 4px 16px rgba(184, 169, 212, 0.6);
+  }
+
+  /* Active state for tap feedback */
+  .scroll-to-top:active {
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    transform: translateY(0) scale(0.95);
+    transition: none;
+  }
+
+  /* Dark mode normal state */
+  [data-theme="dark"] .scroll-to-top {
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    border-color: var(--color-accent-2);
+    backdrop-filter: none;
   }
 
   /* Dark mode hover */
-  :global([data-theme="dark"]) .scroll-to-top:hover {
-    background: var(--color-accent-1) !important; /* Swap to pink for a beautiful pop */
-    border-color: var(--color-accent-1) !important;
-    color: var(--color-bg) !important;
-    transform: translateY(0) scale(1.08) !important;
-    box-shadow: 0 4px 16px rgba(232, 180, 203, 0.6) !important; /* Pink glow */
+  [data-theme="dark"] .scroll-to-top:hover {
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
+    color: var(--color-bg);
+    transform: translateY(0) scale(1.08);
+    box-shadow: 0 4px 16px rgba(232, 180, 203, 0.6);
+  }
+
+  /* Dark mode active */
+  [data-theme="dark"] .scroll-to-top:active {
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
+    color: var(--color-bg);
+    transform: translateY(0) scale(0.95);
+    transition: none;
   }
 
   @media (max-width: 768px) {

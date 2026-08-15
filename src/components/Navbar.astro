@@ -74,6 +74,27 @@ function isActive(linkHref: string) {
 </div>
 
 <script>
+  // Module-level scroll handler (runs once, never stacks)
+  let lastScroll = 0;
+
+  function handleNavbarScroll() {
+    const navbar = document.querySelector('.navbar');
+    const currentScroll = window.scrollY;
+
+    if (currentScroll <= 0) {
+      navbar?.classList.remove('navbar--hidden');
+    } else if (currentScroll > lastScroll) {
+      navbar?.classList.add('navbar--hidden');
+    } else if (currentScroll < lastScroll) {
+      navbar?.classList.remove('navbar--hidden');
+    }
+    lastScroll = currentScroll;
+  }
+
+  // Attach once at module level — never duplicated
+  window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+
+  // Page-load handles DOM-specific bindings (buttons, menus)
   document.addEventListener('astro:page-load', () => {
     /* ── Mobile menu ── */
     const btn = document.getElementById('mobile-menu-btn');
@@ -95,10 +116,9 @@ function isActive(linkHref: string) {
     const toggleBtn = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
-    function applyTheme(theme) {
+    function applyTheme(theme: string) {
       html.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
-      // Update icon: show sun when dark (to switch to light), moon when light (to switch to dark)
       const sunIcon = toggleBtn?.querySelector('.icon-sun');
       const moonIcon = toggleBtn?.querySelector('.icon-moon');
       if (theme === 'dark') {
@@ -119,28 +139,8 @@ function isActive(linkHref: string) {
       applyTheme(isDark ? 'light' : 'dark');
     });
 
-    // Auto-hide Navbar on scroll down, show on scroll up
-    let lastScroll = window.scrollY;
-    const navbar = document.querySelector('.navbar');
-    
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.scrollY;
-      
-      // If we are at the very top, make sure it's visible
-      if (currentScroll <= 0) {
-        navbar?.classList.remove('navbar--hidden');
-        return;
-      }
-      
-      if (currentScroll > lastScroll && !navbar?.classList.contains('navbar--hidden')) {
-        // Scrolling down
-        navbar?.classList.add('navbar--hidden');
-      } else if (currentScroll < lastScroll && navbar?.classList.contains('navbar--hidden')) {
-        // Scrolling up
-        navbar?.classList.remove('navbar--hidden');
-      }
-      lastScroll = currentScroll;
-    }, { passive: true });
+    // Reset scroll tracking on navigation
+    lastScroll = window.scrollY;
   });
 </script>
 

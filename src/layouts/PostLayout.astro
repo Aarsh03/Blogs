@@ -101,8 +101,14 @@ const schema = {
   <script>
     import mediumZoom from 'medium-zoom';
     
+    // Track zoom instance at module level for cleanup
+    let _zoomInstance: ReturnType<typeof mediumZoom> | null = null;
+
     document.addEventListener('astro:page-load', () => {
-      mediumZoom('.prose img', {
+      // Detach previous zoom instance
+      _zoomInstance?.detach();
+      
+      _zoomInstance = mediumZoom('.prose img', {
         margin: 24,
         background: 'var(--color-bg)',
       });

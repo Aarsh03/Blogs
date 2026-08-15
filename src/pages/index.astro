@@ -59,7 +59,14 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   )}
 
   <script>
+    // Track observer at module level to prevent stacking
+    let _scrollObserver: IntersectionObserver | null = null;
+
     document.addEventListener('astro:page-load', () => {
+      // Disconnect previous observer if it exists
+      _scrollObserver?.disconnect();
+      _scrollObserver = null;
+
       const filterBtns = document.querySelectorAll('.tag-filter-btn');
       const posts = document.querySelectorAll('.post-card');
       
@@ -141,7 +148,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
       });
 
       // Infinite Scroll Logic
-      const observer = new IntersectionObserver((entries) => {
+      _scrollObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           currentLimit += 6; // Load 6 more (two rows) on scroll
           applyFiltersAndPagination();
@@ -149,7 +156,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
       }, { rootMargin: '400px' }); // Trigger 400px before reaching the bottom
 
       const trigger = document.getElementById('infinite-scroll-trigger');
-      if (trigger) observer.observe(trigger);
+      if (trigger) _scrollObserver.observe(trigger);
 
     });
   </script>
