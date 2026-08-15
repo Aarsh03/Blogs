@@ -18,12 +18,20 @@
       window.removeEventListener('scroll', _scrollListener);
     }
 
+    let ticking = false;
+
     _scrollListener = () => {
-      if (window.scrollY > 300) {
-        scrollBtn.classList.add('visible');
-      } else {
-        scrollBtn.classList.remove('visible');
-        scrollBtn.classList.remove('tapped');
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 300) {
+            scrollBtn.classList.add('visible');
+          } else {
+            scrollBtn.classList.remove('visible');
+            scrollBtn.classList.remove('tapped');
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

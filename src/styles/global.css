@@ -126,7 +126,7 @@ img {
 a {
   color: var(--color-link);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 a:hover {
@@ -394,7 +394,7 @@ h4 { font-size: 1.125rem; }
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .prose pre:hover .copy-code-btn, .copy-code-btn:focus-visible {
@@ -528,7 +528,7 @@ h4 { font-size: 1.125rem; }
   font-family: var(--font-ui);
   letter-spacing: 0.01em;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   /* Default fallback color */
   background-color: rgba(184, 169, 212, 0.2);
   color: #7a5fa8;

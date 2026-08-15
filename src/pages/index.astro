@@ -182,7 +182,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   /* Tag Filter UI */
@@ -235,7 +235,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     border-radius: 999px;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
   .tag-filter-btn:hover {
