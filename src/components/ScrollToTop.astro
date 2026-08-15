@@ -92,12 +92,19 @@
     transform: translateY(0);
   }
 
-  /* Light mode hover: pink */
+  /* Light mode hover: flowing gradient */
   .scroll-to-top.visible:hover {
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
+    background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-2), var(--color-accent-1));
+    background-size: 200% 100%;
+    animation: flowGradient 3s linear infinite;
+    border-color: transparent;
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
+  }
+
+  @keyframes flowGradient {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
   }
 
   /* JS-controlled tap flash (replaces :active so it always resets) */
@@ -114,10 +121,12 @@
     border-color: var(--color-accent-2);
   }
 
-  /* Dark mode hover: pink */
+  /* Dark mode hover: flowing gradient */
   [data-theme="dark"] .scroll-to-top:hover {
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
+    background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-2), var(--color-accent-1));
+    background-size: 200% 100%;
+    animation: flowGradient 3s linear infinite;
+    border-color: transparent;
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
   }
