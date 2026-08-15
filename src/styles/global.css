@@ -19,8 +19,12 @@
 
   /* Borders & shadows */
   --color-border: #ede4e8;
-  --shadow-card: 0 2px 16px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.08);
+
+  /* WCAG Contrast */
+  --color-link: #8d75b3; /* Darker lavender for contrast */
+  --color-code-text: #bd5982; /* Darker pink for code */
 
   /* Typography */
   --font-ui: 'DM Sans', system-ui, -apple-system, sans-serif;
@@ -54,11 +58,14 @@
 
   --color-text: #f0eaf4;
   --color-text-muted: #a89db8;
-  --color-text-light: #6e637e;
+  --color-text-light: #9589a8; /* Bumped for contrast */
 
   --color-border: #352d45;
-  --shadow-card: 0 2px 16px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
 }
 
 /* ═══════════════════════════════════════
@@ -84,6 +91,26 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: var(--transition-theme);
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 50%, rgba(232, 180, 203, 0.08), transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(184, 169, 212, 0.08), transparent 50%);
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+[data-theme="dark"] body::before {
+  background: radial-gradient(circle at 50% 50%, rgba(232, 160, 191, 0.03), transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(196, 181, 232, 0.03), transparent 50%);
 }
 
 h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd {
@@ -96,7 +123,7 @@ img {
 }
 
 a {
-  color: var(--color-accent-2);
+  color: var(--color-link);
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -173,7 +200,7 @@ h4 { font-size: 1.125rem; }
 
 .prose code {
   background-color: var(--color-bg-code);
-  color: var(--color-accent-2);
+  color: var(--color-code-text);
   padding: 0.15em 0.45em;
   border-radius: 5px;
   font-family: var(--font-mono);
@@ -357,6 +384,9 @@ h4 { font-size: 1.125rem; }
   filter: brightness(0.9);
 }
 
+[data-theme="dark"] .tag:hover {
+  filter: brightness(1.15);
+}
 
 
 

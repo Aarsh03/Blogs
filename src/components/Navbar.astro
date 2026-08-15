@@ -88,6 +88,13 @@ function isActive(linkHref: string) {
     } else if (currentScroll < lastScroll) {
       navbar?.classList.remove('navbar--hidden');
     }
+
+    if (currentScroll > 20) {
+      navbar?.classList.add('navbar--scrolled');
+    } else {
+      navbar?.classList.remove('navbar--scrolled');
+    }
+
     lastScroll = currentScroll;
   }
 
@@ -96,6 +103,9 @@ function isActive(linkHref: string) {
 
   // Page-load handles DOM-specific bindings (buttons, menus)
   document.addEventListener('astro:page-load', () => {
+    // Initial check for shadow
+    handleNavbarScroll();
+
     /* ── Mobile menu ── */
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
@@ -157,7 +167,15 @@ function isActive(linkHref: string) {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid var(--color-border);
-    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  }
+
+  .navbar--scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme="dark"] .navbar--scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
   .navbar--hidden {
