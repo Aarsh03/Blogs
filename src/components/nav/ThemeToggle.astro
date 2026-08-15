@@ -22,15 +22,6 @@
     function applyTheme(theme: string) {
       html.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
-      const sunIcon = toggleBtn?.querySelector('.icon-sun');
-      const moonIcon = toggleBtn?.querySelector('.icon-moon');
-      if (theme === 'dark') {
-        sunIcon?.removeAttribute('hidden');
-        moonIcon?.setAttribute('hidden', '');
-      } else {
-        sunIcon?.setAttribute('hidden', '');
-        moonIcon?.removeAttribute('hidden');
-      }
     }
 
     const initialTheme = html.getAttribute('data-theme') || 'light';
@@ -55,3 +46,18 @@
     });
   });
 </script>
+
+<style>
+  .icon-sun {
+    display: none;
+  }
+  .icon-moon {
+    display: block;
+  }
+  :global([data-theme="dark"]) .icon-sun {
+    display: block;
+  }
+  :global([data-theme="dark"]) .icon-moon {
+    display: none;
+  }
+</style>
