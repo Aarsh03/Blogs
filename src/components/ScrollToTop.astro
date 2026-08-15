@@ -15,6 +15,8 @@
       scrollBtn.classList.add('visible');
     } else {
       scrollBtn.classList.remove('visible');
+      // Ensure no stuck tap style when hidden
+      scrollBtn.classList.remove('tapped');
     }
   }
 
@@ -25,25 +27,15 @@
     const scrollBtn = document.getElementById('scroll-to-top');
     if (!scrollBtn) return;
 
-    // Initial check
     handleScrollToTopVisibility();
 
     scrollBtn.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-      // Blur immediately so active/focus state doesn't persist
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Flash a "tapped" class for tactile feedback, then remove it
+      scrollBtn.classList.add('tapped');
+      setTimeout(() => scrollBtn.classList.remove('tapped'), 200);
       scrollBtn.blur();
     });
-
-    // Reset any lingering active styles when button becomes hidden again
-    const observer = new MutationObserver(() => {
-      if (!scrollBtn.classList.contains('visible')) {
-        scrollBtn.blur();
-      }
-    });
-    observer.observe(scrollBtn, { attributes: true, attributeFilter: ['class'] });
   });
 </script>
 
@@ -55,8 +47,9 @@
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-    background: var(--color-bg);
-    color: var(--color-text);
+    /* Light mode normal: lavender filled */
+    background: var(--color-accent-2);
+    color: var(--color-bg);
     border: 1px solid var(--color-accent-2);
     display: flex;
     align-items: center;
@@ -65,18 +58,11 @@
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease,
+                background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     z-index: 99;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     outline: none;
-  }
-
-  /* Frosted glass effect for light mode */
-  @supports (backdrop-filter: blur(8px)) {
-    .scroll-to-top {
-      background: rgba(253, 246, 249, 0.7);
-      backdrop-filter: blur(8px);
-    }
   }
 
   /* Visible state */
@@ -86,44 +72,34 @@
     transform: translateY(0);
   }
 
-  /* Light mode hover */
+  /* Light mode hover: pink */
   .scroll-to-top.visible:hover {
-    background: var(--color-accent-2);
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
   }
 
-  /* Active state for tap feedback */
-  .scroll-to-top.visible:active {
-    background: var(--color-accent-2);
-    color: var(--color-bg);
-    transform: translateY(0) scale(0.95);
-    transition: none;
+  /* JS-controlled tap flash (replaces :active so it always resets) */
+  .scroll-to-top.tapped {
+    transform: translateY(0) scale(0.93);
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
   }
 
-  /* Dark mode normal state — filled with lavender */
+  /* Dark mode normal: lavender filled */
   [data-theme="dark"] .scroll-to-top {
     background: var(--color-accent-2);
     color: var(--color-bg);
     border-color: var(--color-accent-2);
-    backdrop-filter: none;
   }
 
-  /* Dark mode hover — switches to pink */
+  /* Dark mode hover: pink */
   [data-theme="dark"] .scroll-to-top:hover {
     background: var(--color-accent-1);
     border-color: var(--color-accent-1);
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
-  }
-
-  /* Dark mode active */
-  [data-theme="dark"] .scroll-to-top:active {
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
-    color: var(--color-bg);
-    transform: translateY(0) scale(0.95);
-    transition: none;
   }
 
   @media (max-width: 768px) {
