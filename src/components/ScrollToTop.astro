@@ -73,13 +73,30 @@
     backdrop-filter: none; /* Solid color */
   }
 
-  /* Hover styles only for devices that support hover (fixes mobile sticky hover bug) */
-  @media (hover: hover) {
+  /* Active state for tap feedback (applies instantly when touched) */
+  .scroll-to-top:active {
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    transform: translateY(0) scale(0.95); /* Shrinks slightly when pressed */
+    transition: none; /* Instant feedback */
+  }
+
+  :global([data-theme="dark"]) .scroll-to-top:active {
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
+    color: var(--color-bg);
+    transform: translateY(0) scale(0.95);
+    transition: none;
+  }
+
+  /* Hover styles only for true mouse devices */
+  @media (hover: hover) and (pointer: fine) {
     /* Light mode hover */
     .scroll-to-top:hover {
       background: var(--color-accent-2);
       color: var(--color-bg);
-      transform: translateY(0) scale(1.05);
+      transform: translateY(0) scale(1.08); /* More tactile pop */
+      box-shadow: 0 4px 16px rgba(184, 169, 212, 0.4); /* Lavender glow */
     }
 
     /* Dark mode hover */
