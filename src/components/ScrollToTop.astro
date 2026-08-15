@@ -65,14 +65,7 @@
     }
   }
 
-  /* Light mode hover */
-  .scroll-to-top:hover {
-    background: var(--color-accent-2);
-    color: var(--color-bg);
-    transform: translateY(0) scale(1.05);
-  }
-
-  /* Dark mode */
+  /* Dark mode normal state */
   :global([data-theme="dark"]) .scroll-to-top {
     background: var(--color-accent-2);
     color: var(--color-bg);
@@ -80,13 +73,23 @@
     backdrop-filter: none; /* Solid color */
   }
 
-  /* Dark mode hover */
-  :global([data-theme="dark"]) .scroll-to-top:hover {
-    background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
-    border-color: var(--color-accent-1);
-    color: var(--color-bg);
-    transform: translateY(0) scale(1.08);
-    box-shadow: 0 4px 16px rgba(232, 180, 203, 0.4); /* Pink glow */
+  /* Hover styles only for devices that support hover (fixes mobile sticky hover bug) */
+  @media (hover: hover) {
+    /* Light mode hover */
+    .scroll-to-top:hover {
+      background: var(--color-accent-2);
+      color: var(--color-bg);
+      transform: translateY(0) scale(1.05);
+    }
+
+    /* Dark mode hover */
+    :global([data-theme="dark"]) .scroll-to-top:hover {
+      background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
+      border-color: var(--color-accent-1);
+      color: var(--color-bg);
+      transform: translateY(0) scale(1.08);
+      box-shadow: 0 4px 16px rgba(232, 180, 203, 0.4); /* Pink glow */
+    }
   }
 
   .scroll-to-top.visible {
