@@ -96,23 +96,23 @@
     transform: translateY(0);
   }
 
-  /* Hover styles only for true mouse devices */
-  @media (hover: hover) and (pointer: fine) {
+  /* Hover styles only for devices that support hover */
+  @media (hover: hover) {
     /* Light mode hover */
-    .scroll-to-top.visible:hover {
-      background: var(--color-accent-2);
-      color: var(--color-bg);
-      transform: translateY(0) scale(1.08); /* More tactile pop */
-      box-shadow: 0 4px 16px rgba(184, 169, 212, 0.6); /* Lavender glow */
+    .scroll-to-top:hover {
+      background: var(--color-accent-2) !important;
+      color: var(--color-bg) !important;
+      transform: translateY(0) scale(1.08) !important; /* Force tactile pop */
+      box-shadow: 0 4px 16px rgba(184, 169, 212, 0.6) !important; /* Lavender glow */
     }
 
     /* Dark mode hover */
-    :global([data-theme="dark"]) .scroll-to-top.visible:hover {
-      background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
-      border-color: var(--color-accent-1);
-      color: var(--color-bg);
-      transform: translateY(0) scale(1.08);
-      box-shadow: 0 4px 16px rgba(232, 180, 203, 0.6); /* Pink glow */
+    :global([data-theme="dark"]) .scroll-to-top:hover {
+      background: var(--color-accent-1) !important; /* Swap to pink for a beautiful pop */
+      border-color: var(--color-accent-1) !important;
+      color: var(--color-bg) !important;
+      transform: translateY(0) scale(1.08) !important;
+      box-shadow: 0 4px 16px rgba(232, 180, 203, 0.6) !important; /* Pink glow */
     }
   }
 

@@ -9,13 +9,30 @@
     const progressBar = document.getElementById('reading-progress');
     if (!progressBar) return;
 
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = document.documentElement.clientHeight;
-    let scrollPercent = scrollTop / (docHeight - winHeight);
+    // Use multiple fallbacks for cross-browser accuracy
+    const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const scrollHeight = Math.max(
+      document.body.scrollHeight, 
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight, 
+      document.documentElement.offsetHeight,
+      document.body.clientHeight, 
+      document.documentElement.clientHeight
+    );
+    const clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     
-    // Force 100% if we are at the very bottom (accounts for fractional scrollbar math issues)
-    if (scrollPercent > 0.98) scrollPercent = 1;
+    // Calculate the maximum possible scroll amount
+    const maxScroll = scrollHeight - clientHeight;
+    
+    let scrollPercent = 0;
+    if (maxScroll > 0) {
+      scrollPercent = scrollTop / maxScroll;
+    }
+    
+    // Force 100% if we are within 20px of the very bottom (accounts for fractional scrollbar math issues)
+    if (scrollTop + clientHeight >= scrollHeight - 20) {
+      scrollPercent = 1;
+    }
     
     progressBar.style.width = `${Math.min(100, Math.max(0, scrollPercent * 100))}%`;
   }
