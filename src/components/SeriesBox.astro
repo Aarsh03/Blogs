@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../utils/posts';
 
 interface Props {
   seriesName: string;
@@ -7,9 +7,8 @@ interface Props {
 }
 const { seriesName, currentSlug } = Astro.props;
 
-const allPosts = await getCollection('posts', ({ data }) => {
-  return !data.draft && data.series === seriesName;
-});
+const allPublished = await getPublishedPosts();
+const allPosts = allPublished.filter(p => p.data.series === seriesName);
 
 // Sort by date ascending (oldest first) to get Part 1, Part 2, etc.
 allPosts.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
@@ -34,7 +33,7 @@ const base = import.meta.env.BASE_URL;
             {isCurrent ? (
               <span class="series-box__link">Part {index + 1}: {post.data.title}</span>
             ) : (
-              <a href={`${base}blog/${post.id}`} class="series-box__link">Part {index + 1}: {post.data.title}</a>
+              <a href={`${base}blog/${post.id}/`} class="series-box__link">Part {index + 1}: {post.data.title}</a>
             )}
           </li>
         );

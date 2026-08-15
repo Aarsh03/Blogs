@@ -23,7 +23,7 @@ interface Props {
 const { 
   title, 
   description = SITE.description,
-  image = '/Blogs/og-image.png',
+  image = `${import.meta.env.BASE_URL}og-image.png`,
   ogType = 'website',
   articleDate,
   articleTags

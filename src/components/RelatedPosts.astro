@@ -1,7 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
 import PostCard from './PostCard.astro';
-import readingTime from 'reading-time';
+import { getPublishedPosts, getReadingTime } from '../utils/posts';
 
 interface Props {
   currentSlug: string;
@@ -9,9 +8,8 @@ interface Props {
 }
 const { currentSlug, currentTags } = Astro.props;
 
-const allPosts = await getCollection('posts', ({ data }) => {
-  return data.draft !== true;
-});
+// Get all published posts
+const allPosts = await getPublishedPosts();
 
 // Filter out current post and calculate intersection scores
 const scoredPosts = allPosts
@@ -49,7 +47,7 @@ const relatedPosts = scoredPosts.slice(0, 3).map(s => s.post);
           date={post.data.date}
           description={post.data.description}
           tags={post.data.tags}
-          readingTime={readingTime(post.body || '').text}
+          readingTime={getReadingTime(post.body)}
           slug={post.id}
         />
       ))}

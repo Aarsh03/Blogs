@@ -9,6 +9,8 @@ import ViewCounter from '../components/ViewCounter.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import SeriesBox from '../components/SeriesBox.astro';
 import { SITE } from '../config';
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
 
 interface Props {
   title: string;
@@ -17,9 +19,9 @@ interface Props {
   description: string;
   readingTime: string;
   slug: string;
-  prevPost?: any;
-  nextPost?: any;
-  headings?: any[];
+  prevPost?: CollectionEntry<'posts'> | null;
+  nextPost?: CollectionEntry<'posts'> | null;
+  headings?: MarkdownHeading[];
   series?: string;
 }
 

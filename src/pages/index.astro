@@ -2,11 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import SearchComponent from '../components/Search.astro';
-import { getCollection } from 'astro:content';
-import readingTime from 'reading-time';
+import { getPublishedPosts, getReadingTime } from '../utils/posts';
 
-const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allPosts = await getPublishedPosts();
 
 const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
 ---
@@ -29,8 +27,8 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   </div>
 
   <section class="posts-grid">
-    {allPosts.map((post) => {
-      const readTime = readingTime(post.body ?? '').text;
+    {allPosts.map((post, index) => {
+      const readTime = getReadingTime(post.body);
       return (
         <PostCard
           title={post.data.title}
@@ -252,10 +250,6 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     border-color: var(--color-accent-2);
     color: var(--color-bg);
     font-weight: 600;
-  }
-
-  [data-theme="dark"] .tag-filter-btn.active {
-    color: #1a1520; /* Ensure text is dark and readable on the bright lavender pill */
   }
 
   /* Filtering Animation */

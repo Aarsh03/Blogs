@@ -41,13 +41,15 @@ const { title } = Astro.props;
     const cleanUrl = window.location.origin + window.location.pathname;
     const encodedUrl = encodeURIComponent(cleanUrl);
     
-    document.querySelectorAll('.twitter-share').forEach((a: any) => {
-      const title = a.dataset.shareTitle || '';
-      a.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodedUrl}`;
+    document.querySelectorAll('.twitter-share').forEach((a: Element) => {
+      const anchor = a as HTMLAnchorElement;
+      const title = anchor.dataset.shareTitle || '';
+      anchor.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodedUrl}`;
     });
     
-    document.querySelectorAll('.linkedin-share').forEach((a: any) => {
-      a.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+    document.querySelectorAll('.linkedin-share').forEach((a: Element) => {
+      const anchor = a as HTMLAnchorElement;
+      anchor.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
     });
 
     const copyBtn = document.getElementById('copy-link-btn');
@@ -121,8 +123,8 @@ const { title } = Astro.props;
   }
 
   .copy-link-btn.copied {
-    color: #10b981;
-    border-color: #10b981;
+    color: var(--color-success);
+    border-color: var(--color-success);
   }
 
   .share-feedback {
@@ -151,7 +153,7 @@ const { title } = Astro.props;
     transform: translateX(-50%) translateY(0);
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     .share-label {
       display: none;
     }

@@ -1,11 +1,10 @@
 ---
 import PostLayout from '../../layouts/PostLayout.astro';
-import { getCollection, render } from 'astro:content';
-import readingTime from 'reading-time';
+import { render } from 'astro:content';
+import { getPublishedPosts, getReadingTime } from '../../utils/posts';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('posts', ({ data }) => !data.draft))
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const posts = await getPublishedPosts();
     
   return posts.map((post, index) => ({
     params: { slug: post.id },
@@ -19,7 +18,7 @@ export async function getStaticPaths() {
 
 const { post, prevPost, nextPost } = Astro.props;
 const { Content, headings } = await render(post);
-const readTime = readingTime(post.body ?? '').text;
+const readTime = getReadingTime(post.body);
 ---
 
 <PostLayout

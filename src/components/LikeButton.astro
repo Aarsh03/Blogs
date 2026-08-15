@@ -168,9 +168,9 @@ const base = import.meta.env.BASE_URL;
   }
 
   .like-btn:hover, .comment-btn:hover {
-    border-color: var(--color-accent-1);
-    color: var(--color-accent-1);
-    background: rgba(232, 180, 203, 0.08);
+    border-color: var(--color-code-text);
+    color: var(--color-code-text);
+    background: rgba(232, 180, 203, 0.1);
     transform: scale(1.04);
   }
 
@@ -181,16 +181,16 @@ const base = import.meta.env.BASE_URL;
     flex-shrink: 0;
   }
 
-  .like-btn--liked {
-    border-color: var(--color-accent-1);
-    color: var(--color-bg);
-    background: var(--color-accent-1);
-    box-shadow: 0 4px 12px rgba(232, 180, 203, 0.4);
+  .like-btn--liked, .like-btn--liked:hover {
+    border-color: var(--color-code-text);
+    color: var(--color-code-text);
+    background: rgba(232, 180, 203, 0.15);
+    box-shadow: none;
   }
 
   .like-btn--liked .like-btn__icon {
-    fill: var(--color-bg);
-    stroke: var(--color-bg);
+    fill: var(--color-code-text);
+    stroke: var(--color-code-text);
     animation: heart-burst 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
@@ -211,7 +211,7 @@ const base = import.meta.env.BASE_URL;
     animation: wiggle 0.5s ease;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     .post-actions {
       flex-direction: column-reverse;
       align-items: stretch;

@@ -25,6 +25,7 @@
   /* WCAG Contrast */
   --color-link: #8d75b3; /* Darker lavender for contrast */
   --color-code-text: #bd5982; /* Darker pink for code */
+  --color-success: #10b981; /* Green for success states */
 
   /* Typography */
   --font-ui: 'DM Sans', system-ui, -apple-system, sans-serif;
@@ -274,8 +275,8 @@ h4 { font-size: 1.125rem; }
 }
 
 .copy-code-btn.copied {
-  color: #10b981;
-  border-color: #10b981;
+  color: var(--color-success);
+  border-color: var(--color-success);
 }
 
 .prose hr {
