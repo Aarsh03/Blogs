@@ -1,12 +1,12 @@
-# Likes API — Cloudflare Worker
+# Likes & Views API — Cloudflare Worker
 
-The likes counter uses a Cloudflare Worker backed by Workers KV.
+The likes and page views counters use a Cloudflare Worker backed by Workers KV.
 
 ## Status: ✅ Deployed
 
 - **Worker URL:** `https://blog-likes.aarsh-blog-likes.workers.dev`
 - **KV Namespace ID:** `0560a131bd22403b9b8053b57db6606a`
-- **Routes:** `GET /likes/:slug` · `POST /likes/:slug`
+- **Routes:** `GET /likes/:slug` · `POST /likes/:slug` · `GET /views/:slug` · `POST /views/:slug`
 
 ---
 
@@ -41,4 +41,4 @@ binding = "LIKES_KV"
 id = "your-namespace-id-here"
 ```
 
-Then update `LIKES_API_URL` in `src/components/LikeButton.astro` with your new worker URL.
+Then update `likesApiUrl` in `src/config.ts` with your new worker URL.

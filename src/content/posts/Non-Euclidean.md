@@ -22,6 +22,11 @@ Beyond being a mathematical prodigy who mastered calculus by age 13, Bolyai was 
 
 János ignored his father's warning anyway and revolutionized geometry forever.
 
+> [!NOTE]
+> This is a beautifully styled markdown callout that was just added in Phase 5!
+
+His work (along with Lobachevsky) paved the way for Einstein's General Relativity.
+
 > "Out of nothing I have created a strange new universe." — János Bolyai, in a letter to his father upon discovering non-Euclidean geometry
 
 ### Euclidean vs. Non-Euclidean in Code

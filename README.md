@@ -6,11 +6,22 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 ---
 
+## Features
+
+- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads.
+- **Design:** Modern minimal design with pastel accent themes, frosted glass UI, multi-layered shadows, and a complete Dark/Light mode implementation (with dynamic Giscus comment themes).
+- **Navigation:** Auto-hiding navbar, interactive tag filtering pills, infinite scrolling, table of contents, reading progress bar, scroll-to-top FAB, and a sleek `Ctrl+K` Quick Search Modal overlay via Pagefind.
+- **Content:** MDX support, algorithmic related posts, multi-part series navigation, Markdown callouts (`> [!NOTE]`), IDE-style language badges for code blocks, mobile-visible copy buttons, image zoom capabilities, and reading time estimation.
+- **Social & Engagement:** Like button & view counter (Cloudflare Workers + KV), GitHub Discussions comments via Giscus, social share buttons.
+- **SEO & Publishing:** Auto-generated RSS feed, JSON-LD schema, dynamic Open Graph images (`astro-og-canvas`), auto-generated sitemap, and automatic CI/CD deployment via GitHub Actions.
+
+---
+
 ## Writing a New Post
 
 1. Create a `.md` or `.mdx` file in `src/content/posts/`:
 
-```yaml
+```markdown
 ---
 title: "My Post Title"
 date: 2026-08-01
@@ -24,9 +35,8 @@ Your post content here...
 
 ### Image Optimization
 To take advantage of Astro's automatic image optimization (WebP/AVIF generation, resizing, lazy-loading), place your images in `src/assets/` and use relative paths in your markdown:
-```markdown
+
 ![My Image](../../assets/my-image.jpg)
-```
 ```
 
 2. Push to `main`:
@@ -57,19 +67,20 @@ npm run dev        # → http://localhost:4321/Blogs/
 
 ## Project Structure
 
-```
+```text
 src/
   content/posts/    ← drop .md files here to publish
-  pages/            ← routing (index, blog/[slug], tags, search, about, open-graph)
-  components/       ← Navbar, PostCard, Comments, Search, RelatedPosts, SeriesBox, ScrollToTop, ViewCounter, etc.
+  pages/            ← routing (index, blog/[slug], about, open-graph, rss)
+  components/       ← Navbar, PostCard, Comments, SearchModal, RelatedPosts, SeriesBox, ScrollToTop, ViewCounter, etc.
   layouts/          ← BaseLayout, PostLayout
   styles/           ← global.css (design tokens, typography, utilities)
 public/
   favicon.png
   og-image.png      ← Default SEO Open Graph image
-  giscus-theme.css  ← custom Giscus comment box theme
+  giscus-theme.css  ← custom Giscus light comment box theme
+  giscus-dark.css   ← custom Giscus dark comment box theme
 workers/
-  likes-worker.js   ← Cloudflare Worker for like counts
+  likes-worker.js   ← Cloudflare Worker for like & view counts
   wrangler.toml
 .github/workflows/
   deploy.yml        ← GitHub Actions CI/CD
@@ -82,7 +93,7 @@ workers/
 | Service | Status | Details |
 |---|---|---|
 | GitHub Pages | ✅ Live | Auto-deploys from `main` via GitHub Actions |
-| Cloudflare Worker (Likes) | ✅ Live | `https://blog-likes.aarsh-blog-likes.workers.dev` |
+| Cloudflare Worker (Likes & Views) | ✅ Live | `https://blog-likes.aarsh-blog-likes.workers.dev` |
 | Giscus (Comments) | ✅ Live | GitHub Discussions on `Aarsh03/Blogs` |
 
 See [DEPLOY.md](./DEPLOY.md) for Cloudflare Worker details.

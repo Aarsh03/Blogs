@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
-import SearchComponent from '../components/Search.astro';
 import { getPublishedPosts, getReadingTime } from '../utils/posts';
 
 const allPosts = await getPublishedPosts();
@@ -14,8 +13,6 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     <h1 class="page-header__title">Latest Posts</h1>
     <p class="page-header__subtitle">Thoughts on coding, life, and everything in between.</p>
   </section>
-
-  <SearchComponent />
 
   <div class="tags-filter">
     <div class="tags-filter__scroll">

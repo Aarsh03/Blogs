@@ -203,6 +203,75 @@ h4 { font-size: 1.125rem; }
   margin: 1.5em 0;
 }
 
+/* GitHub Alerts */
+.markdown-alert {
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--color-accent-2);
+  border-radius: 0 8px 8px 0;
+  background: rgba(184, 169, 212, 0.08);
+}
+
+.markdown-alert > :first-child {
+  margin-top: 0;
+}
+
+.markdown-alert > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-style: normal;
+}
+
+.markdown-alert .markdown-alert-title svg {
+  margin-right: 0.5rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+.markdown-alert.markdown-alert-note .markdown-alert-title { color: #3b82f6; }
+
+.markdown-alert.markdown-alert-tip {
+  border-color: var(--color-success);
+  background: rgba(16, 185, 129, 0.08);
+}
+.markdown-alert.markdown-alert-tip .markdown-alert-title { color: var(--color-success); }
+
+.markdown-alert.markdown-alert-important {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.08);
+}
+.markdown-alert.markdown-alert-important .markdown-alert-title { color: #8b5cf6; }
+
+.markdown-alert.markdown-alert-warning {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+.markdown-alert.markdown-alert-warning .markdown-alert-title { color: #f59e0b; }
+
+.markdown-alert.markdown-alert-caution {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+.markdown-alert.markdown-alert-caution .markdown-alert-title { color: #ef4444; }
+
+[data-theme="dark"] .markdown-alert.markdown-alert-note { color: #bfdbfe; }
+[data-theme="dark"] .markdown-alert.markdown-alert-tip { color: #a7f3d0; }
+[data-theme="dark"] .markdown-alert.markdown-alert-important { color: #ddd6fe; }
+[data-theme="dark"] .markdown-alert.markdown-alert-warning { color: #fde68a; }
+[data-theme="dark"] .markdown-alert.markdown-alert-caution { color: #fecaca; }
+
 .prose ul, .prose ol {
   padding-left: 1.5em;
 }
@@ -277,6 +346,31 @@ h4 { font-size: 1.125rem; }
 .copy-code-btn.copied {
   color: var(--color-success);
   border-color: var(--color-success);
+}
+
+@media (max-width: 768px) {
+  .copy-code-btn {
+    opacity: 1;
+    background: var(--color-bg);
+  }
+}
+
+.code-language-badge {
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  background: var(--color-bg-card);
+  color: var(--color-accent-2);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  user-select: none;
 }
 
 .prose hr {

@@ -11,7 +11,7 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
 | Syntax highlighting | Astro built-in Shiki | Zero config, beautiful output in both themes |
 | Search | Pagefind (post-build index) | Zero backend, fully static |
 | Comments | Giscus (GitHub Discussions) | Free, no backend, repo: `Aarsh03/Blogs` |
-| Likes | Cloudflare Workers + Workers KV | Free tier, serverless, persistent |
+| Likes & Views | Cloudflare Workers + Workers KV | Free tier, serverless, persistent |
 | CI/CD | GitHub Actions (`withastro/action@v6`, Node 22) | Auto-deploy on push to `main` |
 | Fonts | `@fontsource` packages | Self-hosted, no render-blocking requests |
 
@@ -20,29 +20,34 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
 ### 3.1 Folder structure
 ```
 /src
+  config.ts             ← global site metadata & config
+  content.config.ts     ← Astro Content Collections schema
   /content
     /posts
       my-post.md        ← drop any .md file here to publish
   /pages
-    index.astro         ← home / post list
+    index.astro         ← home / post list / tag filtering
     about.astro         ← static about page
-    search.astro        ← Pagefind search UI
+    rss.xml.ts          ← auto-generated RSS feed
     /blog
       [...slug].astro   ← individual post template
-    /tags
-      index.astro       ← tag cloud
-      [tag].astro       ← filtered post list
+    /open-graph
+      [...route].ts     ← dynamic OG image generation
   /components
     Navbar.astro
     Footer.astro
     PostCard.astro
     TagChip.astro
     LikeButton.astro
+    ViewCounter.astro
     Comments.astro
-    Search.astro
+    SearchModal.astro   ← Ctrl+K overlay search
     ReadingProgress.astro
     ShareButtons.astro
     TableOfContents.astro
+    RelatedPosts.astro  ← algorithmic recommendations
+    SeriesBox.astro     ← multi-part series navigation
+    ScrollToTop.astro
   /layouts
     BaseLayout.astro
     PostLayout.astro
@@ -50,9 +55,11 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
     global.css
 /public
   favicon.png
+  og-image.png          ← fallback open graph image
   giscus-theme.css      ← custom Giscus lavender theme
+  giscus-dark.css       ← custom Giscus dark theme
 /workers
-  likes-worker.js       ← Cloudflare Worker source
+  likes-worker.js       ← Cloudflare Worker source (handles views & likes)
   wrangler.toml         ← Cloudflare deployment config
 /.github/workflows
   deploy.yml            ← GitHub Actions CI/CD
@@ -65,7 +72,7 @@ title: "My Post Title"
 date: 2026-07-31
 tags: ["tag1", "tag2"]
 description: "A short summary shown on post cards and meta tags."
-slug: "my-post-title"   # optional; auto-generated from filename if omitted
+series: "Series Name"   # optional; groups related posts together
 draft: false            # optional; true = excluded from build
 ---
 ```
@@ -74,32 +81,34 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 
 ## 4. Pages & Navigation
 
-**Navbar:** Home · Tags · Search · About (pill-shaped segmented control, active page highlighted in lavender, frosted glass background, mobile hamburger menu)
+**Navbar:** Home · About (pill-shaped segmented control, active page highlighted in lavender, frosted glass background, mobile hamburger menu). Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Dark/Light Theme toggle.
 
 ### 4.1 Home / Blog List
 - Lists all non-draft posts newest-first as cards
+- Interactive tag filtering pills to filter posts directly on the homepage
+- Search functionality via `Ctrl+K` Quick Search Modal overlay
+- Infinite scroll / pagination (`IntersectionObserver` loading 10 initial posts + 6 posts per scroll)
 - Each card: title, date, estimated reading time, description, tag chips
 - Empty state message when no posts exist
 
 ### 4.2 Individual Post (`/blog/[slug]`)
-- Full Markdown render with Shiki syntax highlighting
-- Header: title, date, tags, reading time
+- Full Markdown render with Shiki syntax highlighting and language badges
+- Markdown Callouts support (`> [!NOTE]`, etc.)
+- Header: title, date, tags, reading time, view count (`ViewCounter.astro`)
 - Table of Contents: Auto-generated from headings, collapsible, sleek frosted glass design
 - Reading Progress Bar: Fixed at the top, fills as you read
+- Series Navigation: `SeriesBox.astro` for multi-part posts
+- Code Blocks: IDE-style language badges and mobile-visible copy buttons
 - Prev/Next Post navigation at the bottom
+- Jump-to-comments button (`.comment-btn` navigating to `#comments`)
+- Related Posts: Algorithmic recommendations based on tags
 - Like button → Cloudflare Worker (`https://blog-likes.aarsh-blog-likes.workers.dev`)
 - Share buttons: Twitter, LinkedIn, and Copy Link to clipboard
 - Comments → Lazy-loaded Giscus widget (repo: `Aarsh03/Blogs`, category: Announcements, custom themes dynamically adapt to dark/light mode)
+- Image Zoom: Medium-style zoom capability
+- Dynamic OG Images: Generated via `/open-graph/[slug].png`
 
-### 4.3 Tags
-- `/tags` → cloud of all tags, colour-coded by position (pink/lavender/mint/peach cycle)
-- `/tags/[tag]` → filtered post list for that tag
-
-### 4.4 Search (`/search`)
-- Pagefind UI, index built at end of every build (`astro build && pagefind --site dist`)
-- Styled via Pagefind CSS variables to match pastel theme
-
-### 4.5 About (`/about`)
+### 4.3 About (`/about`)
 - Static page with bio, what I write about, contact buttons (Email, GitHub, LinkedIn)
 
 ## 5. Design System
@@ -111,7 +120,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
   - `--color-accent-4`: `#f2c4a0` (peach)
   - `--color-bg`: `#fdf6f9`
 - **Typography:** Self-hosted via `@fontsource` — DM Sans (UI), Playfair Display (headings), DM Serif Display (body), JetBrains Mono (code)
-- **Dark mode:** Fully implemented. Users can toggle themes via the Navbar. Code blocks, Giscus comments, and Pagefind search adapt dynamically.
+- **Dark mode:** Fully implemented. Users can toggle themes via the Navbar. Code blocks, Giscus comments, and Pagefind search adapt dynamically. Features specific dark mode tag colors, frosted glass UI, and subtle glow effects.
 - **Responsive:** Fully responsive — mobile hamburger menu, fluid typography, responsive cards and footer
 
 ## 6. Infrastructure
@@ -121,13 +130,13 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - Repo ID: `R_kgDOTgdeGA`
 - Category: Announcements
 - Category ID: `DIC_kwDOTgdeGM4DCaJT`
-- Theme: `https://aarsh03.github.io/Blogs/giscus-theme.css` (lavender button override)
+- Theme: `giscus-theme.css` and `giscus-dark.css` dynamically swapped when switching modes.
 
-### 6.2 Likes (Cloudflare Worker) — ✅ Live
+### 6.2 Likes & Views (Cloudflare Worker) — ✅ Live
 - Worker URL: `https://blog-likes.aarsh-blog-likes.workers.dev`
 - KV Namespace ID: `0560a131bd22403b9b8053b57db6606a`
-- Routes: `GET /likes/:slug` · `POST /likes/:slug`
-- Anti-spam: 1 like per browser via `localStorage`, IP throttling on worker
+- Routes: `GET /likes/:slug`, `POST /likes/:slug`, `GET /views/:slug`, `POST /views/:slug`
+- Anti-spam: 1 like per browser via `localStorage`, session storage for views, IP throttling on worker
 
 ## 7. Build & Deploy Pipeline
 
@@ -148,17 +157,17 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Frontmatter schema validated with Zod
 - [x] Minimal design with pastel accent theme
 - [x] Dark/light mode toggle with dynamic theme sync
-- [x] Pill-shaped navbar with active-state highlight
+- [x] Pill-shaped navbar with active-state highlight & auto-hiding on scroll
 - [x] View Transitions (smooth page loads without hard refreshes)
 - [x] Mobile responsive (hamburger menu, fluid layout)
-- [x] Tag cloud + tag-filtered post lists
-- [x] Client-side Pagefind search
-- [x] Shiki syntax highlighting (adapts to light/dark mode)
+- [x] Tag cloud + tag-filtered post lists directly on homepage
+- [x] `Ctrl+K` / `Cmd+K` Quick Search Modal overlay via Pagefind
+- [x] Shiki syntax highlighting with IDE-style Language Badges
 - [x] Reading time estimate on posts and cards
 - [x] Table of Contents & Reading progress bar
 - [x] Prev/Next post navigation & Social share buttons
 - [x] Like button & Page View Counter (Cloudflare Worker + KV)
-- [x] Lazy-loaded Giscus comments (GitHub Discussions)
+- [x] Lazy-loaded Giscus comments (Dual light/dark theme switching)
 - [x] Full SEO (JSON-LD, dynamic OG tags via `astro-og-canvas`, canonical URLs, Twitter Cards)
 - [x] Auto-generated Sitemap (`sitemap-index.xml`) and RSS Feed (`rss.xml`)
 - [x] Favicon (custom anime character icon)
@@ -173,6 +182,9 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Algorithmic "Related Posts" (via tag intersection)
 - [x] Multi-part "Series" Support (auto-linking parts)
 - [x] Infinite Scroll (Continuous Feed) on the homepage
+- [x] Markdown Callouts (`> [!NOTE]`, etc.)
+- [x] Mobile-visible Copy Button
+- [x] Jump to comments button
 
 ## 9. Out of Scope / Declined
 - Manual post listing/config file

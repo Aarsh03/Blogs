@@ -2,6 +2,7 @@
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import ScrollToTop from '../components/ScrollToTop.astro';
+import SearchModal from '../components/SearchModal.astro';
 import '../styles/global.css';
 import '@fontsource-variable/dm-sans';
 import '@fontsource/playfair-display/700.css';
@@ -92,6 +93,7 @@ const imageURL = new URL(image, Astro.site).href;
     </div>
   </main>
   <ScrollToTop />
+  <SearchModal />
   <Footer />
   <script>
     document.addEventListener('astro:page-load', () => {
@@ -100,6 +102,14 @@ const imageURL = new URL(image, Astro.site).href;
         // Ensure the pre block is positioned relative for absolute positioning of the button
         if (window.getComputedStyle(block).position === 'static') {
           block.style.position = 'relative';
+        }
+
+        const language = block.getAttribute('data-language');
+        if (language) {
+          const badge = document.createElement('span');
+          badge.className = 'code-language-badge';
+          badge.innerText = language;
+          block.appendChild(badge);
         }
         
         const button = document.createElement('button');
