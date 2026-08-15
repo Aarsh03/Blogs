@@ -26,6 +26,7 @@ János ignored his father's warning anyway and revolutionized geometry forever.
 
 His work (along with Lobachevsky) paved the way for Einstein's General Relativity.
 
+> [!NOTE]
 > "Out of nothing I have created a strange new universe." — János Bolyai, in a letter to his father upon discovering non-Euclidean geometry
 
 ### Euclidean vs. Non-Euclidean in Code
