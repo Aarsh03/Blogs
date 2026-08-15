@@ -92,15 +92,15 @@
     transition: none;
   }
 
-  /* Dark mode normal state */
+  /* Dark mode normal state — filled with pink */
   [data-theme="dark"] .scroll-to-top {
-    background: var(--color-bg-card);
-    color: var(--color-accent-2);
-    border-color: var(--color-accent-2);
-    backdrop-filter: blur(8px);
+    background: var(--color-accent-1);
+    color: var(--color-bg);
+    border-color: var(--color-accent-1);
+    backdrop-filter: none;
   }
 
-  /* Dark mode hover — matches light: fills with accent, no glow */
+  /* Dark mode hover — switches to lavender */
   [data-theme="dark"] .scroll-to-top:hover {
     background: var(--color-accent-2);
     border-color: var(--color-accent-2);
