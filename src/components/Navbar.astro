@@ -216,6 +216,7 @@ function isActive(linkHref: string) {
   }
 
   .navbar__inner {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -251,6 +252,9 @@ function isActive(linkHref: string) {
   /* ─── Desktop Links ─── */
   .navbar__links {
     display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     list-style: none;
     gap: 0.25rem;
     margin: 0;

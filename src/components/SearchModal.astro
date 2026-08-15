@@ -240,6 +240,7 @@ const base = import.meta.env.BASE_URL;
   .pagefind-ui__search-input {
     background: var(--color-bg) !important;
     border: 1px solid var(--color-border) !important;
+    border-radius: 999px !important;
     font-weight: 500 !important;
     transition: all 0.2s ease !important;
   }
@@ -247,6 +248,27 @@ const base = import.meta.env.BASE_URL;
   .pagefind-ui__search-input:focus {
     border-color: var(--color-accent-2) !important;
     box-shadow: 0 0 0 3px rgba(184, 169, 212, 0.2) !important;
+    outline: none !important;
+  }
+
+  .pagefind-ui__search-clear {
+    color: var(--color-text-muted) !important;
+    background-color: transparent !important;
+    border-radius: 999px !important;
+    padding: 0 1rem !important;
+  }
+  
+  .pagefind-ui__search-clear:focus {
+    outline: none !important;
+  }
+  
+  [data-theme="dark"] .pagefind-ui__search-clear {
+    color: var(--color-text-muted) !important;
+    background-color: transparent !important;
+  }
+  
+  .pagefind-ui__search-clear:hover {
+    color: var(--color-accent-2) !important;
   }
 
   .pagefind-ui__result-link {
