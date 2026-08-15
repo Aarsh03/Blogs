@@ -182,7 +182,9 @@ const base = import.meta.env.BASE_URL;
     position: relative;
     width: 90%;
     max-width: 650px;
-    background: var(--color-bg-card);
+    background: var(--color-bg-nav); /* Glass effect using nav variable */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 16px;
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
     border: 1px solid var(--color-border);
@@ -244,7 +246,7 @@ const base = import.meta.env.BASE_URL;
     gap: 1rem;
     padding: 0.75rem 1.5rem;
     border-top: 1px solid var(--color-border);
-    background: var(--color-bg);
+    background: transparent;
     flex-wrap: wrap;
     flex-shrink: 0;
   }
@@ -259,14 +261,14 @@ const base = import.meta.env.BASE_URL;
   }
 
   .search-modal__keyhint kbd {
-    background: var(--color-bg-card);
+    background: rgba(184, 169, 212, 0.1);
     border: 1px solid var(--color-border);
     border-radius: 4px;
     padding: 0.1rem 0.4rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--color-text);
-    box-shadow: 0 2px 0 var(--color-border);
+    box-shadow: 0 2px 0 rgba(184, 169, 212, 0.2);
   }
 
   @media (max-width: 600px) {
@@ -297,17 +299,18 @@ const base = import.meta.env.BASE_URL;
   }
 
   .pagefind-ui__search-input {
-    background: var(--color-bg) !important;
-    border: 1px solid var(--color-border) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1.5px solid var(--color-border) !important;
     border-radius: 999px !important;
     color: var(--color-text) !important;
     font-weight: 500 !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
   }
   
   .pagefind-ui__search-input:focus {
     border-color: var(--color-accent-2) !important;
-    box-shadow: 0 0 0 3px rgba(184, 169, 212, 0.2) !important;
+    background: var(--color-bg-card) !important;
+    box-shadow: 0 0 0 4px rgba(184, 169, 212, 0.2) !important;
     outline: none !important;
   }
 
