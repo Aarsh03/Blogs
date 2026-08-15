@@ -82,7 +82,6 @@
     background: var(--color-accent-2);
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
-    box-shadow: 0 4px 16px rgba(184, 169, 212, 0.6);
   }
 
   /* Active state for tap feedback */
@@ -95,25 +94,24 @@
 
   /* Dark mode normal state */
   [data-theme="dark"] .scroll-to-top {
-    background: var(--color-accent-2);
-    color: var(--color-bg);
+    background: var(--color-bg-card);
+    color: var(--color-accent-2);
     border-color: var(--color-accent-2);
-    backdrop-filter: none;
+    backdrop-filter: blur(8px);
   }
 
-  /* Dark mode hover */
+  /* Dark mode hover — matches light: fills with accent, no glow */
   [data-theme="dark"] .scroll-to-top:hover {
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
+    background: var(--color-accent-2);
+    border-color: var(--color-accent-2);
     color: var(--color-bg);
     transform: translateY(0) scale(1.08);
-    box-shadow: 0 4px 16px rgba(232, 180, 203, 0.6);
   }
 
   /* Dark mode active */
   [data-theme="dark"] .scroll-to-top:active {
-    background: var(--color-accent-1);
-    border-color: var(--color-accent-1);
+    background: var(--color-accent-2);
+    border-color: var(--color-accent-2);
     color: var(--color-bg);
     transform: translateY(0) scale(0.95);
     transition: none;

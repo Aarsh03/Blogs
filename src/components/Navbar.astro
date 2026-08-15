@@ -41,15 +41,41 @@ function isActive(linkHref: string) {
         </svg>
       </button>
 
-      <!-- Font toggle -->
-      <button class="font-toggle" id="font-toggle" aria-label="Toggle serif/sans-serif font">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="4 7 4 4 20 4 20 7"/>
-          <line x1="9" y1="20" x2="15" y2="20"/>
-          <line x1="12" y1="4" x2="12" y2="20"/>
-        </svg>
-        <span class="font-feedback" id="font-feedback">Switched font</span>
-      </button>
+      <!-- Settings -->
+      <div class="settings-wrapper">
+        <button class="settings-toggle" id="settings-toggle" aria-label="Settings" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settings-panel" aria-hidden="true">
+          <div class="settings-section">
+            <p class="settings-label">Font</p>
+            <div class="font-options">
+              <button class="font-option" data-font="serif">Lora</button>
+              <button class="font-option" data-font="sans">DM Sans</button>
+              <button class="font-option" data-font="playfair">Playfair</button>
+              <button class="font-option" data-font="sourceserif">Source Serif</button>
+            </div>
+          </div>
+          <div class="settings-divider"></div>
+          <div class="settings-section">
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <span>Eye Comfort</span>
+              </div>
+              <button class="eye-comfort-toggle" id="eye-comfort-toggle" role="switch" aria-checked="false">
+                <span class="eye-comfort-thumb"></span>
+              </button>
+            </div>
+            <p class="settings-hint">Warm tint to reduce eye strain</p>
+          </div>
+        </div>
+      </div>
 
       <!-- Theme toggle -->
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
@@ -167,35 +193,67 @@ function isActive(linkHref: string) {
       applyTheme(isDark ? 'light' : 'dark');
     });
 
-    /* ── Font toggle ── */
-    const fontBtn = document.getElementById('font-toggle');
-    const fontFeedback = document.getElementById('font-feedback');
-    let toastTimeout;
-    
-    function showToast(message) {
-      if (!fontBtn || !fontFeedback) return;
-      fontFeedback.textContent = message;
-      fontBtn.classList.add('show-feedback');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        fontBtn.classList.remove('show-feedback');
-      }, 2000);
+    /* ── Settings Panel ── */
+    const settingsBtn = document.getElementById('settings-toggle');
+    const settingsPanel = document.getElementById('settings-panel');
+    const fontOptions = document.querySelectorAll('.font-option');
+    const eyeComfortBtn = document.getElementById('eye-comfort-toggle');
+
+    function closeSettings() {
+      settingsPanel?.setAttribute('aria-hidden', 'true');
+      settingsBtn?.setAttribute('aria-expanded', 'false');
+      settingsBtn?.classList.remove('active');
     }
-    
-    function applyFont(font, showMsg = false) {
+
+    function openSettings() {
+      settingsPanel?.setAttribute('aria-hidden', 'false');
+      settingsBtn?.setAttribute('aria-expanded', 'true');
+      settingsBtn?.classList.add('active');
+    }
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = settingsPanel?.getAttribute('aria-hidden') === 'false';
+      if (isOpen) closeSettings(); else openSettings();
+    });
+
+    settingsPanel?.addEventListener('click', (e) => e.stopPropagation());
+
+    document.addEventListener('click', () => closeSettings());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
+
+    /* ── Font picker ── */
+    function applyFont(font) {
       html.setAttribute('data-font', font);
       localStorage.setItem('font', font);
-      if (showMsg) {
-        showToast(font === 'sans' ? 'Switched font to DM Sans' : 'Switched font to Lora');
-      }
+      fontOptions.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-font') === font);
+      });
     }
 
-    const initialFont = html.getAttribute('data-font') || 'serif';
-    applyFont(initialFont, false);
+    const initialFont = localStorage.getItem('font') || 'serif';
+    applyFont(initialFont);
 
-    fontBtn?.addEventListener('click', () => {
-      const isSans = html.getAttribute('data-font') === 'sans';
-      applyFont(isSans ? 'serif' : 'sans', true);
+    fontOptions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyFont(btn.getAttribute('data-font'));
+      });
+    });
+
+    /* ── Eye Comfort ── */
+    function applyEyeComfort(on) {
+      html.setAttribute('data-eye-comfort', on ? 'on' : 'off');
+      localStorage.setItem('eye-comfort', on ? 'on' : 'off');
+      eyeComfortBtn?.setAttribute('aria-checked', String(on));
+      eyeComfortBtn?.classList.toggle('on', on);
+    }
+
+    const initialEyeComfort = localStorage.getItem('eye-comfort') === 'on';
+    applyEyeComfort(initialEyeComfort);
+
+    eyeComfortBtn?.addEventListener('click', () => {
+      const isOn = eyeComfortBtn.getAttribute('aria-checked') === 'true';
+      applyEyeComfort(!isOn);
     });
 
     // Reset scroll tracking on navigation
@@ -341,18 +399,167 @@ function isActive(linkHref: string) {
     padding: 0;
   }
 
-  .theme-toggle:hover, .font-toggle:hover, .search-toggle:hover {
+  .theme-toggle:hover, .settings-toggle:hover, .search-toggle:hover {
     background: var(--color-bg-card);
     color: var(--color-accent-2);
     border-color: var(--color-accent-2);
   }
 
-  .theme-toggle svg, .font-toggle svg, .search-toggle svg {
+  .theme-toggle svg, .settings-toggle svg, .search-toggle svg {
     transition: transform 0.25s ease;
   }
 
-  .theme-toggle:hover svg, .font-toggle:hover svg, .search-toggle:hover svg {
+  .theme-toggle:hover svg, .settings-toggle:hover svg, .search-toggle:hover svg {
     transform: rotate(20deg);
+  }
+
+  .settings-toggle.active {
+    background: var(--color-bg-card);
+    color: var(--color-accent-2);
+    border-color: var(--color-accent-2);
+  }
+
+  /* ─── Settings Panel ─── */
+  .settings-panel {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    width: 220px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card-hover);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 0.75rem;
+    z-index: 300;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.97);
+    transform-origin: top right;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+
+  .settings-panel[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .settings-section {
+    padding: 0.25rem 0;
+  }
+
+  .settings-label {
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .settings-hint {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    color: var(--color-text-light);
+    margin: 0.35rem 0 0 0;
+    line-height: 1.4;
+  }
+
+  .settings-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 0.6rem 0;
+  }
+
+  /* Font pills */
+  .font-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
+  }
+
+  .font-option {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.4rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+
+  .font-option:hover {
+    border-color: var(--color-accent-2);
+    color: var(--color-accent-2);
+    background: rgba(184, 169, 212, 0.08);
+  }
+
+  .font-option.active {
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    border-color: var(--color-accent-2);
+  }
+
+  [data-theme="dark"] .font-option.active {
+    color: var(--color-bg);
+  }
+
+  /* Eye comfort row */
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .settings-row-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  /* Toggle switch */
+  .eye-comfort-toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    border-radius: 999px;
+    border: none;
+    background: var(--color-border);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .eye-comfort-toggle.on {
+    background: #e8a838;
+  }
+
+  .eye-comfort-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s ease;
+    pointer-events: none;
+  }
+
+  .eye-comfort-toggle.on .eye-comfort-thumb {
+    transform: translateX(16px);
   }
 
   /* Both icons visible by default; JS immediately hides the right one on load.
@@ -498,34 +705,13 @@ function isActive(linkHref: string) {
     .logo-text { font-size: 1.1rem; }
   }
 
-  /* ─── Font Feedback Tooltip ─── */
-  .font-toggle {
-    position: relative; /* Need this for absolute positioning of the tooltip */
+  /* settings-toggle needs relative positioning for the panel */
+  .settings-toggle {
+    position: relative;
   }
 
-  .font-feedback {
-    position: absolute;
-    bottom: -32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    background: var(--color-bg-card);
-    color: var(--color-text);
-    font-family: var(--font-ui);
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    z-index: 10;
-  }
-  
-  .font-toggle.show-feedback .font-feedback {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+  /* Wrap settings button + panel together */
+  .settings-wrapper {
+    position: relative;
   }
 </style>
