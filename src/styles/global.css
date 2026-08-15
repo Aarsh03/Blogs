@@ -76,7 +76,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 84px; /* Account for sticky navbar height + padding */
+  scroll-padding-top: 68px; /* Just slightly larger than the 64px navbar */
 }
 
 body {
@@ -350,8 +350,11 @@ h4 { font-size: 1.125rem; }
 .tag:nth-child(4n+0) { background-color: rgba(242,196,160,0.2); color: #c07040; border-color: rgba(242,196,160,0.4); }
 
 /* Dark mode */
-
-[data-theme="dark"] .tag { background-color: rgba(196,181,232,0.2); color: #c4b5e8; border-color: rgba(196,181,232,0.3); }
+[data-theme="dark"] .tag { background-color: rgba(184, 169, 212, 0.15); color: #d1c4e9; border-color: rgba(184, 169, 212, 0.3); }
+[data-theme="dark"] .tag:nth-child(4n+1) { background-color: rgba(232,180,203,0.15); color: #f48fb1; border-color: rgba(232,180,203,0.3); }
+[data-theme="dark"] .tag:nth-child(4n+2) { background-color: rgba(184,169,212,0.15); color: #b39ddb; border-color: rgba(184,169,212,0.3); }
+[data-theme="dark"] .tag:nth-child(4n+3) { background-color: rgba(167,213,210,0.15); color: #80cbc4; border-color: rgba(167,213,210,0.3); }
+[data-theme="dark"] .tag:nth-child(4n+0) { background-color: rgba(242,196,160,0.15); color: #ffcc80; border-color: rgba(242,196,160,0.3); }
 
 .tag:hover {
   transform: scale(1.06);

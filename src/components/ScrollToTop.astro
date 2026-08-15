@@ -56,21 +56,36 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  /* Frosted glass effect */
+  /* Frosted glass effect for light mode */
   @supports (backdrop-filter: blur(8px)) {
     .scroll-to-top {
-      background: rgba(253, 246, 249, 0.7); /* Light mode bg roughly */
+      background: rgba(253, 246, 249, 0.7);
       backdrop-filter: blur(8px);
-    }
-    :global(.theme-dark) .scroll-to-top {
-      background: rgba(30, 30, 36, 0.7); /* Dark mode bg roughly */
     }
   }
 
+  /* Light mode hover */
   .scroll-to-top:hover {
     background: var(--color-accent-2);
     color: var(--color-bg);
     transform: translateY(0) scale(1.05);
+  }
+
+  /* Dark mode */
+  :global(.theme-dark) .scroll-to-top {
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    border-color: var(--color-accent-2);
+    backdrop-filter: none; /* Solid color */
+  }
+
+  /* Dark mode hover */
+  :global(.theme-dark) .scroll-to-top:hover {
+    background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
+    border-color: var(--color-accent-1);
+    color: var(--color-bg);
+    transform: translateY(0) scale(1.08);
+    box-shadow: 0 4px 16px rgba(232, 180, 203, 0.4); /* Pink glow */
   }
 
   .scroll-to-top.visible {
