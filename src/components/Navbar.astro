@@ -74,6 +74,8 @@ function isActive(linkHref: string) {
   </div>
 </nav>
 
+<div id="font-toast" class="font-toast" aria-hidden="true"></div>
+
 <div class="mobile-overlay" id="mobile-overlay"></div>
 <div class="mobile-menu" id="mobile-menu">
   <ul class="mobile-links">
@@ -168,18 +170,33 @@ function isActive(linkHref: string) {
 
     /* ── Font toggle ── */
     const fontBtn = document.getElementById('font-toggle');
+    const fontToast = document.getElementById('font-toast');
+    let toastTimeout: ReturnType<typeof setTimeout>;
     
-    function applyFont(font: string) {
+    function showToast(message: string) {
+      if (!fontToast) return;
+      fontToast.textContent = message;
+      fontToast.setAttribute('aria-hidden', 'false');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        fontToast.setAttribute('aria-hidden', 'true');
+      }, 2000);
+    }
+    
+    function applyFont(font: string, showMsg = false) {
       html.setAttribute('data-font', font);
       localStorage.setItem('font', font);
+      if (showMsg) {
+        showToast(font === 'sans' ? 'Switched font to DM Sans' : 'Switched font to Lora');
+      }
     }
 
     const initialFont = html.getAttribute('data-font') || 'serif';
-    applyFont(initialFont);
+    applyFont(initialFont, false);
 
     fontBtn?.addEventListener('click', () => {
       const isSans = html.getAttribute('data-font') === 'sans';
-      applyFont(isSans ? 'serif' : 'sans');
+      applyFont(isSans ? 'serif' : 'sans', true);
     });
 
     // Reset scroll tracking on navigation
@@ -473,5 +490,32 @@ function isActive(linkHref: string) {
     .hamburger { display: flex; }
 
     .logo-text { font-size: 1.1rem; }
+  }
+
+  /* ─── Font Toast ─── */
+  .font-toast {
+    position: fixed;
+    top: calc(var(--nav-height) + 1rem);
+    right: 1.5rem;
+    background: var(--color-bg-card);
+    color: var(--color-text);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-family: var(--font-ui);
+    box-shadow: var(--shadow-card-hover);
+    border: 1px solid var(--color-border);
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 150;
+    pointer-events: none;
+  }
+  
+  .font-toast[aria-hidden="false"] {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
   }
 </style>
