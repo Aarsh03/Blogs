@@ -6,6 +6,16 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 ---
 
+**This blog** is a modern, highly optimized personal blogging platform built on Astro v7. Its primary focus is delivering a frictionless, 120fps reading experience combined with a beautiful, minimal aesthetic.
+
+**Unique Aspects:**
+- ⚡ **Instant Navigation:** Leverages Astro's View Transitions and `requestAnimationFrame` debouncing for a seamless, SPA-like feel without the heavy JavaScript payload.
+- 🎨 **Premium Aesthetics:** Features a meticulously crafted frosted-glass UI, dynamic pastel color palettes, multi-layered shadows, and a complete Dark/Light mode implementation (including dynamic comment themes).
+- 🛠️ **Serverless Interactivity:** Fully static builds hosted on GitHub Pages, enhanced with Cloudflare Workers for persistent view/like counters, and Giscus (GitHub Discussions) for comments.
+- 📖 **Reader-First UX:** Includes algorithmic related posts, reading time estimates, hover tooltips, a multi-action Speed Dial FAB, Eye Comfort mode, and an instant `Ctrl+K` Quick Search Modal.
+
+---
+
 ## Features
 
 - **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads. Features 120fps smooth scrolling with `requestAnimationFrame` debouncing and passive event listeners.
