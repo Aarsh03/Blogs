@@ -212,11 +212,11 @@ function isActive(linkHref: string) {
       const sunIcon = toggleBtn?.querySelector('.icon-sun');
       const moonIcon = toggleBtn?.querySelector('.icon-moon');
       if (theme === 'dark') {
-        sunIcon?.removeAttribute('hidden');
-        moonIcon?.setAttribute('hidden', '');
+        sunIcon?.style.setProperty('display', 'block', 'important');
+        moonIcon?.style.setProperty('display', 'none', 'important');
       } else {
-        sunIcon?.setAttribute('hidden', '');
-        moonIcon?.removeAttribute('hidden');
+        sunIcon?.style.setProperty('display', 'none', 'important');
+        moonIcon?.style.setProperty('display', 'block', 'important');
       }
     }
 
@@ -684,13 +684,6 @@ function isActive(linkHref: string) {
   .settings-wrapper {
     position: relative;
   }
-
-  /* Both icons visible by default; JS immediately hides the right one on load.
-     Using opacity+width trick so layout doesn't shift before JS runs. */
-  .icon-moon { display: block; }
-  .icon-sun  { display: block; }
-  .icon-moon[hidden] { display: none !important; }
-  .icon-sun[hidden]  { display: none !important; }
 
   /* ─── Hamburger ─── */
   .hamburger {
