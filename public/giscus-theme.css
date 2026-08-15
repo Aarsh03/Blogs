@@ -11,4 +11,9 @@ main {
   /* Also slightly tint the standard buttons on hover to pink */
   --color-btn-hover-bg: #fdf6f9 !important;
   --color-btn-hover-border: #e8b4cb !important;
+
+  /* Disabled primary button (Comment button) */
+  --color-btn-primary-disabled-bg: rgba(184, 169, 212, 0.4) !important;
+  --color-btn-primary-disabled-border: transparent !important;
+  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.7) !important;
 }
