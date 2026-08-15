@@ -44,6 +44,9 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     })}
   </section>
 
+  <!-- Invisible trigger element for IntersectionObserver -->
+  <div id="infinite-scroll-trigger" style="height: 1px; width: 100%;"></div>
+
   <div id="empty-filter-state" class="empty-state" style="display: none;">
     <p>No posts found for this tag.</p>
     <button class="tag-filter-btn active" style="margin-top: 1rem;" onclick="document.querySelector('.tag-filter-btn[data-tag=\'all\']').click()">Show all posts</button>
@@ -64,19 +67,23 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
       const params = new URLSearchParams(window.location.search);
       const initialTag = params.get('tag');
 
-      function filterPosts(selectedTag) {
-        // Update active button
-        filterBtns.forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('data-tag') === selectedTag);
-        });
+      let currentLimit = 10;
+      let activeTag = initialTag || 'all';
 
+      function applyFiltersAndPagination() {
         let visibleCount = 0;
-        // Update posts visibility with animation
+        
         posts.forEach(post => {
           const postTags = (post.getAttribute('data-tags') || '').split(',');
-          if (selectedTag === 'all' || postTags.includes(selectedTag)) {
-            post.classList.remove('hidden');
+          const matchesTag = activeTag === 'all' || postTags.includes(activeTag);
+          
+          if (matchesTag) {
             visibleCount++;
+            if (visibleCount <= currentLimit) {
+              post.classList.remove('hidden');
+            } else {
+              post.classList.add('hidden');
+            }
           } else {
             post.classList.add('hidden');
           }
@@ -88,6 +95,18 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
         }
       }
 
+      function filterPosts(selectedTag) {
+        activeTag = selectedTag;
+        currentLimit = 10; // Reset pagination on new filter
+        
+        // Update active button
+        filterBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-tag') === selectedTag);
+        });
+
+        applyFiltersAndPagination();
+      }
+
       // Initialize if URL has tag
       if (initialTag) {
         const btnExists = Array.from(filterBtns).some(btn => btn.getAttribute('data-tag') === initialTag);
@@ -97,15 +116,17 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
           setTimeout(() => {
             document.querySelector('.tags-filter')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }, 100);
+        } else {
+          applyFiltersAndPagination();
         }
+      } else {
+        applyFiltersAndPagination();
       }
 
-      // Click listeners
       filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tag = btn.getAttribute('data-tag');
+        btn.addEventListener('click', (e) => {
+          const tag = (e.target as HTMLElement).getAttribute('data-tag');
           if (tag) {
-            // Update URL without reload
             const url = new URL(window.location.href);
             if (tag === 'all') {
               url.searchParams.delete('tag');
@@ -120,35 +141,12 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
       });
 
       // Infinite Scroll Logic
-      let currentLimit = 10;
-      function applyPagination() {
-        const activeTag = document.querySelector('.tag-filter-btn.active')?.getAttribute('data-tag') || 'all';
-        let visibleCount = 0;
-        
-        posts.forEach(post => {
-          const postTags = (post.getAttribute('data-tags') || '').split(',');
-          if (activeTag === 'all' || postTags.includes(activeTag)) {
-            visibleCount++;
-            if (visibleCount <= currentLimit) {
-              post.classList.remove('hidden');
-            } else {
-              post.classList.add('hidden');
-            }
-          } else {
-            post.classList.add('hidden');
-          }
-        });
-      }
-
-      // Initial pagination
-      applyPagination();
-
       const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          currentLimit += 5;
-          applyPagination();
+          currentLimit += 6; // Load 6 more (two rows) on scroll
+          applyFiltersAndPagination();
         }
-      }, { rootMargin: '200px' });
+      }, { rootMargin: '400px' }); // Trigger 400px before reaching the bottom
 
       const trigger = document.getElementById('infinite-scroll-trigger');
       if (trigger) observer.observe(trigger);

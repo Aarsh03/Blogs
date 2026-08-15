@@ -7,13 +7,10 @@
   --color-bg-card: #ffffff;
   --color-bg-nav: rgba(253, 246, 249, 0.80);
   --color-bg-code: #f8f0f4;
-  --color-bg-tag: #f3e8ef;
 
   /* Pastel accents */
   --color-accent-1: #e8b4cb;  /* soft pink */
   --color-accent-2: #b8a9d4;  /* lavender */
-  --color-accent-3: #a7d5d2;  /* mint */
-  --color-accent-4: #f2c4a0;  /* peach */
 
   /* Text */
   --color-text: #2a2a2a;
@@ -50,13 +47,10 @@
   --color-bg-card: #231d2c;
   --color-bg-nav: rgba(26, 21, 32, 0.85);
   --color-bg-code: #2a2035;
-  --color-bg-tag: #2e2540;
 
   /* Slightly more saturated pastels for dark bg */
   --color-accent-1: #e8a0bf;
   --color-accent-2: #c4b5e8;
-  --color-accent-3: #96d5d2;
-  --color-accent-4: #f2c49a;
 
   --color-text: #f0eaf4;
   --color-text-muted: #a89db8;

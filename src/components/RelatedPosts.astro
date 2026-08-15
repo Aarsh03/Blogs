@@ -15,7 +15,7 @@ const allPosts = await getCollection('posts', ({ data }) => {
 
 // Filter out current post and calculate intersection scores
 const scoredPosts = allPosts
-  .filter(post => post.id !== currentSlug && post.slug !== currentSlug)
+  .filter(post => post.id !== currentSlug)
   .map(post => {
     const commonTags = post.data.tags.filter(tag => currentTags.includes(tag));
     return {
@@ -36,9 +36,7 @@ const scoredPosts = allPosts
 // Grab top 3
 const relatedPosts = scoredPosts.slice(0, 3).map(s => s.post);
 
-if (relatedPosts.length === 0) {
-  // If no related posts, we don't render anything
-}
+
 ---
 
 {relatedPosts.length > 0 && (
@@ -66,9 +64,7 @@ if (relatedPosts.length === 0) {
     border-top: 1px solid rgba(0, 0, 0, 0.05);
   }
   
-  :global(.theme-dark) .related-posts {
-    border-top-color: rgba(255, 255, 255, 0.05);
-  }
+
 
   .related-posts__title {
     font-family: var(--font-heading);
