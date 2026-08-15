@@ -76,7 +76,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 68px; /* Just slightly larger than the 64px navbar */
+  scroll-padding-top: 24px; /* Reduced because navbar auto-hides */
 }
 
 body {

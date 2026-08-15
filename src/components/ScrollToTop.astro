@@ -29,6 +29,7 @@
         top: 0,
         behavior: 'smooth'
       });
+      scrollBtn.blur(); // Remove focus so hover state doesn't stick
     });
   });
 </script>
@@ -72,7 +73,7 @@
   }
 
   /* Dark mode */
-  :global(.theme-dark) .scroll-to-top {
+  :global([data-theme="dark"]) .scroll-to-top {
     background: var(--color-accent-2);
     color: var(--color-bg);
     border-color: var(--color-accent-2);
@@ -80,7 +81,7 @@
   }
 
   /* Dark mode hover */
-  :global(.theme-dark) .scroll-to-top:hover {
+  :global([data-theme="dark"]) .scroll-to-top:hover {
     background: var(--color-accent-1); /* Swap to pink for a beautiful pop */
     border-color: var(--color-accent-1);
     color: var(--color-bg);
