@@ -1,0 +1,23 @@
+[data-theme="pastel-pink"] {
+  --color-bg: #fff0f5;
+  --color-bg-card: #ffffff;
+  --color-bg-nav: rgba(255, 240, 245, 0.80);
+  --color-bg-code: #ffe4e1;
+  
+  --color-accent-1: #ffb6c1; /* Light Pink */
+  --color-accent-2: #ff69b4; /* Hot Pink */
+  --color-accent-3: #dda0dd; /* Plum */
+  --color-accent-4: #ffdab9; /* Peach */
+  
+  --color-text: #4a4a4a;
+  --color-text-muted: #888888;
+  --color-text-light: #aaaaaa;
+  
+  --color-border: #ffb6c1;
+  --shadow-card: 0 4px 24px rgba(255, 105, 180, 0.08);
+  --shadow-card-hover: 0 12px 48px rgba(255, 105, 180, 0.15);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-3);
+  --color-bg-nav-links: rgba(255, 105, 180, 0.15);
+  --color-nav-links-border: rgba(255, 105, 180, 0.3);
+}

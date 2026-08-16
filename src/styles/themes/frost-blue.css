@@ -1,0 +1,23 @@
+[data-theme="frost-blue"] {
+  --color-bg: #f0f8ff;
+  --color-bg-card: #ffffff;
+  --color-bg-nav: rgba(240, 248, 255, 0.80);
+  --color-bg-code: #e6f2ff;
+  
+  --color-accent-1: #ff6b6b; /* Soft Red */
+  --color-accent-2: #4a90e2; /* Blue */
+  --color-accent-3: #50e3c2; /* Teal */
+  --color-accent-4: #f39c12; /* Orange */
+  
+  --color-text: #2c3e50;
+  --color-text-muted: #7f8c8d;
+  --color-text-light: #bdc3c7;
+  
+  --color-border: #d4e6f1;
+  --shadow-card: 0 4px 24px rgba(74, 144, 226, 0.08);
+  --shadow-card-hover: 0 12px 48px rgba(74, 144, 226, 0.15);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+  --color-bg-nav-links: rgba(74, 144, 226, 0.15);
+  --color-nav-links-border: rgba(74, 144, 226, 0.3);
+}

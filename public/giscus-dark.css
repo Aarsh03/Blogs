@@ -1,6 +1,7 @@
 @import url('https://giscus.app/themes/transparent_dark.css');
 
 main {
+  background: transparent !important;
   /* Override the default primary button with Dark Lavender */
   --color-btn-primary-bg: #9481b6 !important;
   --color-btn-primary-border: #9481b6 !important;

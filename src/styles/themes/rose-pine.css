@@ -1,0 +1,23 @@
+[data-theme="rose-pine"] {
+  --color-bg: #191724;
+  --color-bg-card: #1f1d2e;
+  --color-bg-nav: rgba(25, 23, 36, 0.80);
+  --color-bg-code: #26233a;
+  
+  --color-accent-1: #ebbcba; /* Rose */
+  --color-accent-2: #c4a7e7; /* Iris */
+  --color-accent-3: #31748f; /* Pine */
+  --color-accent-4: #f6c177; /* Gold */
+  
+  --color-text: #e0def4;
+  --color-text-muted: #908caa;
+  --color-text-light: #6e6a86;
+  
+  --color-border: #26233a;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --color-link: var(--color-accent-4);
+  --color-code-text: var(--color-accent-1);
+  --color-bg-nav-links: rgba(246, 193, 119, 0.15);
+  --color-nav-links-border: rgba(246, 193, 119, 0.3);
+}

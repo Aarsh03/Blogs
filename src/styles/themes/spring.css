@@ -1,0 +1,23 @@
+[data-theme="spring"] {
+  --color-bg: #fcf8e3;
+  --color-bg-card: #ffffff;
+  --color-bg-nav: rgba(252, 248, 227, 0.80);
+  --color-bg-code: #f5eed3;
+  
+  --color-accent-1: #ffa07a; /* Light Salmon */
+  --color-accent-2: #ff7f50; /* Coral */
+  --color-accent-3: #ffd700; /* Gold */
+  --color-accent-4: #98fb98; /* Pale Green */
+  
+  --color-text: #5d4037;
+  --color-text-muted: #8d6e63;
+  --color-text-light: #bcaaa4;
+  
+  --color-border: #f0e2b6;
+  --shadow-card: 0 4px 24px rgba(255, 127, 80, 0.08);
+  --shadow-card-hover: 0 12px 48px rgba(255, 127, 80, 0.15);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+  --color-bg-nav-links: rgba(255, 127, 80, 0.12);
+  --color-nav-links-border: rgba(255, 127, 80, 0.25);
+}

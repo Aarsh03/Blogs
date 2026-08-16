@@ -1,0 +1,23 @@
+[data-theme="lavender-dark"] {
+  --color-bg: #1c1a25;
+  --color-bg-card: #282436;
+  --color-bg-nav: rgba(28, 26, 37, 0.80);
+  --color-bg-code: #252233;
+  
+  --color-accent-1: #c6a0f6; /* Lavender */
+  --color-accent-2: #8aadf4; /* Blue */
+  --color-accent-3: #f5bde6; /* Pink */
+  --color-accent-4: #eed49f; /* Yellow */
+  
+  --color-text: #cad3f5;
+  --color-text-muted: #8087a2;
+  --color-text-light: #939ab7;
+  
+  --color-border: #363a4f;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --color-link: var(--color-accent-1);
+  --color-code-text: var(--color-accent-3);
+  --color-bg-nav-links: rgba(198, 160, 246, 0.15);
+  --color-nav-links-border: rgba(198, 160, 246, 0.3);
+}

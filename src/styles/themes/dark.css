@@ -1,0 +1,25 @@
+[data-theme="dark"] {
+  --color-bg: #1a1520;
+  --color-bg-card: #231d2c;
+  --color-bg-nav: rgba(26, 21, 32, 0.80);
+  --color-bg-code: #2a2035;
+
+  /* Slightly more saturated pastels for dark bg */
+  --color-accent-1: #e8a0bf;
+  --color-accent-2: #c4b5e8;
+  --color-accent-3: #95ded9;
+  --color-accent-4: #fcbd8b;
+
+  --color-text: #f0eaf4;
+  --color-text-muted: #a89db8;
+  --color-text-light: #9589a8; /* Bumped for contrast */
+
+  --color-border: #352d45;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+  --color-bg-nav-links: rgba(196, 181, 232, 0.15);
+  --color-nav-links-border: rgba(196, 181, 232, 0.3);
+}

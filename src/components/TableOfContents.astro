@@ -31,10 +31,10 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 <style>
   .toc-container {
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--color-bg-nav);
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--color-border);
     border-radius: 16px;
     margin: 2.5rem 0;
     padding: 0;
@@ -44,9 +44,9 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
   }
 
   :global([data-theme-mode="dark"]) .toc-container {
-    background: rgba(35, 29, 44, 0.4);
-    border: 1px solid rgba(196, 181, 232, 0.12);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    background: var(--color-bg-nav);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-card);
   }
 
   .toc-summary {

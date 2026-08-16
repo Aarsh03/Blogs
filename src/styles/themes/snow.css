@@ -1,0 +1,23 @@
+[data-theme="snow"] {
+  --color-bg: #ffffff;
+  --color-bg-card: #f9f9fa;
+  --color-bg-nav: rgba(255, 255, 255, 0.80);
+  --color-bg-code: #f2f2f4;
+  
+  --color-accent-1: #8fa1b3; /* Soft Silver */
+  --color-accent-2: #81a2be; /* Icy Blue */
+  --color-accent-3: #b5bd68; /* Pale Green */
+  --color-accent-4: #f0c674; /* Soft Gold */
+  
+  --color-text: #1a1a1a;
+  --color-text-muted: #666666;
+  --color-text-light: #999999;
+  
+  --color-border: #e6e6e6;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.06);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+  --color-bg-nav-links: rgba(129, 162, 190, 0.12);
+  --color-nav-links-border: rgba(129, 162, 190, 0.25);
+}

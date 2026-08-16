@@ -1,0 +1,32 @@
+:root {
+  /* Backgrounds */
+  --color-bg: #fdf6f9;
+  --color-bg-card: #ffffff;
+  --color-bg-nav: rgba(253, 246, 249, 0.80);
+  --color-bg-code: #f8f0f4;
+
+  /* Pastel accents */
+  --color-accent-1: #e8b4cb;  /* soft pink */
+  --color-accent-2: #b8a9d4;  /* lavender */
+  --color-accent-3: #a7d5d2;  /* mint */
+  --color-accent-4: #f2c4a0;  /* peach */
+
+  /* Text */
+  --color-text: #2a2a2a;
+  --color-text-muted: #6b6b6b;
+  --color-text-light: #999999;
+
+  /* Borders & shadows */
+  --color-border: #ede4e8;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.08);
+
+  /* WCAG Contrast */
+  --color-link: #8d75b3; /* Darker lavender for contrast */
+  --color-code-text: #bd5982; /* Darker pink for code */
+  --color-success: #10b981; /* Green for success states */
+
+  /* Nav Links Contrast */
+  --color-bg-nav-links: rgba(141, 117, 179, 0.15);
+  --color-nav-links-border: rgba(141, 117, 179, 0.3);
+}

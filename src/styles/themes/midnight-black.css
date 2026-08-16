@@ -1,0 +1,28 @@
+[data-theme="midnight-black"] {
+  --color-bg: #000000;
+  --color-bg-card: #0a0a0a;
+  --color-bg-nav: rgba(0, 0, 0, 0.80);
+  --color-bg-code: #111111;
+  
+  --color-accent-1: #ff2a2a; /* Bright Red */
+  --color-accent-2: #ff0055; /* Pinkish Red (Selection/Buttons) */
+  --color-accent-3: #b400ff; /* Purple */
+  --color-accent-4: #39ff14; /* Neon Green */
+  
+  --color-text: #ffffff;
+  --color-text-muted: #888888;
+  --color-text-light: #555555;
+  
+  --color-border: #222222;
+  --shadow-card: 0 8px 32px rgba(0, 229, 255, 0.1);
+  --shadow-card-hover: 0 16px 48px rgba(0, 229, 255, 0.2);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+  --color-nav-links-border: rgba(255, 0, 85, 0.3);
+}
+
+/* Specific tag overrides for Midnight Black for high contrast */
+[data-theme="midnight-black"] .tag { border-color: var(--color-accent-2); color: var(--color-accent-2); background-color: rgba(255, 0, 85, 0.1); }
+[data-theme="midnight-black"] .tag:nth-child(4n+1) { border-color: var(--color-accent-1); color: var(--color-accent-1); background-color: rgba(255, 42, 42, 0.1); }
+[data-theme="midnight-black"] .tag:nth-child(4n+2) { border-color: var(--color-accent-3); color: var(--color-accent-3); background-color: rgba(180, 0, 255, 0.1); }
+[data-theme="midnight-black"] .tag:nth-child(4n+3) { border-color: var(--color-accent-4); color: var(--color-accent-4); background-color: rgba(57, 255, 20, 0.1); }
