@@ -1,7 +1,7 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import ScrollToTop from '../components/ScrollToTop.astro';
+import FloatingActions from '../components/FloatingActions.astro';
 import SearchModal from '../components/SearchModal.astro';
 import '../styles/global.css';
 import '@fontsource-variable/dm-sans';
@@ -137,7 +137,7 @@ const imageURL = new URL(image, Astro.site).href;
       <slot />
     </div>
   </main>
-  <ScrollToTop />
+  <FloatingActions />
   <SearchModal />
   <Footer />
   <script src="../scripts/copy-code.ts"></script>

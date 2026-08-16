@@ -10,17 +10,17 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 **Unique Aspects:**
 - ⚡ **Instant Navigation:** Leverages Astro's View Transitions and `requestAnimationFrame` debouncing for a seamless, SPA-like feel without the heavy JavaScript payload.
-- 🎨 **Premium Aesthetics:** Features a meticulously crafted frosted-glass UI, dynamic pastel color palettes, multi-layered shadows, and a complete Dark/Light mode implementation (including dynamic comment themes).
+- 🎨 **Premium Aesthetics:** Features a meticulously crafted frosted-glass UI, 12 dynamic themes (Dark/Light/Pastel/Neon), multi-layered shadows, and customizable fonts.
 - 🛠️ **Serverless Interactivity:** Fully static builds hosted on GitHub Pages, enhanced with Cloudflare Workers for persistent view/like counters, and Giscus (GitHub Discussions) for comments.
-- 📖 **Reader-First UX:** Includes algorithmic related posts, reading time estimates, hover tooltips, a multi-action Speed Dial FAB, Eye Comfort mode, and an instant `Ctrl+K` Quick Search Modal.
+- 📖 **Reader-First UX:** Includes algorithmic related posts, adjustable Eye Comfort mode, reading time estimates, hover tooltips, a multi-action Speed Dial FAB, and an instant `Ctrl+K` Quick Search Modal.
 
 ---
 
 ## Features
 
-- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads. Features 120fps smooth scrolling with `requestAnimationFrame` debouncing, passive event listeners, FOUC prevention via critical inline theme CSS, and native CSS View Transition directional animations (`slide-from-right`/`slide-to-left`).
-- **Design:** Modern minimal design with pastel accent themes, frosted glass UI, multi-layered shadows, dynamic fonts, Eye Comfort mode, and a complete Dark/Light mode implementation (with dynamic Giscus comment themes). Includes mobile sticky-hover fixes via `@media (hover: hover)` for a flawless touchscreen experience.
-- **Navigation:** Auto-hiding navbar with sliding Settings panel, interactive tag filtering pills, infinite scrolling, table of contents, reading progress bar, a circular animated FAB speed-dial (Scroll to Top, Share URL with toast, Jump to Comments), and a sleek `Ctrl+K` Quick Search Modal overlay with keyboard navigation.
+- **Performance:** Built with Astro v7 (static output), native Content Collections, and View Transitions for instant page loads. Features 120fps smooth scrolling with `requestAnimationFrame` debouncing, FOUC prevention via critical inline theme CSS, and native CSS View Transition directional animations (`slide-from-right`/`slide-to-left`).
+- **Design & Theming:** Ships with 12 highly customizable themes (Light, Dark, Dracula, Rosé Pine, Solarized Light, Lavender Dark, Pastel Pink, Frost Blue, Midnight Black, Snow, Nature, Spring). Includes 4 selectable typography presets (Lora, DM Sans, Playfair Display, Source Serif 4), a Narrow/Wide layout toggle, and an adjustable Eye Comfort slider (2%-25% intensity).
+- **Navigation:** Auto-hiding navbar with sliding Settings panel, interactive tag filtering pills, infinite scrolling, an `IntersectionObserver` scrollspy Table of Contents, reading progress bar, a circular animated FAB speed-dial (Comments, Share, Scroll to Top), and a sleek `Ctrl+K` Quick Search Modal.
 - **Content:** MDX support, algorithmic related posts, multi-part series navigation, Markdown callouts (`> [!NOTE]`), IDE-style language badges for code blocks, mobile-visible copy buttons, heading anchor copy buttons, image zoom capabilities, Author Bio cards, and hover reading-time tooltips.
 - **Social & Engagement:** Like button & view counter (Cloudflare Workers + KV), GitHub Discussions comments via Giscus, social share buttons.
 - **SEO & Publishing:** Auto-generated RSS feed, JSON-LD schema, dynamic Open Graph images (`astro-og-canvas`), auto-generated sitemap, and automatic CI/CD deployment via GitHub Actions.
@@ -79,11 +79,17 @@ npm run dev        # → http://localhost:4321/Blogs/
 
 ```text
 src/
-  content/posts/    ← drop .md files here to publish
-  pages/            ← routing (index, blog/[slug], about, open-graph, rss)
-  components/       ← Navbar, PostCard, Comments, SearchModal, RelatedPosts, SeriesBox, ScrollToTop, ViewCounter, AuthorBio, etc.
-  layouts/          ← BaseLayout, PostLayout
-  styles/           ← global.css (design tokens, typography, utilities)
+  config.ts             ← site metadata, author bio, social links, Giscus/API config
+  content.config.ts     ← Content Collections Zod schema & glob loader
+  content/posts/        ← drop .md / .mdx files here to publish
+  pages/                ← routing (index, blog/[slug], about, open-graph, rss)
+  components/           ← Navbar, PostCard, Comments, SearchModal, TableOfContents, etc.
+  layouts/              ← BaseLayout, PostLayout
+  scripts/              ← client scripts (copy-code.ts, heading-links.ts, post-filter.ts)
+  styles/
+    global.css          ← base styles and CSS imports
+    themes/             ← 12 modular CSS theme stylesheets
+  utils/                ← post queries, date formatting, reading time calculation
 public/
   favicon.png
   og-image.png      ← Default SEO Open Graph image

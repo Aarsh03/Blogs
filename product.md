@@ -39,8 +39,7 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
     PostCard.astro
     TagChip.astro
     AuthorBio.astro
-    LikeButton.astro
-    ViewCounter.astro
+    PostActions.astro   ← like & view counter logic
     Comments.astro
     SearchModal.astro   ← Ctrl+K overlay search
     ReadingProgress.astro
@@ -48,16 +47,27 @@ A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Bl
     TableOfContents.astro
     RelatedPosts.astro  ← algorithmic recommendations
     SeriesBox.astro     ← multi-part series navigation
-    ScrollToTop.astro
+    FloatingActions.astro ← speed dial (Top, Comments, Share)
+    /navbar
+      SettingsPanel.astro ← Font, Theme, Layout, Eye Comfort
+      MobileMenu.astro
   /layouts
     BaseLayout.astro
     PostLayout.astro
+  /scripts
+    copy-code.ts
+    heading-links.ts
+    post-filter.ts
+    navbar.ts
   /styles
     global.css
+    /themes             ← 12 modular CSS theme stylesheets
+  /utils
+    theme.ts            ← dark/light mode detection
 /public
   favicon.png
   og-image.png          ← fallback open graph image
-  giscus-theme.css      ← custom Giscus lavender theme
+  giscus-theme.css      ← custom Giscus light theme
   giscus-dark.css       ← custom Giscus dark theme
 /workers
   likes-worker.js       ← Cloudflare Worker source (handles views & likes)
@@ -82,7 +92,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 
 ## 4. Pages & Navigation
 
-**Navbar:** Home · About (pill-shaped segmented control, active page highlighted in lavender, frosted glass background, mobile hamburger menu). Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel (Font selection, Eye Comfort mode, Dark/Light Theme toggle).
+**Navbar:** Home · About (pill-shaped segmented control, active page highlighted, frosted glass background, mobile hamburger menu). Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel (Font selection, 12-Palette Theme switcher, Narrow/Wide Layout toggle, Eye Comfort mode slider).
 
 ### 4.1 Home / Blog List
 - Lists all non-draft posts newest-first as cards
@@ -97,7 +107,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - Full Markdown render with Shiki syntax highlighting and language badges
 - Markdown Callouts support (`> [!NOTE]`, etc.)
 - Header: title, date, tags, reading time, view count (`ViewCounter.astro`)
-- Table of Contents: Auto-generated from headings, collapsible, sleek frosted glass design
+- Table of Contents: Auto-generated from headings, collapsible, sleek frosted glass design, and features an `IntersectionObserver` scrollspy to highlight the active section.
 - Reading Progress Bar: Fixed at the top, fills as you read
 - Series Navigation: `SeriesBox.astro` for multi-part posts
 - Code Blocks: IDE-style language badges and mobile-visible copy buttons
@@ -115,7 +125,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 ### 4.3 About (`/about`)
 - Static page with bio, what I write about, contact buttons (Email, GitHub, LinkedIn)
 
-### 4.4 Circular Animated FAB (`ScrollToTop.astro`)
+### 4.4 Circular Animated FAB (`FloatingActions.astro`)
 - Fixed bottom-right speed-dial menu activated when scrolled past 300px (rAF throttled).
 - Features spring physics expansion (`cubic-bezier(0.175, 0.885, 0.32, 1.275)`) and morphing menu/close icon.
 - Provides 3 radial action buttons:

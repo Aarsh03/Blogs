@@ -1,0 +1,18 @@
+---
+const { links, isActive } = Astro.props;
+---
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<div class="mobile-menu" id="mobile-menu">
+  <ul class="mobile-links">
+    {links.map((link: { href: string, label: string }) => (
+      <li>
+        <a
+          class:list={['mobile-link', { active: isActive(link.href) }]}
+          href={link.href}
+        >
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>

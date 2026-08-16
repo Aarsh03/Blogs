@@ -1,7 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import TagChip from '../components/TagChip.astro';
-import LikeButton from '../components/LikeButton.astro';
+import PostActions from '../components/PostActions.astro';
 import Comments from '../components/Comments.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TableOfContents from '../components/TableOfContents.astro';
@@ -77,14 +77,14 @@ const schema = {
       <slot />
     </div>
 
-    <LikeButton slug={slug} title={title} />
+    <PostActions slug={slug} title={title} />
     
     <AuthorBio />
     
     { (prevPost || nextPost) && (
       <div class="post-nav">
         {prevPost ? (
-          <a href={`${import.meta.env.BASE_URL}blog/${prevPost.id}/`} class="post-nav-card prev">
+          <a href={`${import.meta.env.BASE_URL}blog/${prevPost.id}/`} class="post-nav-card" data-nav-direction="prev">
             <span class="post-nav-label">← Previous Post</span>
             <span class="post-nav-title">{prevPost.data.title}</span>
           </a>

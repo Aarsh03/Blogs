@@ -1,6 +1,6 @@
 # Theming Guide
 
-The Blog uses a highly advanced CSS Variable-driven architecture, enabling seamless toggling between an infinite number of themes with perfect 120fps View Transitions and zero Flash of Unstyled Content (FOUC).
+The Blog uses a highly advanced CSS Variable-driven architecture, enabling seamless toggling between an infinite number of themes with perfect 120fps View Transitions and zero Flash of Unstyled Content (FOUC). The current version ships with 12 built-in themes (Dark/Light/Pastel/Neon).
 
 ## Architecture
 
@@ -50,20 +50,24 @@ To add a new theme (e.g. `ocean-breeze`):
    Add `@import url('./themes/ocean-breeze.css');` to the top of `src/styles/global.css`.
 
 3. **Register the Swatch in Settings**
-   Open `src/components/Navbar.astro` and add the new swatch HTML to the `.theme-palette` flex container:
+   Open `src/components/navbar/SettingsPanel.astro` and add the new swatch HTML to the `.theme-palette` flex container:
    ```html
    <div class="theme-swatch-wrapper">
      <button class="theme-swatch" data-theme-val="ocean-breeze" aria-label="Ocean Breeze Theme"></button>
      <span class="theme-label">Ocean</span>
    </div>
    ```
-   Then, add its color definition to the Navbar CSS:
+   Then, add its color definition to `src/styles/navbar.css`:
    ```css
    .theme-swatch[data-theme-val="ocean-breeze"] { background: #e0f7fa; border: 1px solid #00bcd4; }
    ```
 
 4. **Register Dark Themes**
-   If the new theme is a **dark theme**, you MUST add it to the `darkThemes` arrays in both `src/layouts/BaseLayout.astro` (the inline FOUC script) and `src/components/Navbar.astro` (the `applyTheme` script). This ensures `data-theme-mode="dark"` is correctly applied, which triggers dark mode frosted glassmorphism, dark tag styling, and dark Giscus comments.
+   If the new theme is a **dark theme**, you MUST add it to the `isDarkTheme` function array in `src/utils/theme.ts`, AND the inline critical FOUC script array in `src/layouts/BaseLayout.astro`. This ensures `data-theme-mode="dark"` is correctly applied, which triggers dark mode frosted glassmorphism, dark tag styling, and dark Giscus comments.
+
+## Eye Comfort Mode
+
+The site features an adjustable Eye Comfort mode that overlays a warm sepia tint on the page. It is controlled via the `--eye-comfort-intensity` CSS variable in `src/scripts/navbar.ts`, which scales from `0.02` to `0.25`. This variable multiplies the opacity of a fixed `pointer-events: none` overlay div in `BaseLayout.astro`.
 
 ## Required Variables Checklist
 

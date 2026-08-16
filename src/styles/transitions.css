@@ -1,0 +1,31 @@
+ANIMATIONS
+   ═══════════════════════════════════════ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-content {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* ═══════════════════════════════════════
+   VIEW TRANSITIONS
+   ═══════════════════════════════════════ */
+@keyframes slide-from-right {
+  from { transform: translateX(30px); opacity: 0; }
+}
+@keyframes slide-to-left {
+  to { transform: translateX(-30px); opacity: 0; }
+}
+::view-transition-old(root) {
+  animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+}
+::view-transition-new(root) {
+  animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+@keyframes flowGradient {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}

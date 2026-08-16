@@ -6,6 +6,8 @@ const baseUrl = import.meta.env.BASE_URL;
   <h2 class="comments-section__title">Comments</h2>
   <div class="giscus-container" data-repo={SITE.giscus.repo} data-repo-id={SITE.giscus.repoId} data-category={SITE.giscus.category} data-category-id={SITE.giscus.categoryId} data-base-url={baseUrl}></div>
   <script>
+    import { isDarkTheme } from '../utils/theme';
+
     // Track observers at module level to clean up on re-navigation
     let _giscusThemeObserver = null;
     let _giscusIntersectObserver = null;
@@ -27,7 +29,7 @@ const baseUrl = import.meta.env.BASE_URL;
 
       function getGiscusTheme() {
         const theme = document.documentElement.getAttribute('data-theme') || 'light';
-        const isDark = ['dark', 'dracula', 'rose-pine', 'lavender-dark'].includes(theme);
+        const isDark = isDarkTheme(theme);
         const themeBase = window.location.origin + (baseUrl || '/');
         return isDark ? `${themeBase}giscus-dark.css` : `${themeBase}giscus-theme.css`;
       }
