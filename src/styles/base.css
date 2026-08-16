@@ -90,6 +90,23 @@ h3 { font-size: 1.5rem; }
 h4 { font-size: 1.125rem; }
 
 /* ═══════════════════════════════════════
+   LAYOUT CONTAINERS
+   ═══════════════════════════════════════ */
+.container {
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container--narrow {
+  max-width: var(--max-width);
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 1rem; }
+}
+
+/* ═══════════════════════════════════════
    SCROLLBAR
    ═══════════════════════════════════════ */
 ::-webkit-scrollbar { width: 7px; height: 7px; }
@@ -109,3 +126,5 @@ h4 { font-size: 1.125rem; }
 }
 
 /* ═══════════════════════════════════════
+:root { --font-mono: 'JetBrains Mono', 'Fira Code', monospace; --max-width: 720px; --max-width-wide: 960px; --nav-height: 64px; --radius: 14px; --radius-sm: 8px; --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+
