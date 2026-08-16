@@ -78,7 +78,9 @@ const imageURL = new URL(image, Astro.site).href;
       var theme = savedTheme || (prefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
       
-      var isDark = theme === 'dark' || theme === 'dracula' || theme === 'rose-pine' || theme === 'lavender-dark';
+      var darkThemes = ['dark', 'dracula', 'rose-pine', 'lavender-dark', 'midnight-black'];
+      var isDark = darkThemes.indexOf(theme) !== -1;
+      document.documentElement.setAttribute('data-theme-mode', isDark ? 'dark' : 'light');
 
       // Inject critical CSS synchronously so icons are correct before first paint.
       // MUST be inside is:inline — regular <style> tags are bundled by Astro
@@ -108,6 +110,9 @@ const imageURL = new URL(image, Astro.site).href;
         var pd = window.matchMedia('(prefers-color-scheme: dark)').matches;
         t = t || (pd ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
+        
+        var darkThemes = ['dark', 'dracula', 'rose-pine', 'lavender-dark', 'midnight-black'];
+        document.documentElement.setAttribute('data-theme-mode', darkThemes.indexOf(t) !== -1 ? 'dark' : 'light');
 
         var f = localStorage.getItem('font') || 'serif';
         document.documentElement.setAttribute('data-font', f);
