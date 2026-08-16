@@ -5,7 +5,7 @@
   /* Backgrounds */
   --color-bg: #fdf6f9;
   --color-bg-card: #ffffff;
-  --color-bg-nav: rgba(253, 246, 249, 0.50);
+  --color-bg-nav: rgba(253, 246, 249, 0.80);
   --color-bg-code: #f8f0f4;
 
   /* Pastel accents */
@@ -52,7 +52,7 @@
 [data-theme="dark"] {
   --color-bg: #1a1520;
   --color-bg-card: #231d2c;
-  --color-bg-nav: rgba(26, 21, 32, 0.55);
+  --color-bg-nav: rgba(26, 21, 32, 0.80);
   --color-bg-code: #2a2035;
 
   /* Slightly more saturated pastels for dark bg */

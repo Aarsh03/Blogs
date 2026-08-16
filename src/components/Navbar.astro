@@ -33,12 +33,16 @@ function isActive(linkHref: string) {
     </ul>
 
     <div class="navbar__actions">
-      <!-- Search Modal Toggle -->
-      <button class="search-toggle" id="search-modal-btn" aria-label="Search (Ctrl+K)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
+      <!-- Search Modal Toggle (Search Pill) -->
+      <button class="search-toggle search-pill" id="search-modal-btn" aria-label="Search (Ctrl+K)">
+        <span class="search-pill-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+        <span class="search-pill-text">Search...</span>
+        <kbd class="search-pill-kbd">⌘K</kbd>
       </button>
 
       <!-- Theme toggle -->
@@ -456,6 +460,13 @@ function isActive(linkHref: string) {
   .navbar__link.active {
     color: var(--color-accent-2);
     background: var(--color-bg-card);
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark mode active link background needs slightly higher contrast */
+  :global([data-theme="dark"]) .navbar__link.active {
+    background: rgba(196, 181, 232, 0.25);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   }
 
@@ -467,8 +478,8 @@ function isActive(linkHref: string) {
     flex-shrink: 0;
   }
 
-  /* ─── Theme Toggle, Search Toggle ─── */
-  .theme-toggle, .search-toggle, .settings-toggle {
+  /* ─── Theme Toggle, Settings Toggle ─── */
+  .theme-toggle, .settings-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -483,18 +494,73 @@ function isActive(linkHref: string) {
     padding: 0;
   }
 
-  .theme-toggle:hover, .settings-toggle:hover, .search-toggle:hover {
+  .theme-toggle:hover, .settings-toggle:hover {
     background: var(--color-bg-card);
     color: var(--color-accent-2);
     border-color: var(--color-accent-2);
   }
 
-  .theme-toggle svg, .settings-toggle svg, .search-toggle svg {
+  .theme-toggle svg, .settings-toggle svg {
     transition: transform 0.25s ease;
   }
 
-  .theme-toggle:hover svg, .settings-toggle:hover svg, .search-toggle:hover svg {
-    transform: rotate(20deg);
+  .theme-toggle:hover svg, .settings-toggle:hover svg {
+    transform: scale(1.1);
+  }
+
+  /* ─── Search Pill ─── */
+  .search-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    height: 40px;
+    background: rgba(0,0,0,0.02);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: all 0.25s ease;
+    padding: 0 0.5rem 0 0.75rem;
+    gap: 0.75rem;
+  }
+
+  :global([data-theme="dark"]) .search-pill {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .search-pill:hover {
+    background: var(--color-bg-card);
+    color: var(--color-accent-2);
+    border-color: var(--color-accent-2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .search-pill-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-pill-text {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .search-pill-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.4rem;
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    line-height: 1;
   }
 
   .settings-toggle.active {
@@ -790,8 +856,17 @@ function isActive(linkHref: string) {
   @media (max-width: 768px) {
     .navbar__links { display: none; }
     .hamburger { display: flex; }
-
     .logo-text { font-size: 1.1rem; }
+
+    /* On mobile, collapse the search pill back to an icon */
+    .search-pill-text, .search-pill-kbd {
+      display: none;
+    }
+    .search-pill {
+      width: 40px;
+      padding: 0;
+      justify-content: center;
+    }
   }
 
   /* settings-toggle needs relative positioning for the panel */
