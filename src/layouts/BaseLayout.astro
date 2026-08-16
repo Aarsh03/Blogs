@@ -78,7 +78,7 @@ const imageURL = new URL(image, Astro.site).href;
       var theme = savedTheme || (prefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
       
-      var isDark = theme === 'dark' || theme === 'dracula' || theme === 'rose-pine';
+      var isDark = theme === 'dark' || theme === 'dracula' || theme === 'rose-pine' || theme === 'lavender-dark';
 
       // Inject critical CSS synchronously so icons are correct before first paint.
       // MUST be inside is:inline — regular <style> tags are bundled by Astro
@@ -99,6 +99,9 @@ const imageURL = new URL(image, Astro.site).href;
       var savedEyeComfort = localStorage.getItem('eye-comfort') || 'off';
       document.documentElement.setAttribute('data-eye-comfort', savedEyeComfort);
 
+      var savedEyeComfortIntensity = localStorage.getItem('eye-comfort-intensity') || '7';
+      document.documentElement.style.setProperty('--eye-comfort-intensity', (parseInt(savedEyeComfortIntensity) / 100).toString());
+
       // On View Transition swap, re-apply theme/font/comfort attributes.
       document.addEventListener('astro:after-swap', function() {
         var t = localStorage.getItem('theme');
@@ -114,6 +117,9 @@ const imageURL = new URL(image, Astro.site).href;
 
         var ec = localStorage.getItem('eye-comfort') || 'off';
         document.documentElement.setAttribute('data-eye-comfort', ec);
+        
+        var eci = localStorage.getItem('eye-comfort-intensity') || '7';
+        document.documentElement.style.setProperty('--eye-comfort-intensity', (parseInt(eci) / 100).toString());
       });
     })();
   </script>
