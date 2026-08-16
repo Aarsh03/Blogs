@@ -121,12 +121,15 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     transition: transform 0.2s ease;
   }
 
-  .toc-item a:hover {
+  .toc-item a:hover,
+  .toc-item a.active-toc {
     color: var(--color-text);
     transform: translateX(4px);
+    font-weight: 600;
   }
 
-  .toc-item a:hover::before {
+  .toc-item a:hover::before,
+  .toc-item a.active-toc::before {
     transform: scaleY(1);
   }
 
@@ -135,3 +138,47 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     font-size: 0.88rem;
   }
 </style>
+
+<script>
+  let _tocObserver = null;
+
+  document.addEventListener('astro:page-load', () => {
+    if (_tocObserver) {
+      _tocObserver.disconnect();
+    }
+
+    const tocLinks = document.querySelectorAll('.toc-item a');
+    if (tocLinks.length === 0) return;
+
+    const headings = Array.from(document.querySelectorAll('.prose h2, .prose h3, .prose h4'));
+    
+    // Intersection observer to track active heading
+    _tocObserver = new IntersectionObserver((entries) => {
+      // Find the first intersecting heading
+      const intersecting = entries.find(entry => entry.isIntersecting);
+      
+      if (intersecting) {
+        const id = intersecting.target.id;
+        
+        tocLinks.forEach(link => link.classList.remove('active-toc'));
+        
+        const activeLink = document.querySelector(`.toc-item a[href="#${id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active-toc');
+        }
+      }
+    }, {
+      rootMargin: '-80px 0px -70% 0px',
+      threshold: 0
+    });
+
+    headings.forEach(heading => _tocObserver.observe(heading));
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    if (_tocObserver) {
+      _tocObserver.disconnect();
+      _tocObserver = null;
+    }
+  });
+</script>

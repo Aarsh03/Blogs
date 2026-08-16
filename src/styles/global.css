@@ -74,6 +74,82 @@
 }
 
 /* ═══════════════════════════════════════
+   PREMIUM THEMES
+   ═══════════════════════════════════════ */
+[data-theme="dracula"] {
+  --color-bg: #282a36;
+  --color-bg-card: #44475a;
+  --color-bg-nav: rgba(40, 42, 54, 0.80);
+  --color-bg-code: #21222c;
+  
+  --color-accent-1: #ff79c6; /* Pink */
+  --color-accent-2: #bd93f9; /* Purple */
+  --color-accent-3: #8be9fd; /* Cyan */
+  --color-accent-4: #f1fa8c; /* Yellow */
+  
+  --color-text: #f8f8f2;
+  --color-text-muted: #6272a4;
+  --color-text-light: #50fa7b; /* Green for success */
+  
+  --color-border: #6272a4;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --color-link: var(--color-accent-3);
+  --color-code-text: var(--color-accent-1);
+}
+
+[data-theme="rose-pine"] {
+  --color-bg: #191724;
+  --color-bg-card: #1f1d2e;
+  --color-bg-nav: rgba(25, 23, 36, 0.80);
+  --color-bg-code: #26233a;
+  
+  --color-accent-1: #ebbcba; /* Rose */
+  --color-accent-2: #c4a7e7; /* Iris */
+  --color-accent-3: #31748f; /* Pine */
+  --color-accent-4: #f6c177; /* Gold */
+  
+  --color-text: #e0def4;
+  --color-text-muted: #908caa;
+  --color-text-light: #6e6a86;
+  
+  --color-border: #26233a;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --color-link: var(--color-accent-4);
+  --color-code-text: var(--color-accent-1);
+}
+
+[data-theme="solarized-light"] {
+  --color-bg: #fdf6e3;
+  --color-bg-card: #eee8d5;
+  --color-bg-nav: rgba(253, 246, 227, 0.80);
+  --color-bg-code: #eee8d5;
+  
+  --color-accent-1: #d33682; /* Magenta */
+  --color-accent-2: #268bd2; /* Blue */
+  --color-accent-3: #2aa198; /* Cyan */
+  --color-accent-4: #b58900; /* Yellow */
+  
+  --color-text: #657b83;
+  --color-text-muted: #93a1a1;
+  --color-text-light: #586e75;
+  
+  --color-border: #93a1a1;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.08);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+}
+
+/* ═══════════════════════════════════════
+   LAYOUTS
+   ═══════════════════════════════════════ */
+[data-layout="wide"] {
+  --max-width: 960px;
+}
+
+/* ═══════════════════════════════════════
    BASE RESET
    ═══════════════════════════════════════ */
 *, *::before, *::after {

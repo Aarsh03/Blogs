@@ -81,14 +81,13 @@ function isActive(linkHref: string) {
           </div>
           <div class="settings-divider"></div>
           <div class="settings-section">
-            <div class="settings-row">
-              <div class="settings-row-info">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                <span>Dark Mode</span>
-              </div>
-              <button class="settings-theme-toggle" id="settings-theme-toggle" role="switch" aria-checked="false">
-                <span class="settings-theme-thumb"></span>
-              </button>
+            <p class="settings-label">Theme</p>
+            <div class="theme-palette">
+              <button class="theme-swatch" data-theme-val="light" aria-label="Light Theme"></button>
+              <button class="theme-swatch" data-theme-val="dark" aria-label="Dark Theme"></button>
+              <button class="theme-swatch" data-theme-val="dracula" aria-label="Dracula Theme"></button>
+              <button class="theme-swatch" data-theme-val="rose-pine" aria-label="Rosé Pine Theme"></button>
+              <button class="theme-swatch" data-theme-val="solarized-light" aria-label="Solarized Light Theme"></button>
             </div>
           </div>
           <div class="settings-divider"></div>
@@ -103,6 +102,14 @@ function isActive(linkHref: string) {
               </button>
             </div>
             <p class="settings-hint">Warm tint to reduce eye strain</p>
+          </div>
+          <div class="settings-divider"></div>
+          <div class="settings-section">
+            <p class="settings-label">Layout</p>
+            <div class="font-options">
+              <button class="font-option layout-option" data-layout-val="narrow">Narrow</button>
+              <button class="font-option layout-option" data-layout-val="wide">Wide</button>
+            </div>
           </div>
         </div>
       </div>
@@ -210,18 +217,30 @@ function isActive(linkHref: string) {
     const toggleBtn = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
+    function isDarkTheme(theme) {
+      return ['dark', 'dracula', 'rose-pine'].includes(theme);
+    }
+
     function applyTheme(theme) {
       html.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
+      
+      const isDark = isDarkTheme(theme);
+      
       const sunIcon = toggleBtn?.querySelector('.icon-sun');
       const moonIcon = toggleBtn?.querySelector('.icon-moon');
-      if (theme === 'dark') {
+      if (isDark) {
         sunIcon?.style.setProperty('display', 'block', 'important');
         moonIcon?.style.setProperty('display', 'none', 'important');
       } else {
         sunIcon?.style.setProperty('display', 'none', 'important');
         moonIcon?.style.setProperty('display', 'block', 'important');
       }
+
+      // Update Swatches
+      document.querySelectorAll('.theme-swatch').forEach(swatch => {
+        swatch.classList.toggle('active', swatch.getAttribute('data-theme-val') === theme);
+      });
     }
 
     // Sync icon on initial load
@@ -229,16 +248,22 @@ function isActive(linkHref: string) {
     applyTheme(initialTheme);
 
     toggleBtn?.addEventListener('click', () => {
-      const isDark = html.getAttribute('data-theme') === 'dark';
-      applyTheme(isDark ? 'light' : 'dark');
+      const currentTheme = html.getAttribute('data-theme') || 'light';
+      // Toggle between light and dark (base) when using the top navbar button
+      if (isDarkTheme(currentTheme)) {
+        applyTheme('light');
+      } else {
+        applyTheme('dark');
+      }
     });
 
     /* ── Settings Panel ── */
     const settingsBtn = document.getElementById('settings-toggle');
     const settingsPanel = document.getElementById('settings-panel');
     const fontOptions = document.querySelectorAll('.font-option');
+    const layoutOptions = document.querySelectorAll('.layout-option');
+    const themeSwatches = document.querySelectorAll('.theme-swatch');
     const eyeComfortBtn = document.getElementById('eye-comfort-toggle');
-    const settingsThemeToggle = document.getElementById('settings-theme-toggle');
 
     function closeSettings() {
       settingsPanel?.setAttribute('aria-hidden', 'true');
@@ -285,8 +310,35 @@ function isActive(linkHref: string) {
     applyFont(initialFont);
 
     fontOptions.forEach(btn => {
+      if (!btn.classList.contains('layout-option')) {
+        btn.addEventListener('click', () => {
+          applyFont(btn.getAttribute('data-font'));
+        });
+      }
+    });
+
+    /* ── Layout picker ── */
+    function applyLayout(layout) {
+      html.setAttribute('data-layout', layout);
+      localStorage.setItem('layout', layout);
+      layoutOptions.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-layout-val') === layout);
+      });
+    }
+
+    const initialLayout = localStorage.getItem('layout') || 'narrow';
+    applyLayout(initialLayout);
+
+    layoutOptions.forEach(btn => {
       btn.addEventListener('click', () => {
-        applyFont(btn.getAttribute('data-font'));
+        applyLayout(btn.getAttribute('data-layout-val'));
+      });
+    });
+
+    /* ── Theme Swatches ── */
+    themeSwatches.forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        applyTheme(swatch.getAttribute('data-theme-val'));
       });
     });
 
@@ -624,12 +676,43 @@ function isActive(linkHref: string) {
     margin: 0.6rem 0;
   }
 
-  /* Font pills */
+  /* Font pills & Layout pills */
   .font-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.35rem;
   }
+
+  /* Theme Palette */
+  .theme-palette {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .theme-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .theme-swatch:hover {
+    transform: scale(1.15);
+  }
+
+  .theme-swatch.active {
+    box-shadow: 0 0 0 2px var(--color-bg-card), 0 0 0 4px var(--color-accent-2);
+  }
+
+  .theme-swatch[data-theme-val="light"] { background: #fdf6f9; border: 1px solid #ede4e8; }
+  .theme-swatch[data-theme-val="dark"] { background: #1a1520; border: 1px solid #352d45; }
+  .theme-swatch[data-theme-val="dracula"] { background: #282a36; border: 1px solid #6272a4; }
+  .theme-swatch[data-theme-val="rose-pine"] { background: #191724; border: 1px solid #26233a; }
+  .theme-swatch[data-theme-val="solarized-light"] { background: #fdf6e3; border: 1px solid #93a1a1; }
 
   .font-option {
     font-family: var(--font-ui);

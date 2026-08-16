@@ -70,26 +70,31 @@ const imageURL = new URL(image, Astro.site).href;
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={imageURL} />
 
-  <!-- Prevent flash of wrong theme + inject critical icon CSS before body renders -->
+    <!-- Prevent flash of wrong theme + inject critical icon CSS before body renders -->
   <script is:inline>
     (function() {
       var savedTheme = localStorage.getItem('theme');
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       var theme = savedTheme || (prefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
+      
+      var isDark = theme === 'dark' || theme === 'dracula' || theme === 'rose-pine';
 
       // Inject critical CSS synchronously so icons are correct before first paint.
       // MUST be inside is:inline — regular <style> tags are bundled by Astro
       // into external .css files which load async and cause FOUC.
       var s = document.createElement('style');
       s.id = 'theme-icon-critical';
-      s.textContent = theme === 'dark'
+      s.textContent = isDark
         ? '.icon-sun{display:block!important}.icon-moon{display:none!important}'
         : '.icon-sun{display:none!important}.icon-moon{display:block!important}';
       document.head.appendChild(s);
 
       var savedFont = localStorage.getItem('font') || 'serif';
       document.documentElement.setAttribute('data-font', savedFont);
+
+      var savedLayout = localStorage.getItem('layout') || 'narrow';
+      document.documentElement.setAttribute('data-layout', savedLayout);
 
       var savedEyeComfort = localStorage.getItem('eye-comfort') || 'off';
       document.documentElement.setAttribute('data-eye-comfort', savedEyeComfort);
@@ -103,6 +108,9 @@ const imageURL = new URL(image, Astro.site).href;
 
         var f = localStorage.getItem('font') || 'serif';
         document.documentElement.setAttribute('data-font', f);
+
+        var l = localStorage.getItem('layout') || 'narrow';
+        document.documentElement.setAttribute('data-layout', l);
 
         var ec = localStorage.getItem('eye-comfort') || 'off';
         document.documentElement.setAttribute('data-eye-comfort', ec);
