@@ -111,8 +111,6 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
     touch-action: pan-x;
-    -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
-    mask-image: linear-gradient(to right, black 90%, transparent 100%);
   }
   
   .tags-filter__scroll::-webkit-scrollbar {

@@ -1,24 +1,24 @@
 [data-theme="solarized-light"] {
   --color-bg: #fdf6e3;
   --color-bg-card: #eee8d5;
-  --color-bg-nav: rgba(253, 246, 227, 0.80);
-  --color-bg-code: #eee8d5;
+  --color-bg-nav: rgba(253, 246, 227, 0.85);
+  --color-bg-code: #e5dfc9;
   
   --color-accent-1: #d33682; /* Magenta */
   --color-accent-2: #268bd2; /* Blue */
   --color-accent-3: #2aa198; /* Cyan */
   --color-accent-4: #b58900; /* Yellow */
   
-  --color-text: #586e75; /* Darkened for better contrast */
-  --color-text-muted: #657b83;
-  --color-text-light: #839496;
+  --color-text: #073642; /* Much darker text for better legibility (base02) */
+  --color-text-muted: #586e75; /* (base01) */
+  --color-text-light: #93a1a1; /* (base1) */
   
-  --color-border: #93a1a1;
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.08);
+  --color-border: #d5ccb7; /* Softer border than base1 */
+  --shadow-card: 0 4px 24px rgba(7, 54, 66, 0.05);
+  --shadow-card-hover: 0 12px 48px rgba(7, 54, 66, 0.1);
   --color-link: var(--color-accent-2);
   --color-code-text: var(--color-accent-1);
-  --color-bg-nav-links: rgba(38, 139, 210, 0.15);
+  --color-bg-nav-links: rgba(38, 139, 210, 0.12);
   --color-nav-links-border: rgba(38, 139, 210, 0.3);
-  --color-success: #10b981;
+  --color-success: #859900; /* Solarized Green */
 }

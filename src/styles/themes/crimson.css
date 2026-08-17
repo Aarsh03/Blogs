@@ -1,0 +1,24 @@
+[data-theme="crimson"] {
+  --color-bg: #1a0a0a;
+  --color-bg-card: #2a1010;
+  --color-bg-nav: rgba(26, 10, 10, 0.85);
+  --color-bg-code: #2a1010;
+  
+  --color-accent-1: #ef4444; /* Red 500 */
+  --color-accent-2: #f87171; /* Red 400 */
+  --color-accent-3: #fca5a5; /* Red 300 */
+  --color-accent-4: #fb923c; /* Orange 400 */
+  
+  --color-text: #fecaca; /* Red 200 */
+  --color-text-muted: #f87171; /* Red 400 */
+  --color-text-light: #ef4444; /* Red 500 */
+  
+  --color-border: #450a0a;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-3);
+  --color-bg-nav-links: rgba(239, 68, 68, 0.1);
+  --color-nav-links-border: rgba(239, 68, 68, 0.3);
+  --color-success: #34d399;
+}

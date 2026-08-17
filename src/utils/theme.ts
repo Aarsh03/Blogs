@@ -1,6 +1,6 @@
 export const DARK_THEMES = [
   'dark',
-  'dracula',
+  'crimson',
   'rose-pine',
   'lavender-dark',
   'midnight-black'
