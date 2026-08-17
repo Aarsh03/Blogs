@@ -22,4 +22,5 @@
   --color-code-text: var(--color-accent-1);
   --color-bg-nav-links: rgba(196, 181, 232, 0.15);
   --color-nav-links-border: rgba(196, 181, 232, 0.3);
+  --color-success: #10b981;
 }

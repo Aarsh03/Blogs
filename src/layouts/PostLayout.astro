@@ -196,14 +196,14 @@ const schema = {
     text-decoration: none;
     transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
-
-  .post-nav-card:hover {
-    border-color: var(--color-accent-2);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
-    text-decoration: none;
+  @media (hover: hover) {
+    .post-nav-card:hover {
+      border-color: var(--color-accent-2);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+      text-decoration: none;
+    }
   }
-
   .post-nav-card.next {
     align-items: flex-end;
     text-align: right;
@@ -225,9 +225,10 @@ const schema = {
     font-weight: 700;
     transition: color 0.2s ease;
   }
-
-  .post-nav-card:hover .post-nav-title {
-    color: var(--color-accent-2);
+  @media (hover: hover) {
+    .post-nav-card:hover .post-nav-title {
+      color: var(--color-accent-2);
+    }
   }
 
   .post-nav-empty {

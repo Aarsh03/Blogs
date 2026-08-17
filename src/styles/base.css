@@ -1,4 +1,15 @@
-LAYOUTS
+:root {
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --max-width: 720px;
+  --max-width-wide: 960px;
+  --nav-height: 64px;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUTS
    ═══════════════════════════════════════ */
 [data-layout="wide"] {
   --max-width: 960px;
@@ -14,7 +25,7 @@ LAYOUTS
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 24px; /* Reduced because navbar auto-hides */
+  scroll-padding-top: 24px;
 }
 
 body {
@@ -37,16 +48,16 @@ body::before {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 50% 50%, rgba(232, 180, 203, 0.08), transparent 60%),
-              radial-gradient(circle at 80% 20%, rgba(184, 169, 212, 0.08), transparent 50%);
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-accent-1) 8%, transparent), transparent 60%),
+              radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-accent-2) 8%, transparent), transparent 50%);
   z-index: -1;
   pointer-events: none;
   transition: opacity 0.5s ease;
 }
 
 [data-theme-mode="dark"] body::before {
-  background: radial-gradient(circle at 50% 50%, rgba(232, 160, 191, 0.03), transparent 60%),
-              radial-gradient(circle at 80% 20%, rgba(196, 181, 232, 0.03), transparent 50%);
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-accent-1) 3%, transparent), transparent 60%),
+              radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-accent-2) 3%, transparent), transparent 50%);
 }
 
 h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd {
@@ -64,8 +75,10 @@ a {
   transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
-a:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 /* ═══════════════════════════════════════
@@ -115,16 +128,14 @@ h4 { font-size: 1.125rem; }
   background: linear-gradient(var(--color-accent-1), var(--color-accent-2));
   border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--color-accent-2); }
+@media (hover: hover) {
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-accent-2); }
+}
 
 /* ═══════════════════════════════════════
    SELECTION
    ═══════════════════════════════════════ */
 ::selection {
-  background: rgba(184, 169, 212, 0.3);
+  background: color-mix(in srgb, var(--color-accent-2) 30%, transparent);
   color: var(--color-text);
 }
-
-/* ═══════════════════════════════════════
-:root { --font-mono: 'JetBrains Mono', 'Fira Code', monospace; --max-width: 720px; --max-width-wide: 960px; --nav-height: 64px; --radius: 14px; --radius-sm: 8px; --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
-

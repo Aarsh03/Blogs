@@ -1,103 +1,107 @@
-# Theming Guide
+# Theming & UI Development Guide
 
-The Blog uses a highly advanced CSS Variable-driven architecture, enabling seamless toggling between an infinite number of themes with perfect 120fps View Transitions and zero Flash of Unstyled Content (FOUC). The current version ships with 12 built-in themes (Dark/Light/Pastel/Neon).
+This guide is the single source of truth for creating and maintaining themes in this blog. The Blog uses a highly advanced CSS Variable-driven architecture, enabling seamless toggling between an infinite number of themes with perfect 120fps View Transitions and zero Flash of Unstyled Content (FOUC).
 
-## Architecture
+## 1. Architecture
 
 Themes are decoupled from the components. Instead of writing `[data-theme="dark"]` inside every single Astro component, components are designed to use semantic `var(--color-...)` variables. The themes themselves simply redefine these variables at the document root level.
 
 All themes are stored individually inside `src/styles/themes/` and are automatically imported into `global.css`.
 
-### Adding a New Theme
+## 2. Adding a New Theme
 
 To add a new theme (e.g. `ocean-breeze`):
 
-1. **Create the Theme File**
-   Create `src/styles/themes/ocean-breeze.css`:
-   ```css
-   [data-theme="ocean-breeze"] {
-     /* Backgrounds */
-     --color-bg: #e0f7fa;
-     --color-bg-card: #ffffff;
-     --color-bg-nav: rgba(224, 247, 250, 0.80);
-     --color-bg-code: #b2ebf2;
-     
-     /* Accents */
-     --color-accent-1: #00bcd4;
-     --color-accent-2: #009688;
-     --color-accent-3: #4dd0e1;
-     --color-accent-4: #80cbc4;
-     
-     /* Text */
-     --color-text: #006064;
-     --color-text-muted: #00838f;
-     --color-text-light: #00acc1;
-     
-     /* Borders & Shadows */
-     --color-border: #b2ebf2;
-     --shadow-card: 0 4px 24px rgba(0, 150, 136, 0.08);
-     --shadow-card-hover: 0 12px 48px rgba(0, 150, 136, 0.15);
-     
-     /* Specific Overrides */
-     --color-link: var(--color-accent-2);
-     --color-code-text: var(--color-accent-1);
-     --color-bg-nav-links: rgba(0, 150, 136, 0.15);
-     --color-nav-links-border: rgba(0, 150, 136, 0.3);
-   }
-   ```
+### 1. Create the Theme File
+Create `src/styles/themes/ocean-breeze.css` with the required variables (see the Required Variables Checklist below).
 
-2. **Import the Theme**
-   Add `@import url('./themes/ocean-breeze.css');` to the top of `src/styles/global.css`.
+### 2. Import the Theme
+Add `@import url('./themes/ocean-breeze.css');` to the top of `src/styles/global.css`.
 
-3. **Register the Swatch in Settings**
-   Open `src/components/navbar/SettingsPanel.astro` and add the new swatch HTML to the `.theme-palette` flex container:
-   ```html
-   <div class="theme-swatch-wrapper">
-     <button class="theme-swatch" data-theme-val="ocean-breeze" aria-label="Ocean Breeze Theme"></button>
-     <span class="theme-label">Ocean</span>
-   </div>
-   ```
-   Then, add its color definition to `src/styles/navbar.css`:
-   ```css
-   .theme-swatch[data-theme-val="ocean-breeze"] { background: #e0f7fa; border: 1px solid #00bcd4; }
-   ```
+### 3. Register the Swatch in Settings
+Open `src/components/navbar/SettingsPanel.astro` and add the new swatch HTML to the `.theme-palette` flex container:
+```html
+<div class="theme-swatch-wrapper">
+  <button class="theme-swatch" data-theme-val="ocean-breeze" aria-label="Ocean Breeze Theme"></button>
+  <span class="theme-label">Ocean</span>
+</div>
+```
+Then, add its color definition to `src/styles/navbar.css`:
+```css
+.theme-swatch[data-theme-val="ocean-breeze"] { background: #e0f7fa; border: 1px solid #00bcd4; }
+```
 
-4. **Register Dark Themes**
-   If the new theme is a **dark theme**, you MUST add it to the `isDarkTheme` function array in `src/utils/theme.ts`, AND the inline critical FOUC script array in `src/layouts/BaseLayout.astro`. This ensures `data-theme-mode="dark"` is correctly applied, which triggers dark mode frosted glassmorphism, dark tag styling, and dark Giscus comments.
+### 4. Register Dark Themes
+If the new theme is a **dark theme**, you MUST add it to the `isDarkTheme` function array in `src/utils/theme.ts`, AND the inline critical FOUC script array in `src/layouts/BaseLayout.astro`. This ensures `data-theme-mode="dark"` is correctly applied, which triggers dark mode frosted glassmorphism, dark tag styling, and dark Giscus comments.
 
-## Eye Comfort Mode
+---
+
+## 3. Required Variables Checklist
+
+Every new theme file MUST contain **all** of the following variables in its `[data-theme="your-theme"]` block:
+
+### Backgrounds
+- `--color-bg`: Main body background.
+- `--color-bg-card`: For cards (e.g., post cards, search modal, `.empty-state`). Should be slightly lighter than `--color-bg` (dark mode) or slightly darker (light mode) to provide depth.
+- `--color-bg-nav`: RGBA value for the frosted glass navbar/TOC (e.g., `rgba(255,255,255,0.8)`). Must contrast well with the body.
+- `--color-bg-nav-links`: Very transparent RGBA mapped to active Nav Link pills and subtle hover highlights.
+- `--color-bg-code`: Background for `<kbd>`, inline `<code>`, and code blocks.
+
+### Typography & Lines
+- `--color-text`: The primary text color (headers, paragraphs). Ensure WCAG contrast > 4.5:1 against `--color-bg`.
+- `--color-text-muted`: Secondary text (dates, metadata).
+- `--color-text-light`: Placeholder text, very subtle elements.
+- `--color-border`: Standard border color used across the app (navbar line, card strokes).
+
+### Accents & Interactions
+- `--color-accent-1`, `--color-accent-3`, `--color-accent-4`: Brand colors.
+- `--color-accent-2`: Secondary brand/interactive color (primary for buttons, hover states, links).
+- `--color-link`: Usually mapped to `var(--color-accent-2)`.
+- `--color-code-text`: Used for inline code text and the "like" heart animation.
+- `--color-success`: Success state color (e.g., `#10b981` green).
+- `--color-nav-links-border`: Slightly opaque RGBA mapped to active Nav Link borders.
+
+### Overlays & Shadows
+- `--shadow-card`: The default shadow for elevated elements.
+- `--shadow-card-hover`: The elevated hover state shadow.
+
+---
+
+## 4. Best Practices for Colors & Contrast
+
+1. **Avoid Hardcoded Colors**: 
+   - Never use static hex codes or `rgba` directly in `.astro` components for UI states.
+   - Use `color-mix(in srgb, var(--color-accent-2) 10%, transparent)` to create dynamic, theme-aware translucent layers.
+2. **Tag and Alert Visibility**:
+   - Tags and alerts (`tags.css`, `alerts.css`) use `color-mix()` against `--color-text` and `--color-accent-2` to guarantee contrast on both dark and light modes.
+   - Ensure the theme's `--color-bg` isn't completely pitch black (`#000000`) if you intend to use subtle dark grays for borders.
+3. **Glassmorphism Considerations**:
+   - The `--color-bg-nav` must have a reliable solid baseline color before `backdrop-filter: blur(24px)` is applied by the global CSS. Do not make it fully transparent.
+
+---
+
+## 5. UI/UX and Mobile Considerations
+
+- **No Sticky Hovers on Mobile**: 
+  - Every single `:hover` state must be wrapped in `@media (hover: hover)`. This prevents touch devices from locking elements into an active hover state after a tap.
+- **Backdrop Filter Clipping Bugs**:
+  - Never put `backdrop-filter` on a container that also has `overflow: hidden` or `overflow: auto`. It will clip the blur in Chromium/WebKit. Always apply the filter to an absolute pseudo-element (`::before`) or a dedicated `.bg-layer`.
+- **View Transitions**:
+  - Be mindful that all client-side JavaScript must listen to `astro:page-load` instead of `DOMContentLoaded` because the site utilizes native View Transitions.
+  - Event listeners must be cleaned up in `astro:before-swap` to prevent memory leaks and duplicate triggers.
+
+---
+
+## 6. Eye Comfort Mode
 
 The site features an adjustable Eye Comfort mode that overlays a warm sepia tint on the page. It is controlled via the `--eye-comfort-intensity` CSS variable in `src/scripts/navbar.ts`, which scales from `0.02` to `0.25`. This variable multiplies the opacity of a fixed `pointer-events: none` overlay div in `BaseLayout.astro`.
 
-## Required Variables Checklist
+---
 
-Every single theme MUST define the following variables to ensure perfect contrast and visibility across the site:
+## 7. Audit Process
 
-| Variable | Description |
-|---|---|
-| `--color-bg` | Main body background |
-| `--color-bg-card` | Solid background for cards and modals |
-| `--color-bg-nav` | RGBA value for the frosted glass navbar (e.g., `rgba(255,255,255,0.8)`) |
-| `--color-bg-code` | Background for inline code `<code>` |
-| `--color-accent-1`, `2`, `3`, `4` | Brand colors. `accent-2` is usually primary. |
-| `--color-text` | Primary reading text |
-| `--color-text-muted` | Subtitles, dates, meta info |
-| `--color-text-light` | Placeholder text, very subtle elements |
-| `--color-border` | Standard borders (hr, cards, tables) |
-| `--shadow-card` | Default card shadow |
-| `--shadow-card-hover` | Hovered card shadow |
-| `--color-link` | Usually mapped to `var(--color-accent-2)` |
-| `--color-code-text` | Text color for inline code snippets |
-| `--color-bg-nav-links` | Very transparent RGBA mapped to active Nav Link pills |
-| `--color-nav-links-border` | Slightly opaque RGBA mapped to active Nav Link borders |
-
-## Component Visibility Troubleshooting
-
-If a new theme has poor visibility in certain components (like the Search Box, Table of Contents, or Tags), it is almost always because the theme failed to define the correct contrast for its variables.
-
-- **Tags:** Tag backgrounds are generated using `data-theme-mode="dark" | "light"`. If a specific theme requires unique tag coloring (like Midnight Black), you can override `.tag` directly in that theme's CSS file:
-  ```css
-  [data-theme="midnight-black"] .tag { border-color: var(--color-accent-1); }
-  ```
-- **Search Modal:** Uses `var(--color-bg-card)` for the panel and `var(--color-text)` for text. Ensure these have high contrast.
-- **Giscus Comments:** Uses `data-theme-mode="dark"` to load `giscus-dark.css`. Ensure `var(--color-border)` is visible against `var(--color-bg)`.
+After adding a new theme or modifying UI, run:
+```bash
+node scratch/theme_audit.cjs
+```
+This script ensures all required variables are present across all themes and flags missing fallback styles.

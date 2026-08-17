@@ -10,42 +10,56 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 {toc.length > 0 && (
-  <details class="toc-container">
-    <summary class="toc-summary">
-      <span class="toc-title">Table of Contents</span>
-      <svg class="toc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
-    </summary>
-    <div class="toc-content">
-      <ul class="toc-list">
-        {toc.map((heading) => (
-          <li class={`toc-item toc-depth-${heading.depth}`}>
-            <a href={`#${heading.slug}`}>{heading.text}</a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </details>
+  <nav aria-label="Table of Contents" class="toc-wrapper">
+    <div class="toc-bg"></div>
+    <details class="toc-container">
+      <summary class="toc-summary">
+        <span class="toc-title">Table of Contents</span>
+        <svg class="toc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </summary>
+      <div class="toc-content">
+        <ul class="toc-list">
+          {toc.map((heading) => (
+            <li class={`toc-item toc-depth-${heading.depth}`}>
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
+  </nav>
 )}
 
 <style>
-  .toc-container {
+  .toc-wrapper {
+    position: relative;
+    margin: 2.5rem 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .toc-bg {
+    position: absolute;
+    inset: 0;
     background: var(--color-bg-nav);
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
-    margin: 2.5rem 0;
-    padding: 0;
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: -1;
+    transition: background-color 0.3s ease;
   }
 
-  :global([data-theme-mode="dark"]) .toc-container {
-    background: var(--color-bg-nav);
-    border-color: var(--color-border);
+  .toc-container {
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 0;
+    transition: border-color 0.3s ease;
+  }
+
+  :global([data-theme-mode="dark"]) .toc-wrapper {
     box-shadow: var(--shadow-card);
   }
 
@@ -65,8 +79,10 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     transition: background 0.2s ease;
   }
 
-  .toc-summary:hover {
-    background: rgba(184, 169, 212, 0.08);
+  @media (hover: hover) {
+    .toc-summary:hover {
+      background: color-mix(in srgb, var(--color-accent-2) 10%, transparent);
+    }
   }
 
   .toc-summary::-webkit-details-marker {
@@ -95,7 +111,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    border-left: 1px solid rgba(184, 169, 212, 0.3);
+    border-left: 1px solid color-mix(in srgb, var(--color-accent-2) 30%, transparent);
   }
 
   .toc-item a {
@@ -121,14 +137,23 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     transition: transform 0.2s ease;
   }
 
-  .toc-item a:hover,
+  @media (hover: hover) {
+    .toc-item a:hover {
+      color: var(--color-text);
+      transform: translateX(4px);
+      font-weight: 600;
+    }
+    .toc-item a:hover::before {
+      transform: scaleY(1);
+    }
+  }
+
   .toc-item a.active-toc {
     color: var(--color-text);
     transform: translateX(4px);
     font-weight: 600;
   }
 
-  .toc-item a:hover::before,
   .toc-item a.active-toc::before {
     transform: scaleY(1);
   }

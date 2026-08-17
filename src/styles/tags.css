@@ -1,0 +1,44 @@
+/* ═══════════════════════════════════════
+   TAGS
+   ═══════════════════════════════════════ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4em 1em;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  /* Default fallback color */
+  background-color: color-mix(in srgb, var(--color-accent-2) 20%, transparent);
+  color: var(--color-text);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 35%, transparent);
+}
+
+/* Colors when tag is a direct child (e.g. in PostCard, PostLayout) */
+.tag:nth-child(4n+1) { background-color: color-mix(in srgb, var(--color-accent-1) 20%, transparent); border-color: color-mix(in srgb, var(--color-accent-1) 40%, transparent); color: var(--color-text); }
+.tag:nth-child(4n+2) { background-color: color-mix(in srgb, var(--color-accent-2) 20%, transparent); border-color: color-mix(in srgb, var(--color-accent-2) 40%, transparent); color: var(--color-text); }
+.tag:nth-child(4n+3) { background-color: color-mix(in srgb, var(--color-accent-3) 20%, transparent); border-color: color-mix(in srgb, var(--color-accent-3) 40%, transparent); color: var(--color-text); }
+.tag:nth-child(4n+0) { background-color: color-mix(in srgb, var(--color-accent-4) 20%, transparent); border-color: color-mix(in srgb, var(--color-accent-4) 40%, transparent); color: var(--color-text); }
+
+/* Dark mode */
+[data-theme-mode="dark"] .tag { background-color: color-mix(in srgb, var(--color-accent-2) 15%, transparent); border-color: color-mix(in srgb, var(--color-accent-2) 30%, transparent); }
+[data-theme-mode="dark"] .tag:nth-child(4n+1) { background-color: color-mix(in srgb, var(--color-accent-1) 15%, transparent); border-color: color-mix(in srgb, var(--color-accent-1) 30%, transparent); }
+[data-theme-mode="dark"] .tag:nth-child(4n+2) { background-color: color-mix(in srgb, var(--color-accent-2) 15%, transparent); border-color: color-mix(in srgb, var(--color-accent-2) 30%, transparent); }
+[data-theme-mode="dark"] .tag:nth-child(4n+3) { background-color: color-mix(in srgb, var(--color-accent-3) 15%, transparent); border-color: color-mix(in srgb, var(--color-accent-3) 30%, transparent); }
+[data-theme-mode="dark"] .tag:nth-child(4n+0) { background-color: color-mix(in srgb, var(--color-accent-4) 15%, transparent); border-color: color-mix(in srgb, var(--color-accent-4) 30%, transparent); }
+
+@media (hover: hover) {
+  .tag:hover {
+    transform: scale(1.06);
+    text-decoration: none;
+    filter: brightness(0.9);
+  }
+
+  [data-theme-mode="dark"] .tag:hover {
+    filter: brightness(1.15);
+  }
+}

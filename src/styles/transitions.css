@@ -1,4 +1,5 @@
-ANIMATIONS
+/* ═══════════════════════════════════════
+   ANIMATIONS
    ═══════════════════════════════════════ */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(14px); }

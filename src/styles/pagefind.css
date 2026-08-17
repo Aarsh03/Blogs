@@ -1,13 +1,13 @@
 /* ═══════════════════════════════════════
    PAGEFIND UI OVERRIDES
    ═══════════════════════════════════════ */
-:global(.pagefind-ui) {
+.pagefind-ui {
   --pagefind-ui-scale: 0.9;
   --pagefind-ui-primary: var(--color-accent-2);
   --pagefind-ui-text: var(--color-text);
   --pagefind-ui-background: transparent;
-  --pagefind-ui-border: rgba(184, 169, 212, 0.3);
-  --pagefind-ui-tag: rgba(184, 169, 212, 0.1);
+  --pagefind-ui-border: color-mix(in srgb, var(--color-accent-2) 30%, transparent);
+  --pagefind-ui-tag: color-mix(in srgb, var(--color-accent-2) 10%, transparent);
   --pagefind-ui-border-width: 1px;
   --pagefind-ui-border-radius: 8px;
   --pagefind-ui-image-border-radius: 8px;
@@ -15,13 +15,13 @@
   --pagefind-ui-font: var(--font-ui);
 }
 
-:global([data-theme-mode="dark"] .pagefind-ui) {
-  --pagefind-ui-border: rgba(255, 255, 255, 0.1);
-  --pagefind-ui-tag: rgba(255, 255, 255, 0.05);
+[data-theme-mode="dark"] .pagefind-ui {
+  --pagefind-ui-border: color-mix(in srgb, var(--color-border) 50%, transparent);
+  --pagefind-ui-tag: color-mix(in srgb, var(--color-accent-2) 10%, transparent);
 }
 
 /* Base input overrides */
-:global(.pagefind-ui__search-input) {
+.pagefind-ui__search-input {
   font-weight: 400 !important;
   color: var(--color-text) !important;
   background-color: transparent !important;
@@ -30,20 +30,20 @@
 }
 
 /* Hide default clear/search buttons since we use custom UI */
-:global(.pagefind-ui__search-clear),
-:global(.pagefind-ui__button) {
+.pagefind-ui__search-clear,
+.pagefind-ui__button {
   display: none !important;
 }
 
 /* Results container styling */
-:global(.pagefind-ui__drawer:not(.pagefind-ui__hidden)) {
+.pagefind-ui__drawer:not(.pagefind-ui__hidden) {
   margin-top: 1.5rem !important;
   padding-top: 1.5rem !important;
   border-top: 1px solid var(--pagefind-ui-border);
 }
 
 /* Result item styling */
-:global(.pagefind-ui__result) {
+.pagefind-ui__result {
   padding: 1.25rem !important;
   border-radius: 12px;
   border-bottom: none !important;
@@ -51,45 +51,51 @@
   cursor: pointer;
 }
 
-:global(.pagefind-ui__result:hover),
-:global(.pagefind-ui__result:focus-within) {
+@media (hover: hover) {
+  .pagefind-ui__result:hover {
+    background: var(--pagefind-ui-tag) !important;
+    outline: none;
+  }
+}
+
+.pagefind-ui__result:focus-within {
   background: var(--pagefind-ui-tag) !important;
   outline: none;
 }
 
 /* Result title */
-:global(.pagefind-ui__result-title) {
+.pagefind-ui__result-title {
   font-weight: 600 !important;
   font-size: 1.15rem !important;
   margin-bottom: 0.5rem !important;
 }
 
 /* Result excerpt */
-:global(.pagefind-ui__result-excerpt) {
+.pagefind-ui__result-excerpt {
   color: var(--color-text-muted) !important;
   line-height: 1.6 !important;
   font-size: 0.95rem !important;
 }
 
 /* Match highlights */
-:global(.pagefind-ui__result-excerpt mark) {
-  background-color: rgba(184, 169, 212, 0.3) !important;
+.pagefind-ui__result-excerpt mark {
+  background-color: color-mix(in srgb, var(--color-accent-2) 30%, transparent) !important;
   color: inherit !important;
   border-radius: 3px;
   padding: 0.1em 0.3em;
 }
 
-:global([data-theme-mode="dark"] .pagefind-ui__result-excerpt mark) {
-  background-color: rgba(196, 181, 232, 0.4) !important;
+[data-theme-mode="dark"] .pagefind-ui__result-excerpt mark {
+  background-color: color-mix(in srgb, var(--color-accent-2) 40%, transparent) !important;
 }
 
 /* Hide image for cleaner look */
-:global(.pagefind-ui__result-image) {
+.pagefind-ui__result-image {
   display: none !important;
 }
 
 /* Message styling (e.g. "No results") */
-:global(.pagefind-ui__message) {
+.pagefind-ui__message {
   color: var(--color-text-muted) !important;
   text-align: center;
   padding: 2rem 0 !important;

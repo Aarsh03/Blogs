@@ -1,6 +1,8 @@
 document.addEventListener('astro:page-load', () => {
   const blocks = document.querySelectorAll('.prose pre');
   blocks.forEach((block) => {
+    if (block.querySelector('.copy-code-btn')) return;
+    
     // Ensure the pre block is positioned relative for absolute positioning of the button
     if (window.getComputedStyle(block).position === 'static') {
       (block as HTMLElement).style.position = 'relative';

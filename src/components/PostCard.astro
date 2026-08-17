@@ -24,9 +24,9 @@ const base = import.meta.env.BASE_URL;
   <p class="post-card__description">{description}</p>
   <div class="post-card__meta">
     <span class="post-card__date">{formattedDate}</span>
-    <span class="post-card__arrow">→</span>
+    <span class="post-card__arrow" aria-hidden="true">→</span>
   </div>
-  <div class="post-card__tooltip">{readingTime}</div>
+  <div class="post-card__tooltip" aria-hidden="true">{readingTime}</div>
 </a>
 
 <style>
@@ -48,7 +48,7 @@ const base = import.meta.env.BASE_URL;
     position: absolute;
     inset: 0;
     border-radius: var(--radius);
-    background: linear-gradient(135deg, rgba(232,180,203,0.07), rgba(184,169,212,0.07));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-1) 7%, transparent), color-mix(in srgb, var(--color-accent-2) 7%, transparent));
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
@@ -85,8 +85,10 @@ const base = import.meta.env.BASE_URL;
     letter-spacing: -0.01em;
   }
 
-  .post-card:hover .post-card__title {
-    color: var(--color-accent-2);
+  @media (hover: hover) {
+    .post-card:hover .post-card__title {
+      color: var(--color-accent-2);
+    }
   }
 
   .post-card__description {

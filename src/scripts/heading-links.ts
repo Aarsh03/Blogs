@@ -2,6 +2,7 @@ document.addEventListener('astro:page-load', () => {
   // Add Copy Link buttons to headings in prose
   document.querySelectorAll('.prose h2, .prose h3').forEach((heading) => {
     if (!heading.id) return;
+    if (heading.querySelector('.heading-link-btn')) return;
     
     // Ensure relative positioning
     if (window.getComputedStyle(heading).position === 'static') {

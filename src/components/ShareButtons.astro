@@ -111,11 +111,13 @@ const { title } = Astro.props;
     transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
   }
 
-  .share-btn:hover {
-    color: var(--color-accent-2);
-    border-color: var(--color-accent-2);
-    background: rgba(184, 169, 212, 0.08);
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .share-btn:hover {
+      color: var(--color-accent-2);
+      border-color: var(--color-accent-2);
+      background: color-mix(in srgb, var(--color-accent-2) 10%, transparent);
+      transform: translateY(-2px);
+    }
   }
 
   .copy-link-btn {
