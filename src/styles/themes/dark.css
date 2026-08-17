@@ -4,11 +4,11 @@
   --color-bg-nav: rgba(26, 21, 32, 0.80);
   --color-bg-code: #2a2035;
 
-  /* Slightly more saturated pastels for dark bg */
-  --color-accent-1: #e8a0bf;
-  --color-accent-2: #c4b5e8;
-  --color-accent-3: #95ded9;
-  --color-accent-4: #fcbd8b;
+  /* Saturated bright accents for high visibility in dark mode */
+  --color-accent-1: #f472b6; /* Bright Pink 400 */
+  --color-accent-2: #a78bfa; /* Bright Purple 400 */
+  --color-accent-3: #2dd4bf; /* Bright Teal 400 */
+  --color-accent-4: #fb923c; /* Bright Orange 400 */
 
   --color-text: #f0eaf4;
   --color-text-muted: #a89db8;
