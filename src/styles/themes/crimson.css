@@ -6,10 +6,10 @@
   --color-bg-code: #ffe4e6; /* Rose 100 */
   
   /* Accents */
-  --color-accent-1: #ffe4e6; /* Rose 100 */
+  --color-accent-1: #be123c; /* Rose 700 - darker for visible tags */
   --color-accent-2: #e11d48; /* Rose 600 - Main interactive */
-  --color-accent-3: #f43f5e; /* Rose 500 */
-  --color-accent-4: #fb7185; /* Rose 400 */
+  --color-accent-3: #c026d3; /* Fuchsia 600 - Complementary */
+  --color-accent-4: #ea580c; /* Orange 600 - Complementary */
   
   /* Text */
   --color-text: #4c0519; /* Rose 950 */
