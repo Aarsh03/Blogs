@@ -21,11 +21,25 @@ function isActive(linkHref: string) {
   <div class="navbar__inner">
     <a class="navbar__logo" href={base} aria-label="Aarsh's blogs home">
       <div class="logo-monogram">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-          <!-- A -->
-          <path d="M45 20 L25 80 M45 20 L65 80 M15 60 L53 60" />
-          <!-- S sweeping under -->
-          <path d="M45 20 C65 10, 80 25, 60 50 C40 70, 85 60, 85 80 C85 105, 45 105, 30 90 C20 80, 20 65, 25 60" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+          <!-- A Top Serif -->
+          <path d="M 36 20 L 49 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          
+          <!-- A Left Leg & Bottom Serif -->
+          <path d="M 20 70 L 30 70 M 25 70 L 45 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          
+          <!-- A Right Leg (Thick) & Bottom Serif -->
+          <polygon points="43,20 49,20 62,70 50,70" />
+          <path d="M 48 70 L 64 70" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          
+          <!-- S Sweeping Tail & A Crossbar -->
+          <path d="M 49 35 
+                   C 49 8, 77 10, 77 30 
+                   C 77 50, 92 55, 92 70 
+                   C 92 98, 18 102, 10 80 
+                   C 0 65, 10 55, 22 55 
+                   L 48 55" 
+                fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" />
         </svg>
       </div>
     </a>
