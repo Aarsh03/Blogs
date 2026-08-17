@@ -1,0 +1,252 @@
+---
+export interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+<div id="tag-modal" class="tag-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Filter by Tags">
+  <div class="tag-modal__backdrop" id="tag-modal-backdrop"></div>
+  <div class="tag-modal__content">
+    <div class="tag-modal__header">
+      <span class="tag-modal__title">Filter by Tags</span>
+      <button class="tag-modal__close" id="tag-modal-close" aria-label="Close filter">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="tag-modal__body">
+      <p class="tag-modal__subtitle">Select tags to filter posts (matches ALL selected):</p>
+      <div class="tag-grid" id="modal-tag-grid">
+        {tags.map(tag => (
+          <button class="tag-modal-chip" data-modal-tag={tag}>
+            <span class="tag-modal-chip__text">{tag}</span>
+            <svg class="tag-modal-chip__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </button>
+        ))}
+      </div>
+    </div>
+    
+    <div class="tag-modal__footer">
+      <button id="tag-modal-apply" class="tag-modal__btn tag-modal__btn--primary">Apply Filters</button>
+      <button id="tag-modal-clear" class="tag-modal__btn tag-modal__btn--secondary">Clear</button>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* ── Modal overlay ── */
+  .tag-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 15vh;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .tag-modal[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* ── Backdrop ── */
+  .tag-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg-nav);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.35s ease;
+  }
+
+  /* ── Modal Content ── */
+  .tag-modal__content {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card-hover);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+    transform: translateY(-20px) scale(0.96);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .tag-modal[aria-hidden="false"] .tag-modal__content {
+    transform: translateY(0) scale(1);
+  }
+
+  /* ── Header ── */
+  .tag-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .tag-modal__title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+    color: var(--color-text);
+  }
+
+  .tag-modal__close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0.35rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  @media (hover: hover) {
+    .tag-modal__close:hover {
+      background: color-mix(in srgb, var(--color-accent-2) 20%, transparent);
+      color: var(--color-accent-2);
+    }
+  }
+
+  /* ── Body ── */
+  .tag-modal__body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .tag-modal__body::-webkit-scrollbar { width: 4px; }
+  .tag-modal__body::-webkit-scrollbar-track { background: transparent; }
+  .tag-modal__body::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 4px; }
+
+  .tag-modal__subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag-modal-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tag-modal-chip__icon {
+    opacity: 0;
+    transform: scale(0.5);
+    width: 0;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @media (hover: hover) {
+    .tag-modal-chip:hover {
+      border-color: var(--color-accent-2);
+      color: var(--color-accent-2);
+    }
+  }
+
+  .tag-modal-chip.selected {
+    background: color-mix(in srgb, var(--color-accent-2) 15%, transparent);
+    border-color: var(--color-accent-2);
+    color: var(--color-accent-2);
+    font-weight: 600;
+  }
+
+  .tag-modal-chip.selected .tag-modal-chip__icon {
+    opacity: 1;
+    transform: scale(1);
+    width: 14px;
+  }
+
+  /* ── Footer ── */
+  .tag-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .tag-modal__btn {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.1s ease, filter 0.2s ease;
+  }
+
+  @media (hover: hover) {
+    .tag-modal__btn:hover {
+      filter: brightness(1.1);
+    }
+    .tag-modal__btn:active {
+      transform: scale(0.97);
+    }
+  }
+
+  .tag-modal__btn--secondary {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .tag-modal__btn--primary {
+    background: var(--color-accent-2);
+    border: 1px solid var(--color-accent-2);
+    color: var(--color-bg);
+  }
+
+  @media (max-width: 600px) {
+    .tag-modal { padding-top: auto; align-items: flex-end; }
+    .tag-modal__content { 
+      width: 100%; 
+      max-width: 100%; 
+      border-bottom-left-radius: 0; 
+      border-bottom-right-radius: 0;
+      transform: translateY(100%);
+    }
+    .tag-modal[aria-hidden="false"] .tag-modal__content {
+      transform: translateY(0);
+    }
+  }
+</style>

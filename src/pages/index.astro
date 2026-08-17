@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
+import TagFilterModal from '../components/TagFilterModal.astro';
 import { getPublishedPosts, getReadingTime } from '../utils/posts';
 
 const allPosts = await getPublishedPosts();
@@ -15,11 +16,14 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   </section>
 
   <div class="tags-filter">
-    <div class="tags-filter__scroll">
-      <button class="tag-filter-btn active" data-tag="all">All Posts</button>
-      {allTags.map(tag => (
-        <button class="tag-filter-btn" data-tag={tag}>{tag}</button>
-      ))}
+    <button id="open-tag-modal-btn" class="filter-btn" aria-label="Filter by tags">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+      </svg>
+      Filter by Tags
+    </button>
+    <div id="active-tags-container" class="active-tags">
+      <!-- Active tag chips injected via JS -->
     </div>
   </div>
 
@@ -57,6 +61,8 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   <script>
     import '../scripts/post-filter';
   </script>
+
+  <TagFilterModal tags={allTags} />
 </BaseLayout>
 
 <style>
@@ -89,57 +95,78 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   /* Tag Filter UI */
   .tags-filter {
     margin: 1.5rem 0 3rem;
-    position: relative;
-  }
-  
-
-
-  .tags-filter__scroll {
     display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-border) transparent;
-    touch-action: pan-x;
-  }
-  
-  .tags-filter__scroll::-webkit-scrollbar {
-    height: 4px;
-  }
-  .tags-filter__scroll::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .tags-filter__scroll::-webkit-scrollbar-thumb {
-    background-color: var(--color-border);
-    border-radius: 4px;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  .tag-filter-btn {
-    background: color-mix(in srgb, var(--color-accent-2) 10%, transparent);
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-bg-card);
     border: 1px solid var(--color-border);
-    color: var(--color-text-muted);
+    color: var(--color-text);
     font-family: var(--font-ui);
-    font-size: 0.875rem;
-    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
     border-radius: 999px;
     cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
   }
 
   @media (hover: hover) {
-    .tag-filter-btn:hover {
-      background: color-mix(in srgb, var(--color-accent-2) 20%, transparent);
-      color: var(--color-text);
+    .filter-btn:hover {
+      border-color: var(--color-accent-2);
+      color: var(--color-accent-2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
   }
 
-  .tag-filter-btn.active {
-    background: var(--color-accent-2);
-    border-color: var(--color-accent-2);
-    color: var(--color-bg);
-    font-weight: 600;
+  .active-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* Dynamically injected chip styling */
+  :global(.active-tag-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: color-mix(in srgb, var(--color-accent-2) 15%, transparent);
+    border: 1px solid var(--color-accent-2);
+    color: var(--color-accent-2);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+  }
+
+  :global(.active-tag-chip__remove) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: currentColor;
+    padding: 0;
+    margin-right: -0.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  @media (hover: hover) {
+    :global(.active-tag-chip__remove:hover) {
+      opacity: 1;
+    }
   }
 
   /* Filtering Animation */

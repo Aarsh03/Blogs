@@ -96,7 +96,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 
 ### 4.1 Home / Blog List
 - Lists all non-draft posts newest-first as cards
-- Interactive tag filtering pills to filter posts directly on the homepage
+- **Multi-Select Tag Filter Modal:** A frosted glass modal that allows users to filter posts by multiple tags using AND logic (posts must contain all selected tags). Active filters appear as removable chips directly on the homepage.
 - **Glassmorphism Search Modal (`SearchModal.astro`):** Full-screen frosted backdrop (`backdrop-filter: blur(20px) saturate(180%)`) with an isolated translucent card layer to prevent browser backdrop rendering conflicts. Features full keyboard navigation (`Ctrl+K`/`Cmd+K` toggle, `Esc` dismiss, `↑`/`↓` result traversal, `Enter` to select first hit).
 - Infinite scroll / pagination (`IntersectionObserver` loading 10 initial posts + 6 posts per scroll)
 - Each card: title, date, estimated reading time, description, tag chips
@@ -190,7 +190,7 @@ Fields validated at build time via Zod schema in `src/content.config.ts`. A malf
 - [x] Pill-shaped navbar with active-state highlight & auto-hiding on scroll
 - [x] View Transitions (smooth page loads without hard refreshes)
 - [x] Mobile responsive (hamburger menu, fluid layout)
-- [x] Tag cloud + tag-filtered post lists directly on homepage
+- [x] Multi-Select Tag Filter Modal (AND logic) on homepage
 - [x] `Ctrl+K` / `Cmd+K` Quick Search Modal overlay via Pagefind
 - [x] Shiki syntax highlighting with IDE-style Language Badges
 - [x] Reading time estimate on posts and cards
