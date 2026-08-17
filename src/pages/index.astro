@@ -92,16 +92,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
     position: relative;
   }
   
-  .tags-filter::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 2rem;
-    background: linear-gradient(to right, transparent, var(--color-bg));
-    pointer-events: none;
-  }
+
 
   .tags-filter__scroll {
     display: flex;
