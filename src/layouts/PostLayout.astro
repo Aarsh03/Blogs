@@ -119,6 +119,13 @@ const schema = {
         background: 'var(--color-bg)',
       });
     });
+
+    document.addEventListener('astro:before-swap', () => {
+      if (_zoomInstance) {
+        _zoomInstance.detach();
+        _zoomInstance = null;
+      }
+    });
   </script>
 </BaseLayout>
 

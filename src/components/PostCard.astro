@@ -9,12 +9,11 @@ interface Props {
   tags?: string[];
   readingTime?: string;
   slug: string;
-  index?: number;
 }
-const { title, date, description, tags = [], readingTime, slug, index = 0 } = Astro.props;
+const { title, date, description, tags = [], readingTime, slug } = Astro.props;
 const formattedDate = formatDate(date);
 const base = import.meta.env.BASE_URL;
-<a href={`${base}blog/${slug}/`} class="post-card" data-tags={tags.join(',')} style={`--animation-order: ${index};`}>
+<a href={`${base}blog/${slug}/`} class="post-card" data-tags={tags.join(',')}>
   <div class="post-card__tags">
     {tags.map((tag) => (
       <TagChip tag={tag} linked={false} />

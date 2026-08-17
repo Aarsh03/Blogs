@@ -111,7 +111,7 @@ const imageURL = new URL(image, Astro.site).href;
         t = t || (pd ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
         
-        var darkThemes = ['dark', 'dracula', 'rose-pine', 'lavender-dark', 'midnight-black'];
+
         document.documentElement.setAttribute('data-theme-mode', darkThemes.indexOf(t) !== -1 ? 'dark' : 'light');
 
         var f = localStorage.getItem('font') || 'serif';

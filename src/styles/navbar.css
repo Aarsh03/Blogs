@@ -17,7 +17,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
-  [data-theme="dark"] .navbar--scrolled {
+  [data-theme-mode="dark"] .navbar--scrolled {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
@@ -108,10 +108,7 @@
   }
 
   /* Active link contrast for dark themes */
-  :global([data-theme="dark"]) .navbar__link.active,
-  :global([data-theme="dracula"]) .navbar__link.active,
-  :global([data-theme="rose-pine"]) .navbar__link.active,
-  :global([data-theme="lavender-dark"]) .navbar__link.active {
+  [data-theme-mode="dark"] .navbar__link.active {
     background: var(--color-nav-links-border);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   }
@@ -369,7 +366,7 @@
     border-color: var(--color-accent-2);
   }
 
-  [data-theme="dark"] .font-option.active {
+  [data-theme-mode="dark"] .font-option.active {
     color: var(--color-bg);
   }
 
@@ -451,7 +448,7 @@
       background: rgba(0, 0, 0, 0.05);
     }
 
-    [data-theme="dark"] .hamburger:hover {
+    [data-theme-mode="dark"] .hamburger:hover {
       background: rgba(255, 255, 255, 0.08);
     }
   }
