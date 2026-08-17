@@ -41,26 +41,50 @@
 
   /* ─── Logo ─── */
   .navbar__logo {
-    text-decoration: none;
+    text-decoration: none !important;
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     flex-shrink: 0;
+  }
+
+  .navbar__logo:hover, .navbar__logo:focus {
+    text-decoration: none !important;
+  }
+
+  .logo-monogram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-radius: 8px;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .logo-monogram svg {
+    width: 18px;
+    height: 18px;
   }
 
   .logo-text {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    font-style: italic;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     color: var(--color-text);
     transition: color 0.2s ease;
   }
 
   @media (hover: hover) {
+    .navbar__logo:hover .logo-monogram {
+      transform: scale(1.05) rotate(-2deg);
+      background: var(--color-accent-2);
+    }
     .navbar__logo:hover .logo-text {
       color: var(--color-accent-2);
-      text-decoration: none;
     }
   }
 
@@ -120,8 +144,8 @@
     flex-shrink: 0;
   }
 
-  /* ─── Theme Toggle, Settings Toggle ─── */
-  .theme-toggle, .settings-toggle {
+  /* ─── Settings Toggle ─── */
+  .settings-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,13 +161,13 @@
   }
 
   @media (hover: hover) {
-    .theme-toggle:hover, .settings-toggle:hover {
+    .settings-toggle:hover {
       background: var(--color-bg-card);
       color: var(--color-accent-2);
       border-color: var(--color-accent-2);
     }
 
-    .theme-toggle:hover svg, .settings-toggle:hover svg {
+    .settings-toggle:hover svg {
       transform: scale(1.1);
     }
   }
@@ -199,6 +223,19 @@
     border: 1px solid var(--color-border);
     border-radius: 4px;
     line-height: 1;
+  }
+
+  @media (max-width: 768px) {
+    .search-pill-text,
+    .search-pill-kbd {
+      display: none;
+    }
+    .search-pill {
+      padding: 0;
+      width: 40px;
+      justify-content: center;
+      gap: 0;
+    }
   }
 
   .settings-toggle.active {
@@ -272,7 +309,7 @@
   /* Theme Palette */
   .theme-palette {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem 0.25rem;
     align-items: flex-start;
     justify-content: center;

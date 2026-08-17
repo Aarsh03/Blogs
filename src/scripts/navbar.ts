@@ -72,8 +72,7 @@ document.addEventListener('astro:page-load', () => {
   btn?.addEventListener('click', toggleMenu);
   overlay?.addEventListener('click', toggleMenu);
 
-  /* ── Theme toggle ── */
-  const toggleBtn = document.getElementById('theme-toggle');
+  /* ── Theme Manager ── */
   const html = document.documentElement;
 
   function applyTheme(theme: string) {
@@ -81,18 +80,6 @@ document.addEventListener('astro:page-load', () => {
     html.setAttribute('data-theme-mode', isDarkTheme(theme) ? 'dark' : 'light');
     localStorage.setItem('theme', theme);
     
-    const isDark = isDarkTheme(theme);
-    
-    const sunIcon = toggleBtn?.querySelector('.icon-sun') as HTMLElement;
-    const moonIcon = toggleBtn?.querySelector('.icon-moon') as HTMLElement;
-    if (isDark) {
-      sunIcon?.style.setProperty('display', 'block', 'important');
-      moonIcon?.style.setProperty('display', 'none', 'important');
-    } else {
-      sunIcon?.style.setProperty('display', 'none', 'important');
-      moonIcon?.style.setProperty('display', 'block', 'important');
-    }
-
     // Update Swatches
     document.querySelectorAll('.theme-swatch').forEach(swatch => {
       swatch.classList.toggle('active', swatch.getAttribute('data-theme-val') === theme);
@@ -102,16 +89,6 @@ document.addEventListener('astro:page-load', () => {
   // Sync icon on initial load
   const initialTheme = html.getAttribute('data-theme') || 'light';
   applyTheme(initialTheme);
-
-  toggleBtn?.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-theme') || 'light';
-    // Toggle between light and dark (base) when using the top navbar button
-    if (isDarkTheme(currentTheme)) {
-      applyTheme('light');
-    } else {
-      applyTheme('dark');
-    }
-  });
 
   /* ── Settings Panel ── */
   const settingsBtn = document.getElementById('settings-toggle');
