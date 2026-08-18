@@ -1,0 +1,30 @@
+[data-theme="nebula"] {
+  /* Backgrounds */
+  --color-bg: #0b0c10; /* Very deep cosmic blue/black */
+  --color-bg-card: #14161f; /* Slightly lighter deep space */
+  --color-bg-nav: rgba(11, 12, 16, 0.85);
+  --color-bg-code: #1c1e29;
+  
+  /* Accents */
+  --color-accent-1: #00f0ff; /* Neon Cyan */
+  --color-accent-2: #8a2be2; /* Electric Purple (Main interactive) */
+  --color-accent-3: #ff00ff; /* Neon Magenta */
+  --color-accent-4: #4ade80; /* Toxic Green */
+  
+  /* Text */
+  --color-text: #e2e8f0; 
+  --color-text-muted: #94a3b8;
+  --color-text-light: #64748b;
+  
+  /* Borders & Shadows */
+  --color-border: #1e293b;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 12px 48px rgba(138, 43, 226, 0.2);
+  
+  /* Interactive & Status */
+  --color-link: var(--color-accent-1);
+  --color-code-text: var(--color-accent-3);
+  --color-bg-nav-links: rgba(138, 43, 226, 0.15);
+  --color-nav-links-border: rgba(138, 43, 226, 0.4);
+  --color-success: #10b981;
+}

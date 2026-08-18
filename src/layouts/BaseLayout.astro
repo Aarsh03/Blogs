@@ -78,7 +78,7 @@ const imageURL = new URL(image, Astro.site).href;
       var theme = savedTheme || (prefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
       
-      var darkThemes = ['dark', 'rose-pine', 'lavender-dark', 'midnight-black'];
+      var darkThemes = ['dark', 'rose-pine', 'nebula', 'midnight-black'];
       var isDark = darkThemes.indexOf(theme) !== -1;
       document.documentElement.setAttribute('data-theme-mode', isDark ? 'dark' : 'light');
 
