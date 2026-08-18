@@ -346,7 +346,7 @@
   .theme-swatch[data-theme-val="rose"] { background: #1a0b0e; border: 1px solid #ff4d6d; }
   .theme-swatch[data-theme-val="solarized-light"] { background: #fdf6e3; border: 1px solid #93a1a1; }
   .theme-swatch[data-theme-val="nebula"] { background: #0b0c10; border: 1px solid #8a2be2; }
-  .theme-swatch[data-theme-val="barbie"] { background: #fff0f5; border: 1px solid #ffb6c1; }
+  .theme-swatch[data-theme-val="barbie"] { background: #ffffff; border: 1px solid #ff1493; }
   .theme-swatch[data-theme-val="frost-blue"] { background: #f0f8ff; border: 1px solid #add8e6; }
   .theme-swatch[data-theme-val="midnight-black"] { background: #000000; border: 1px solid #333333; }
   .theme-swatch[data-theme-val="snow"] { background: #ffffff; border: 1px solid #e6e6e6; }
