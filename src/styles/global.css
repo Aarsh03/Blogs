@@ -1,13 +1,13 @@
 /* ═══════════════════════════════════════
    THEMES
    ═══════════════════════════════════════ */
-@import url('./themes/light.css');
-@import url('./themes/dark.css');
+@import url('./themes/serenity.css');
+@import url('./themes/obsidian.css');
 @import url('./themes/crimson.css');
 @import url('./themes/rose-pine.css');
 @import url('./themes/solarized-light.css');
 @import url('./themes/lavender-dark.css');
-@import url('./themes/pastel-pink.css');
+@import url('./themes/barbie.css');
 @import url('./themes/frost-blue.css');
 @import url('./themes/midnight-black.css');
 @import url('./themes/snow.css');

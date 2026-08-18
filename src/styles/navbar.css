@@ -20,7 +20,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
-  [data-theme-mode="dark"] .navbar--scrolled {
+  [data-theme-mode="obsidian"] .navbar--scrolled {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
@@ -118,7 +118,7 @@
   }
 
   /* Active link contrast for dark themes */
-  [data-theme-mode="dark"] .navbar__link.active {
+  [data-theme-mode="obsidian"] .navbar__link.active {
     background: var(--color-nav-links-border);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   }
@@ -340,13 +340,13 @@
     box-shadow: 0 0 0 2px var(--color-bg-card), 0 0 0 4px var(--color-accent-2);
   }
 
-  .theme-swatch[data-theme-val="light"] { background: #fdf6f9; border: 1px solid #ede4e8; }
-  .theme-swatch[data-theme-val="dark"] { background: #1a1520; border: 1px solid #352d45; }
-  .theme-swatch[data-theme-val="crimson"] { background: #ef4444; border: 1px solid #450a0a; }
+  .theme-swatch[data-theme-val="serenity"] { background: #f1f5f9; border: 1px solid #cbd5e1; }
+  .theme-swatch[data-theme-val="obsidian"] { background: #0f1115; border: 1px solid #334155; }
+  .theme-swatch[data-theme-val="crimson"] { background: #fff0f2; border: 1px solid #fecdd3; }
   .theme-swatch[data-theme-val="rose-pine"] { background: #191724; border: 1px solid #26233a; }
   .theme-swatch[data-theme-val="solarized-light"] { background: #fdf6e3; border: 1px solid #93a1a1; }
   .theme-swatch[data-theme-val="lavender-dark"] { background: #1c1a25; border: 1px solid #363a4f; }
-  .theme-swatch[data-theme-val="pastel-pink"] { background: #fff0f5; border: 1px solid #ffb6c1; }
+  .theme-swatch[data-theme-val="barbie"] { background: #fff0f5; border: 1px solid #ffb6c1; }
   .theme-swatch[data-theme-val="frost-blue"] { background: #f0f8ff; border: 1px solid #add8e6; }
   .theme-swatch[data-theme-val="midnight-black"] { background: #000000; border: 1px solid #333333; }
   .theme-swatch[data-theme-val="snow"] { background: #ffffff; border: 1px solid #e6e6e6; }
@@ -391,7 +391,7 @@
     border-color: var(--color-accent-2);
   }
 
-  [data-theme-mode="dark"] .font-option.active {
+  [data-theme-mode="obsidian"] .font-option.active {
     color: var(--color-bg);
   }
 
@@ -473,7 +473,7 @@
       background: rgba(0, 0, 0, 0.05);
     }
 
-    [data-theme-mode="dark"] .hamburger:hover {
+    [data-theme-mode="obsidian"] .hamburger:hover {
       background: rgba(255, 255, 255, 0.08);
     }
   }

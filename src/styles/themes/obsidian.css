@@ -1,0 +1,30 @@
+[data-theme="obsidian"] {
+  /* Backgrounds */
+  --color-bg: #09090b; /* Zinc 950 */
+  --color-bg-card: #18181b; /* Zinc 900 */
+  --color-bg-nav: rgba(9, 9, 11, 0.85);
+  --color-bg-code: #27272a; /* Zinc 800 */
+  
+  /* Accents */
+  --color-accent-1: #c084fc; /* Purple 400 */
+  --color-accent-2: #2dd4bf; /* Teal 400 */
+  --color-accent-3: #f472b6; /* Pink 400 */
+  --color-accent-4: #fbbf24; /* Amber 400 */
+  
+  /* Text */
+  --color-text: #f4f4f5; /* Zinc 50 */
+  --color-text-muted: #a1a1aa; /* Zinc 400 */
+  --color-text-light: #71717a; /* Zinc 500 */
+  
+  /* Borders & Shadows */
+  --color-border: #27272a; /* Zinc 800 */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 12px 48px rgba(45, 212, 191, 0.15);
+  
+  /* Interactive & Status */
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-1);
+  --color-bg-nav-links: rgba(45, 212, 191, 0.15);
+  --color-nav-links-border: rgba(45, 212, 191, 0.3);
+  --color-success: #10b981;
+}
