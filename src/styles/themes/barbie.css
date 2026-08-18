@@ -1,25 +1,24 @@
 [data-theme="barbie"] {
-  --color-bg: #ffffff;
-  --color-bg-card: #fff0f5;
-  --color-bg-nav: rgba(255, 255, 255, 0.85);
+  --color-bg: #fff0f5;
+  --color-bg-card: #ffffff;
+  --color-bg-nav: rgba(255, 240, 245, 0.80);
   --color-bg-code: #ffe4e1;
   
-  --color-accent-1: #ff1493; /* Deep Pink */
+  --color-accent-1: #ffb6c1; /* Light Pink */
   --color-accent-2: #ff69b4; /* Hot Pink */
-  --color-accent-3: #ff00ff; /* Magenta */
-  --color-accent-4: #c71585; /* Medium Violet Red */
+  --color-accent-3: #dda0dd; /* Plum */
+  --color-accent-4: #ffdab9; /* Peach */
   
-  --color-text: #1a1a1a;
-  --color-text-muted: #6b6b6b;
-  --color-text-light: #888888;
+  --color-text: #4a4a4a;
+  --color-text-muted: #888888;
+  --color-text-light: #aaaaaa;
   
   --color-border: #ffb6c1;
-  --shadow-card: 0 4px 16px rgba(255, 105, 180, 0.15);
-  --shadow-card-hover: 0 12px 32px rgba(255, 20, 147, 0.25);
-  
-  --color-link: var(--color-accent-1);
-  --color-code-text: var(--color-accent-4);
+  --shadow-card: 0 4px 24px rgba(255, 105, 180, 0.08);
+  --shadow-card-hover: 0 12px 48px rgba(255, 105, 180, 0.15);
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-3);
   --color-bg-nav-links: rgba(255, 105, 180, 0.15);
-  --color-nav-links-border: rgba(255, 105, 180, 0.4);
+  --color-nav-links-border: rgba(255, 105, 180, 0.3);
   --color-success: #10b981;
 }
