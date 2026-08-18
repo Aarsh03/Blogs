@@ -75,10 +75,10 @@ const imageURL = new URL(image, Astro.site).href;
     (function() {
       var savedTheme = localStorage.getItem('theme');
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      var theme = savedTheme || 'crimson';
       document.documentElement.setAttribute('data-theme', theme);
       
-      var darkThemes = ['dark', 'rose-pine', 'nebula', 'midnight-black'];
+      var darkThemes = ['obsidian', 'rose', 'nebula', 'midnight-black'];
       var isDark = darkThemes.indexOf(theme) !== -1;
       document.documentElement.setAttribute('data-theme-mode', isDark ? 'dark' : 'light');
 
@@ -108,7 +108,7 @@ const imageURL = new URL(image, Astro.site).href;
       document.addEventListener('astro:after-swap', function() {
         var t = localStorage.getItem('theme');
         var pd = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        t = t || (pd ? 'dark' : 'light');
+        t = t || 'crimson';
         document.documentElement.setAttribute('data-theme', t);
         
 
@@ -149,22 +149,24 @@ const imageURL = new URL(image, Astro.site).href;
     padding-top: var(--nav-height, 64px);
   }
 
-  .skip-link {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateY(-100%);
-    background: var(--color-accent-2);
-    color: var(--color-bg);
-    padding: 8px 16px;
-    z-index: 1000;
-    transition: transform 0.2s ease;
+.skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translate(-50%, -150%);
+    background: var(--color-bg-card);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 12px 24px;
+    z-index: 9999;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s;
     text-decoration: none;
+    font-family: var(--font-ui);
     font-weight: 600;
-    border-bottom-right-radius: var(--radius-sm);
   }
-
   .skip-link:focus {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
   }
 </style>

@@ -1,0 +1,26 @@
+[data-theme="rose"] {
+  /* Rich romantic dark red theme */
+  --color-bg: #1a0b0e;
+  --color-bg-card: #2d1318;
+  --color-bg-nav: rgba(26, 11, 14, 0.85);
+  --color-bg-code: #250f14;
+  
+  --color-accent-1: #ff4d6d;
+  --color-accent-2: #ff758f;
+  --color-accent-3: #ff8fa3;
+  --color-accent-4: #c9184a;
+  
+  --color-text: #fff0f3;
+  --color-text-muted: #ffb3c6;
+  --color-text-light: #ff8fa3;
+  
+  --color-border: #590d22;
+  --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 8px 32px rgba(255, 77, 109, 0.15);
+  
+  --color-link: var(--color-accent-2);
+  --color-code-text: var(--color-accent-3);
+  --color-bg-nav-links: rgba(255, 77, 109, 0.15);
+  --color-nav-links-border: rgba(255, 77, 109, 0.3);
+  --color-success: #38b000;
+}
