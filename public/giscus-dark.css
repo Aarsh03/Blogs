@@ -2,23 +2,23 @@
 
 main {
   background: transparent !important;
-  /* Override the default primary button with Dark Lavender */
-  --color-btn-primary-bg: #9481b6 !important;
-  --color-btn-primary-border: #9481b6 !important;
-  --color-btn-primary-hover-bg: #a695c5 !important;
-  --color-btn-primary-hover-border: #a695c5 !important;
-  --color-btn-primary-selected-bg: #b8a9d4 !important;
+  /* Override the default primary button with Slate */
+  --color-btn-primary-bg: #475569 !important;
+  --color-btn-primary-border: #475569 !important;
+  --color-btn-primary-hover-bg: #64748b !important;
+  --color-btn-primary-hover-border: #64748b !important;
+  --color-btn-primary-selected-bg: #94a3b8 !important;
   
-  /* Also slightly tint the standard buttons on hover to dark pink */
-  --color-btn-hover-bg: rgba(232, 180, 203, 0.15) !important;
-  --color-btn-hover-border: rgba(232, 180, 203, 0.3) !important;
+  /* Standard buttons on hover */
+  --color-btn-hover-bg: rgba(255, 255, 255, 0.1) !important;
+  --color-btn-hover-border: rgba(255, 255, 255, 0.2) !important;
 
   /* Explicitly define border colors so they are visible on all dark themes */
   --color-border-primary: rgba(255, 255, 255, 0.15) !important;
   --color-border-muted: rgba(255, 255, 255, 0.1) !important;
 
   /* Disabled primary button (Comment button) */
-  --color-btn-primary-disabled-bg: rgba(148, 129, 182, 0.3) !important;
+  --color-btn-primary-disabled-bg: rgba(71, 85, 105, 0.5) !important;
   --color-btn-primary-disabled-border: transparent !important;
   --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.4) !important;
 }
