@@ -94,7 +94,7 @@ Every new theme file MUST contain **all** of the following variables in its `[da
 
 ## 6. Eye Comfort Mode
 
-The site features an adjustable Eye Comfort mode that overlays a warm sepia tint on the page. It is controlled via the `--eye-comfort-intensity` CSS variable in `src/scripts/navbar.ts`, which scales from `0.02` to `0.25`. This variable multiplies the opacity of a fixed `pointer-events: none` overlay div in `BaseLayout.astro`.
+The site features an adjustable Eye Comfort mode that overlays a warm sepia tint on the page. It is controlled via the `--eye-comfort-intensity` CSS variable in `src/scripts/settings.ts`, which scales from `0.02` to `0.25`. This variable multiplies the opacity of a fixed `pointer-events: none` overlay div in `BaseLayout.astro`.
 
 ---
 
@@ -105,3 +105,11 @@ After adding a new theme or modifying UI, run:
 node scratch/theme_audit.cjs
 ```
 This script ensures all required variables are present across all themes and flags missing fallback styles.
+
+
+## 7. Custom Theme Builder & Engine
+The blog includes a powerful runtime custom theme engine.
+- **Dock Toolbar (`CustomThemeToolbar.astro`)**: A draggable, rotatable, frosted-glass interface to pick colors.
+- **Visual Color Picker (`CustomColorPicker.astro`)**: A fully custom 2D canvas with HSV Saturation/Value, Hue slider, and synchronized HEX/RGB/HSL/CMYK text inputs.
+- **Dynamic CSS**: 7 Custom Theme properties (`bg`, `card`, `text`, `accent1`, `accent2`, `accent3`, `accent4`) are saved to `localStorage`. The engine automatically computes derived variables (`--color-text-muted`, `--color-border`, etc.) using `color-mix()` and injects them into `<style id="custom-theme-vars">`.
+- **Giscus Transparency**: Custom themes dynamically calculate relative luminance. If dark, Giscus loads `giscus-dark.css` (inheriting `transparent_dark.css`). Both custom light and dark modes pass a transparent background to Giscus, seamlessly blending the comment box with your custom palette.

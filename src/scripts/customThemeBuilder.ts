@@ -251,14 +251,18 @@ document.addEventListener('astro:page-load', () => {
   });
 
   let isDraggingSV = false;
+  const svMove = (e: MouseEvent) => { if (isDraggingSV) updateSVFromEvent(e); };
+  const svUp = () => { isDraggingSV = false; };
   svArea?.addEventListener('mousedown', (e) => {
     isDraggingSV = true;
     updateSVFromEvent(e);
   });
-  document.addEventListener('mousemove', (e) => {
-    if (isDraggingSV) updateSVFromEvent(e);
-  });
-  document.addEventListener('mouseup', () => { isDraggingSV = false; });
+  document.addEventListener('mousemove', svMove);
+  document.addEventListener('mouseup', svUp);
+  document.addEventListener('astro:before-swap', () => {
+    document.removeEventListener('mousemove', svMove);
+    document.removeEventListener('mouseup', svUp);
+  }, { once: true });
   
   function updateSVFromEvent(e: MouseEvent) {
     if (!svArea) return;
@@ -330,7 +334,12 @@ document.addEventListener('astro:page-load', () => {
 
     const start = (e: any) => {
       if (window.innerWidth <= 768) return;
-      initialX = (e.touches ? e.touches[0].clientX : e.clientX) - xOffset;
+      if (target.style.transform.includes('-50%')) {
+        const rect = target.getBoundingClientRect();
+        target.style.left = rect.left + 'px';
+        target.style.top = rect.top + 'px';
+        target.style.transform = 'translate(0px, 0px)';
+      }\n      initialX = (e.touches ? e.touches[0].clientX : e.clientX) - xOffset;
       initialY = (e.touches ? e.touches[0].clientY : e.clientY) - yOffset;
       isDragging = true;
     };
@@ -353,8 +362,11 @@ document.addEventListener('astro:page-load', () => {
     
     return () => {
       handle.removeEventListener('mousedown', start);
+      handle.removeEventListener('touchstart', start);
       document.removeEventListener('mousemove', move);
+      document.removeEventListener('touchmove', move);
       document.removeEventListener('mouseup', end);
+      document.removeEventListener('touchend', end);
     };
   }
 

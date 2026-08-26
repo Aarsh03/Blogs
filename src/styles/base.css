@@ -1,4 +1,9 @@
 :root {
+  --font-ui: 'DM Sans Variable', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'DM Sans Variable', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Lora', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --color-eye-comfort-tint: #ffa528;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   --max-width: 720px;
   --max-width-wide: 960px;
