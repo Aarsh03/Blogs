@@ -1,6 +1,8 @@
 @import url('https://giscus.app/themes/light.css');
 
-body, main {
+main {
+  --color-canvas-default: transparent !important;
+  --color-canvas-overlay: transparent !important;
   background: transparent !important;
   
   --color-btn-primary-bg: #64748b !important;
@@ -11,4 +13,8 @@ body, main {
   
   --color-btn-hover-bg: rgba(0, 0, 0, 0.05) !important;
   --color-btn-hover-border: rgba(0, 0, 0, 0.1) !important;
+}
+
+body {
+  background-color: transparent !important;
 }
