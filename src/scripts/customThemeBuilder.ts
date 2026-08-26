@@ -126,6 +126,15 @@ document.addEventListener('astro:page-load', () => {
   };
   document.addEventListener('keydown', _toolbarKeydown);
 
+  
+  /* Rotate Logic */
+  const rotateBtn = document.getElementById('theme-toolbar-rotate');
+  let isVertical = false;
+  rotateBtn?.addEventListener('click', () => {
+    isVertical = !isVertical;
+    toolbar?.classList.toggle('vertical-mode', isVertical);
+  });
+
   /* Drag Logic */
   const handle = document.getElementById('theme-toolbar-handle');
   let isDragging = false;

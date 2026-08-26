@@ -1,18 +1,33 @@
 ---
 ---
 <div id="custom-theme-toolbar" class="theme-toolbar" aria-hidden="true" style="transform: translate(0px, 0px);">
-  <div class="theme-toolbar__drag-handle" id="theme-toolbar-handle">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle>
-      <circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle>
-    </svg>
-  </div>
-  <div class="theme-toolbar__content">
+  <div class="theme-toolbar__row">
+    <!-- Drag Handle -->
+    <div class="theme-toolbar__drag-handle" id="theme-toolbar-handle" title="Drag to move">
+      <svg width="12" height="24" viewBox="0 0 12 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="4" cy="8" r="1"></circle><circle cx="4" cy="12" r="1"></circle><circle cx="4" cy="16" r="1"></circle>
+        <circle cx="8" cy="8" r="1"></circle><circle cx="8" cy="12" r="1"></circle><circle cx="8" cy="16" r="1"></circle>
+      </svg>
+    </div>
+    
+    <!-- Rotate Toggle -->
+    <button class="theme-toolbar__rotate" id="theme-toolbar-rotate" title="Rotate Toolbar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+    </button>
+    
+    <!-- Divider -->
+    <div class="theme-toolbar__divider"></div>
+
+    <!-- Bubbles -->
     <div class="theme-toolbar__bubbles">
       <label class="toolbar-bubble-wrapper">
         <div class="toolbar-bubble" id="bubble-bg"></div>
         <input type="color" id="toolbar-color-bg" class="sr-only" />
-        <span>Background</span>
+        <span>Bg</span>
       </label>
       <label class="toolbar-bubble-wrapper">
         <div class="toolbar-bubble" id="bubble-card"></div>
@@ -27,17 +42,30 @@
       <label class="toolbar-bubble-wrapper">
         <div class="toolbar-bubble" id="bubble-accent1"></div>
         <input type="color" id="toolbar-color-accent1" class="sr-only" />
-        <span>Accent 1</span>
+        <span>Primary</span>
       </label>
       <label class="toolbar-bubble-wrapper">
         <div class="toolbar-bubble" id="bubble-accent2"></div>
         <input type="color" id="toolbar-color-accent2" class="sr-only" />
-        <span>Accent 2</span>
+        <span>Hover</span>
       </label>
     </div>
+
+    <!-- Divider -->
+    <div class="theme-toolbar__divider"></div>
+
+    <!-- Actions -->
     <div class="theme-toolbar__actions">
-      <button id="toolbar-cancel" class="btn-cancel">Cancel</button>
-      <button id="toolbar-confirm" class="btn-confirm">Confirm</button>
+      <button id="toolbar-cancel" class="btn-icon btn-cancel" title="Cancel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <button id="toolbar-confirm" class="btn-icon btn-confirm" title="Confirm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
     </div>
   </div>
 </div>
@@ -45,60 +73,108 @@
 <style is:global>
   .theme-toolbar {
     position: fixed;
-    top: 80px; left: 50%;
-    margin-left: -200px;
+    top: 90px; left: 50%;
+    margin-left: -270px; /* roughly half width to center initially */
     z-index: 10000;
-    background: var(--color-bg-card);
+    background: color-mix(in srgb, var(--color-bg-card) 90%, transparent);
     border: 1px solid var(--color-border);
-    border-radius: 16px;
+    border-radius: 999px; /* Pill shape */
     box-shadow: var(--shadow-card-hover);
-    display: flex;
-    flex-direction: column;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    width: max-content;
-    max-width: 95vw;
-    /* Optional: translucent background */
-    background: color-mix(in srgb, var(--color-bg-card) 90%, transparent);
+    transition: opacity 0.3s ease, visibility 0.3s ease, border-radius 0.3s ease;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    width: max-content;
+    max-width: 95vw;
   }
   .theme-toolbar[aria-hidden="false"] {
     opacity: 1; visibility: visible;
   }
+  .theme-toolbar__row {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    gap: 0.75rem;
+    transition: flex-direction 0.3s ease, padding 0.3s ease;
+  }
+
+  /* Vertical Mode */
+  .theme-toolbar.vertical-mode {
+    border-radius: 32px;
+  }
+  .theme-toolbar.vertical-mode .theme-toolbar__row {
+    flex-direction: column;
+    padding: 1rem 0.6rem;
+  }
+  .theme-toolbar.vertical-mode .theme-toolbar__drag-handle {
+    transform: rotate(90deg);
+  }
+  .theme-toolbar.vertical-mode .theme-toolbar__bubbles {
+    flex-direction: column;
+  }
+  .theme-toolbar.vertical-mode .theme-toolbar__actions {
+    flex-direction: column;
+  }
+  .theme-toolbar.vertical-mode .theme-toolbar__divider {
+    width: 24px;
+    height: 1px;
+  }
+
+  /* Rest of styles */
+  .theme-toolbar__divider {
+    width: 1px;
+    height: 32px;
+    background: var(--color-border);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  
   .theme-toolbar__drag-handle {
-    width: 100%;
-    height: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: grab;
-    background: color-mix(in srgb, var(--color-text) 5%, transparent);
-    border-radius: 16px 16px 0 0;
     color: var(--color-text-muted);
+    padding: 0.25rem 0.15rem;
+    border-radius: 8px;
+    transition: transform 0.3s ease, background 0.2s ease;
+  }
+  .theme-toolbar__drag-handle:hover {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
   }
   .theme-toolbar__drag-handle:active { cursor: grabbing; }
-  .theme-toolbar__content {
-    padding: 1.25rem 2rem;
+
+  .theme-toolbar__rotate {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 50%;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.3s ease;
   }
+  .theme-toolbar__rotate:hover {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+    color: var(--color-text);
+  }
+
   .theme-toolbar__bubbles {
     display: flex;
-    gap: 1.5rem;
-    justify-content: center;
+    gap: 0.75rem;
+    align-items: center;
   }
   .toolbar-bubble-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.25rem;
     cursor: pointer;
   }
   .toolbar-bubble {
-    width: 44px; height: 44px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     border: 2px solid var(--color-border);
     box-shadow: var(--shadow-card);
@@ -106,36 +182,53 @@
   }
   .toolbar-bubble-wrapper:hover .toolbar-bubble { transform: scale(1.15); }
   .toolbar-bubble-wrapper span {
-    font-size: 0.75rem;
+    font-size: 0.6rem;
     font-family: var(--font-sans);
     color: var(--color-text-muted);
     font-weight: 500;
   }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
   .theme-toolbar__actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    border-top: 1px solid var(--color-border);
-    padding-top: 1.25rem;
+    gap: 0.5rem;
+    align-items: center;
   }
-  .btn-cancel, .btn-confirm {
-    padding: 0.5rem 1.25rem;
-    border-radius: 8px;
-    font-family: var(--font-sans);
-    font-weight: 600;
+  .btn-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px; height: 36px;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 0.85rem;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
-  .btn-cancel:active, .btn-confirm:active { transform: scale(0.95); }
-  .btn-cancel { background: transparent; border: 1px solid var(--color-border); color: var(--color-text); }
-  .btn-confirm { background: var(--color-accent-2); border: none; color: #fff; }
-  @media (max-width: 600px) {
-    .theme-toolbar__content { padding: 1rem; gap: 1rem; }
-    .theme-toolbar__bubbles { gap: 0.75rem; }
-    .toolbar-bubble { width: 36px; height: 36px; }
-    .toolbar-bubble-wrapper span { font-size: 0.65rem; }
-    .theme-toolbar { margin-left: 0; left: 50%; transform: translateX(-50%) !important; /* disable horizontal drag on mobile */ }
+  .btn-icon:active { transform: scale(0.9); }
+  .btn-cancel { 
+    background: transparent; 
+    border: 1px solid var(--color-border); 
+    color: var(--color-text); 
+  }
+  .btn-cancel:hover {
+    background: color-mix(in srgb, var(--color-caution) 15%, transparent);
+    color: var(--color-caution);
+    border-color: transparent;
+  }
+  .btn-confirm { 
+    background: var(--color-accent-2); 
+    border: none; 
+    color: var(--color-bg); 
+  }
+  .btn-confirm:hover {
+    background: var(--color-success);
+  }
+
+  @media (max-width: 768px) {
+    .theme-toolbar { margin-left: 0; left: 50%; transform: translateX(-50%) !important; }
+    .theme-toolbar__drag-handle { display: none; /* disable drag on mobile entirely to save space */ }
+    .theme-toolbar__rotate { display: none; /* disable rotation on mobile to save space */ }
+    .theme-toolbar__bubbles { gap: 0.5rem; }
+    .toolbar-bubble { width: 28px; height: 28px; }
+    .btn-icon { width: 32px; height: 32px; }
   }
 </style>
