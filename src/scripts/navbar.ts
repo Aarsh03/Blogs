@@ -80,6 +80,12 @@ document.addEventListener('astro:page-load', () => {
     html.setAttribute('data-theme-mode', isDarkTheme(theme) ? 'dark' : 'light');
     localStorage.setItem('theme', theme);
     
+    if (customBuilder && customDivider) {
+      const isCustom = theme === 'custom';
+      customBuilder.style.display = isCustom ? 'block' : 'none';
+      customDivider.style.display = isCustom ? 'block' : 'none';
+    }
+    
     // Update Swatches
     document.querySelectorAll('.theme-swatch').forEach(swatch => {
       swatch.classList.toggle('active', swatch.getAttribute('data-theme-val') === theme);
@@ -167,6 +173,77 @@ document.addEventListener('astro:page-load', () => {
       applyLayout(btn.getAttribute('data-layout-val') || 'narrow');
     });
   });
+
+  
+  /* ── Custom Theme Builder ── */
+  const customBuilder = document.getElementById('custom-theme-builder');
+  const customDivider = document.getElementById('custom-theme-divider');
+  
+  const customInputs = {
+    bg: document.getElementById('custom-bg') as HTMLInputElement,
+    card: document.getElementById('custom-card') as HTMLInputElement,
+    text: document.getElementById('custom-text') as HTMLInputElement,
+    accent1: document.getElementById('custom-accent1') as HTMLInputElement,
+    accent2: document.getElementById('custom-accent2') as HTMLInputElement,
+  };
+
+  function updateCustomThemeCSS(parsed: any) {
+    let s = document.getElementById('custom-theme-vars');
+    if (!s) {
+      s = document.createElement('style');
+      s.id = 'custom-theme-vars';
+      document.head.appendChild(s);
+    }
+    s.textContent = '[data-theme="custom"] { ' +
+      '--color-bg: ' + (parsed.bg || '#ffffff') + '; ' +
+      '--color-bg-card: ' + (parsed.card || '#f8f9fa') + '; ' +
+      '--color-bg-nav: ' + (parsed.bg ? parsed.bg + 'd9' : 'rgba(255,255,255,0.85)') + '; ' + // Add alpha
+      '--color-bg-code: ' + (parsed.card || '#f1f5f9') + '; ' +
+      '--color-accent-1: ' + (parsed.accent1 || '#3b82f6') + '; ' +
+      '--color-accent-2: ' + (parsed.accent2 || '#2563eb') + '; ' +
+      '--color-accent-3: ' + (parsed.accent1 || '#60a5fa') + '; ' +
+      '--color-accent-4: ' + (parsed.accent2 || '#1d4ed8') + '; ' +
+      '--color-text: ' + (parsed.text || '#0f172a') + '; ' +
+      '--color-text-muted: ' + (parsed.text || '#64748b') + '; ' + // Simplified
+      '--color-text-light: ' + (parsed.text || '#94a3b8') + '; ' +
+      '--color-border: ' + (parsed.card || '#e2e8f0') + '; ' +
+      '--color-link: var(--color-accent-2); ' +
+      '--color-code-text: var(--color-accent-1); ' +
+      '--color-success: #10b981; ' +
+    '}';
+  }
+
+  function handleCustomThemeChange() {
+    const customConfig = {
+      bg: customInputs.bg?.value,
+      card: customInputs.card?.value,
+      text: customInputs.text?.value,
+      accent1: customInputs.accent1?.value,
+      accent2: customInputs.accent2?.value,
+    };
+    localStorage.setItem('customTheme', JSON.stringify(customConfig));
+    updateCustomThemeCSS(customConfig);
+  }
+
+  Object.values(customInputs).forEach(input => {
+    input?.addEventListener('input', handleCustomThemeChange);
+  });
+
+  // Init custom inputs
+  const savedCustom = localStorage.getItem('customTheme');
+  if (savedCustom) {
+    try {
+      const parsed = JSON.parse(savedCustom);
+      if (customInputs.bg) customInputs.bg.value = parsed.bg || '#ffffff';
+      if (customInputs.card) customInputs.card.value = parsed.card || '#f8f9fa';
+      if (customInputs.text) customInputs.text.value = parsed.text || '#0f172a';
+      if (customInputs.accent1) customInputs.accent1.value = parsed.accent1 || '#3b82f6';
+      if (customInputs.accent2) customInputs.accent2.value = parsed.accent2 || '#2563eb';
+      updateCustomThemeCSS(parsed);
+    } catch(e) {}
+  } else {
+    handleCustomThemeChange(); // Init defaults
+  }
 
   /* ── Theme Swatches ── */
   themeSwatches.forEach(swatch => {

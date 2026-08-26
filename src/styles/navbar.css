@@ -618,3 +618,35 @@
       justify-content: center;
     }
   }
+
+/* Custom Theme Builder */
+.custom-theme-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.custom-theme-inputs label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+.custom-theme-inputs input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+.custom-theme-inputs input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.custom-theme-inputs input[type="color"]::-webkit-color-swatch {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}

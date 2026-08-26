@@ -18,9 +18,25 @@
         <button class="font-option" data-font="sans">DM Sans</button>
         <button class="font-option" data-font="playfair">Playfair</button>
         <button class="font-option" data-font="sourceserif">Source Serif</button>
+      
+        <div class="theme-swatch-wrapper">
+          <button class="theme-swatch" data-theme-val="custom" aria-label="Custom Theme" style="background: conic-gradient(red, yellow, green, cyan, blue, magenta, red); border: 1px solid var(--color-border);"></button>
+          <span class="theme-label">Custom</span>
+        </div>
       </div>
     </div>
     <div class="settings-divider"></div>
+    <div class="settings-section" id="custom-theme-builder" style="display: none;">
+      <p class="settings-label">Custom Theme Builder</p>
+      <div class="custom-theme-inputs">
+        <label><span>Background</span><input type="color" id="custom-bg" value="#ffffff"></label>
+        <label><span>Card</span><input type="color" id="custom-card" value="#f8f9fa"></label>
+        <label><span>Text</span><input type="color" id="custom-text" value="#0f172a"></label>
+        <label><span>Accent 1</span><input type="color" id="custom-accent1" value="#3b82f6"></label>
+        <label><span>Accent 2</span><input type="color" id="custom-accent2" value="#2563eb"></label>
+      </div>
+    </div>
+    <div class="settings-divider" id="custom-theme-divider" style="display: none;"></div>
     <div class="settings-section">
       <p class="settings-label">Theme</p>
       <div class="theme-palette">
