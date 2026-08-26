@@ -3,7 +3,12 @@
 main {
   --color-canvas-default: transparent !important;
   --color-canvas-overlay: transparent !important;
+  --color-canvas-inset: rgba(0, 0, 0, 0.04) !important;
+  --color-canvas-subtle: rgba(0, 0, 0, 0.04) !important;
   background: transparent !important;
+  
+  --color-border-default: rgba(0, 0, 0, 0.1) !important;
+  --color-border-muted: rgba(0, 0, 0, 0.05) !important;
   
   --color-btn-primary-bg: #64748b !important;
   --color-btn-primary-border: #64748b !important;
