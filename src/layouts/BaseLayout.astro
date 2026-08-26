@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import FloatingActions from '../components/FloatingActions.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CustomThemeToolbar from '../components/CustomThemeToolbar.astro';
+import CustomColorPicker from '../components/CustomColorPicker.astro';
 import '../styles/global.css';
 import '@fontsource-variable/dm-sans';
 import '@fontsource/playfair-display/700.css';
@@ -219,6 +220,7 @@ const imageURL = new URL(image, Astro.site).href;
   <FloatingActions />
   <SearchModal />
     <CustomThemeToolbar />
+    <CustomColorPicker />
   <Footer />
   <script src="../scripts/copy-code.ts"></script>
   <script src="../scripts/heading-links.ts"></script>

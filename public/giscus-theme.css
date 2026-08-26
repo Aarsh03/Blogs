@@ -1,18 +1,26 @@
-@import url('https://giscus.app/themes/light.css');
+@import url('https://giscus.app/themes/transparent_dark.css');
 
+/* 
+ * We use transparent_dark as base to inherit the transparent background,
+ * but we override the text and button colors to match light mode styles 
+ * so it perfectly adapts to ANY light custom theme (Pastel Pink, Yellow, etc.)
+ */
 main {
-  /* Override the default green primary button with Slate */
-  --color-btn-primary-bg: #94a3b8 !important;
-  --color-btn-primary-border: #94a3b8 !important;
-  --color-btn-primary-hover-bg: #64748b !important;
-  --color-btn-primary-hover-border: #64748b !important;
-  --color-btn-primary-selected-bg: #475569 !important;
+  background: transparent !important;
+  color: #0f172a !important; /* Text color */
   
-  /* Also slightly tint the standard buttons on hover */
-  --color-btn-hover-bg: #f8fafc !important;
-  --color-btn-hover-border: #e2e8f0 !important;
+  --color-btn-primary-bg: #64748b !important;
+  --color-btn-primary-border: #64748b !important;
+  --color-btn-primary-hover-bg: #475569 !important;
+  --color-btn-primary-hover-border: #475569 !important;
+  --color-btn-primary-selected-bg: #334155 !important;
+  
+  --color-btn-hover-bg: rgba(0, 0, 0, 0.05) !important;
+  --color-btn-hover-border: rgba(0, 0, 0, 0.1) !important;
 
-  /* Disabled primary button (Comment button) */
+  --color-border-primary: rgba(0, 0, 0, 0.1) !important;
+  --color-border-muted: rgba(0, 0, 0, 0.05) !important;
+
   --color-btn-primary-disabled-bg: rgba(148, 163, 184, 0.4) !important;
   --color-btn-primary-disabled-border: transparent !important;
   --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.7) !important;
