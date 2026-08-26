@@ -339,7 +339,8 @@ document.addEventListener('astro:page-load', () => {
         target.style.left = rect.left + 'px';
         target.style.top = rect.top + 'px';
         target.style.transform = 'translate(0px, 0px)';
-      }\n      initialX = (e.touches ? e.touches[0].clientX : e.clientX) - xOffset;
+      }
+      initialX = (e.touches ? e.touches[0].clientX : e.clientX) - xOffset;
       initialY = (e.touches ? e.touches[0].clientY : e.clientY) - yOffset;
       isDragging = true;
     };
