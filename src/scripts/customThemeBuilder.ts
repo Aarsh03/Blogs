@@ -327,11 +327,7 @@ document.addEventListener('astro:page-load', () => {
     let initialX = 0; let initialY = 0;
     let xOffset = 0; let yOffset = 0;
     
-    // Parse existing transform if it's translate(-50%, -50%)
-    if (target.style.transform.includes('-50%')) {
-      target.style.transform = `translate(${0}px, ${0}px)`;
-    }
-
+    
     const start = (e: any) => {
       if (window.innerWidth <= 768) return;
       if (target.style.transform.includes('-50%')) {

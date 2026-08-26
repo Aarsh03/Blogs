@@ -1,6 +1,6 @@
 @import url('https://giscus.app/themes/light.css');
 
-main {
+body, main {
   background: transparent !important;
   
   --color-btn-primary-bg: #64748b !important;
