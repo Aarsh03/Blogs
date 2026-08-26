@@ -1,8 +1,9 @@
-let _wizardKeydown: EventListener | null = null;
+let _toolbarKeydown: EventListener | null = null;
+let _dragStart: EventListener | null = null;
+let _dragMove: EventListener | null = null;
+let _dragEnd: EventListener | null = null;
 
 document.addEventListener('astro:page-load', () => {
-  const html = document.documentElement;
-  
   function updateCustomThemeCSS(parsed: any) {
     let s = document.getElementById('custom-theme-vars');
     if (!s) {
@@ -31,100 +32,163 @@ document.addEventListener('astro:page-load', () => {
 
   // Load existing
   const saved = localStorage.getItem('customTheme');
-  let config = {
-    bg: '#ffffff',
-    card: '#f8f9fa',
-    text: '#0f172a',
-    accent1: '#3b82f6',
-    accent2: '#2563eb'
-  };
+  let config = { bg: '#ffffff', card: '#f8f9fa', text: '#0f172a', accent1: '#3b82f6', accent2: '#2563eb' };
   if (saved) {
     try { config = { ...config, ...JSON.parse(saved) }; } catch(e) {}
   }
   updateCustomThemeCSS(config);
 
-  /* Wizard Logic */
-  const wizardBtn = document.getElementById('open-custom-theme-wizard');
-  const wizardModal = document.getElementById('custom-theme-wizard');
-  const wizardClose = document.getElementById('wizard-close');
-  const wizardBackdrop = document.getElementById('wizard-backdrop');
+  /* Toolbar Logic */
+  const openBtn = document.getElementById('open-custom-theme-wizard');
+  const toolbar = document.getElementById('custom-theme-toolbar');
+  const cancelBtn = document.getElementById('toolbar-cancel');
+  const confirmBtn = document.getElementById('toolbar-confirm');
   
-  const title = document.getElementById('wizard-title');
-  const desc = document.getElementById('wizard-desc');
-  const picker = document.getElementById('wizard-color-picker') as HTMLInputElement;
-  const btnPrev = document.getElementById('wizard-prev') as HTMLButtonElement;
-  const btnNext = document.getElementById('wizard-next') as HTMLButtonElement;
-
-  const steps = [
-    { key: 'bg', title: 'Step 1: Background', desc: 'Pick the main background color for your site.' },
-    { key: 'card', title: 'Step 2: Cards', desc: 'Pick the background color for floating cards and code blocks.' },
-    { key: 'text', title: 'Step 3: Text', desc: 'Pick your main text color. (Ensure good contrast!)' },
-    { key: 'accent1', title: 'Step 4: Primary Accent', desc: 'Pick the color for links and primary buttons.' },
-    { key: 'accent2', title: 'Step 5: Secondary Accent', desc: 'Pick the color for hover states and secondary elements.' }
-  ];
-  let currentStep = 0;
-
-  function openWizard() {
-    wizardModal?.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    currentStep = 0;
-    renderStep();
-  }
-
-  function closeWizard() {
-    wizardModal?.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  function renderStep() {
-    const step = steps[currentStep];
-    if (title) title.textContent = step.title;
-    if (desc) desc.textContent = step.desc;
-    // @ts-ignore
-    if (picker) picker.value = config[step.key];
-    
-    if (btnPrev) btnPrev.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-    if (btnNext) btnNext.textContent = currentStep === steps.length - 1 ? 'Finish' : 'Next';
-  }
-
-  picker?.addEventListener('input', (e) => {
-    const val = (e.target as HTMLInputElement).value;
-    // @ts-ignore
-    config[steps[currentStep].key] = val;
-    localStorage.setItem('customTheme', JSON.stringify(config));
-    updateCustomThemeCSS(config);
-  });
-
-  btnNext?.addEventListener('click', () => {
-    if (currentStep < steps.length - 1) {
-      currentStep++;
-      renderStep();
-    } else {
-      closeWizard();
-    }
-  });
-
-  btnPrev?.addEventListener('click', () => {
-    if (currentStep > 0) {
-      currentStep--;
-      renderStep();
-    }
-  });
-
-  wizardBtn?.addEventListener('click', openWizard);
-  wizardClose?.addEventListener('click', closeWizard);
-  wizardBackdrop?.addEventListener('click', closeWizard);
-
-  if (_wizardKeydown) document.removeEventListener('keydown', _wizardKeydown);
-  _wizardKeydown = (e: Event) => {
-    if ((e as KeyboardEvent).key === 'Escape') closeWizard();
+  const inputs = {
+    bg: document.getElementById('toolbar-color-bg') as HTMLInputElement,
+    card: document.getElementById('toolbar-color-card') as HTMLInputElement,
+    text: document.getElementById('toolbar-color-text') as HTMLInputElement,
+    accent1: document.getElementById('toolbar-color-accent1') as HTMLInputElement,
+    accent2: document.getElementById('toolbar-color-accent2') as HTMLInputElement,
   };
-  document.addEventListener('keydown', _wizardKeydown);
+  const bubbles = {
+    bg: document.getElementById('bubble-bg'),
+    card: document.getElementById('bubble-card'),
+    text: document.getElementById('bubble-text'),
+    accent1: document.getElementById('bubble-accent1'),
+    accent2: document.getElementById('bubble-accent2'),
+  };
+
+  let backupConfig = { ...config };
+
+  function syncBubbles() {
+    Object.keys(inputs).forEach(key => {
+      // @ts-ignore
+      const val = config[key];
+      // @ts-ignore
+      if (inputs[key]) inputs[key].value = val;
+      // @ts-ignore
+      if (bubbles[key]) bubbles[key].style.backgroundColor = val;
+    });
+  }
+
+  function openToolbar() {
+    backupConfig = { ...config };
+    syncBubbles();
+    toolbar?.setAttribute('aria-hidden', 'false');
+    // Ensure data-theme is custom
+    if (document.documentElement.getAttribute('data-theme') !== 'custom') {
+      // @ts-ignore
+      if (window.applyTheme) window.applyTheme('custom');
+    }
+  }
+
+  function closeToolbar() {
+    toolbar?.setAttribute('aria-hidden', 'true');
+  }
+
+  // Bind input changes
+  Object.keys(inputs).forEach(key => {
+    // @ts-ignore
+    const input = inputs[key];
+    if (input) {
+      input.addEventListener('input', (e: Event) => {
+        const val = (e.target as HTMLInputElement).value;
+        // @ts-ignore
+        config[key] = val;
+        // @ts-ignore
+        if (bubbles[key]) bubbles[key].style.backgroundColor = val;
+        updateCustomThemeCSS(config);
+      });
+    }
+  });
+
+  cancelBtn?.addEventListener('click', () => {
+    config = { ...backupConfig };
+    updateCustomThemeCSS(config);
+    closeToolbar();
+  });
+
+  confirmBtn?.addEventListener('click', () => {
+    localStorage.setItem('customTheme', JSON.stringify(config));
+    closeToolbar();
+  });
+
+  openBtn?.addEventListener('click', openToolbar);
+
+  if (_toolbarKeydown) document.removeEventListener('keydown', _toolbarKeydown);
+  _toolbarKeydown = (e: Event) => {
+    if ((e as KeyboardEvent).key === 'Escape') {
+      if (toolbar?.getAttribute('aria-hidden') === 'false') {
+        cancelBtn?.click();
+      }
+    }
+  };
+  document.addEventListener('keydown', _toolbarKeydown);
+
+  /* Drag Logic */
+  const handle = document.getElementById('theme-toolbar-handle');
+  let isDragging = false;
+  let currentX = 0;
+  let currentY = 0;
+  let initialX = 0;
+  let initialY = 0;
+  let xOffset = 0;
+  let yOffset = 0;
+
+  if (_dragStart) handle?.removeEventListener('mousedown', _dragStart);
+  if (_dragStart) handle?.removeEventListener('touchstart', _dragStart);
+  if (_dragMove) document.removeEventListener('mousemove', _dragMove);
+  if (_dragMove) document.removeEventListener('touchmove', _dragMove);
+  if (_dragEnd) document.removeEventListener('mouseup', _dragEnd);
+  if (_dragEnd) document.removeEventListener('touchend', _dragEnd);
+
+  _dragStart = (e: any) => {
+    if (window.innerWidth <= 600) return; // Disabled on mobile
+    if (e.type === 'touchstart') {
+      initialX = e.touches[0].clientX - xOffset;
+      initialY = e.touches[0].clientY - yOffset;
+    } else {
+      initialX = e.clientX - xOffset;
+      initialY = e.clientY - yOffset;
+    }
+    isDragging = true;
+  };
+
+  _dragMove = (e: any) => {
+    if (!isDragging || window.innerWidth <= 600) return;
+    e.preventDefault();
+    if (e.type === 'touchmove') {
+      currentX = e.touches[0].clientX - initialX;
+      currentY = e.touches[0].clientY - initialY;
+    } else {
+      currentX = e.clientX - initialX;
+      currentY = e.clientY - initialY;
+    }
+    xOffset = currentX;
+    yOffset = currentY;
+    if (toolbar) toolbar.style.transform = `translate(${currentX}px, ${currentY}px)`;
+  };
+
+  _dragEnd = () => {
+    isDragging = false;
+  };
+
+  handle?.addEventListener('mousedown', _dragStart);
+  handle?.addEventListener('touchstart', _dragStart, { passive: true });
+  document.addEventListener('mousemove', _dragMove, { passive: false });
+  document.addEventListener('touchmove', _dragMove, { passive: false });
+  document.addEventListener('mouseup', _dragEnd);
+  document.addEventListener('touchend', _dragEnd);
 });
 
 document.addEventListener('astro:before-swap', () => {
-  if (_wizardKeydown) {
-    document.removeEventListener('keydown', _wizardKeydown);
-    _wizardKeydown = null;
-  }
+  if (_toolbarKeydown) document.removeEventListener('keydown', _toolbarKeydown);
+  if (_dragMove) document.removeEventListener('mousemove', _dragMove);
+  if (_dragMove) document.removeEventListener('touchmove', _dragMove);
+  if (_dragEnd) document.removeEventListener('mouseup', _dragEnd);
+  if (_dragEnd) document.removeEventListener('touchend', _dragEnd);
+  _toolbarKeydown = null;
+  _dragMove = null;
+  _dragEnd = null;
 });

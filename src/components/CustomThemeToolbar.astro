@@ -1,0 +1,141 @@
+---
+---
+<div id="custom-theme-toolbar" class="theme-toolbar" aria-hidden="true" style="transform: translate(0px, 0px);">
+  <div class="theme-toolbar__drag-handle" id="theme-toolbar-handle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle>
+      <circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle>
+    </svg>
+  </div>
+  <div class="theme-toolbar__content">
+    <div class="theme-toolbar__bubbles">
+      <label class="toolbar-bubble-wrapper">
+        <div class="toolbar-bubble" id="bubble-bg"></div>
+        <input type="color" id="toolbar-color-bg" class="sr-only" />
+        <span>Background</span>
+      </label>
+      <label class="toolbar-bubble-wrapper">
+        <div class="toolbar-bubble" id="bubble-card"></div>
+        <input type="color" id="toolbar-color-card" class="sr-only" />
+        <span>Card</span>
+      </label>
+      <label class="toolbar-bubble-wrapper">
+        <div class="toolbar-bubble" id="bubble-text"></div>
+        <input type="color" id="toolbar-color-text" class="sr-only" />
+        <span>Text</span>
+      </label>
+      <label class="toolbar-bubble-wrapper">
+        <div class="toolbar-bubble" id="bubble-accent1"></div>
+        <input type="color" id="toolbar-color-accent1" class="sr-only" />
+        <span>Accent 1</span>
+      </label>
+      <label class="toolbar-bubble-wrapper">
+        <div class="toolbar-bubble" id="bubble-accent2"></div>
+        <input type="color" id="toolbar-color-accent2" class="sr-only" />
+        <span>Accent 2</span>
+      </label>
+    </div>
+    <div class="theme-toolbar__actions">
+      <button id="toolbar-cancel" class="btn-cancel">Cancel</button>
+      <button id="toolbar-confirm" class="btn-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .theme-toolbar {
+    position: fixed;
+    top: 80px; left: 50%;
+    margin-left: -200px;
+    z-index: 10000;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    width: max-content;
+    max-width: 95vw;
+    /* Optional: translucent background */
+    background: color-mix(in srgb, var(--color-bg-card) 90%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .theme-toolbar[aria-hidden="false"] {
+    opacity: 1; visibility: visible;
+  }
+  .theme-toolbar__drag-handle {
+    width: 100%;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+    border-radius: 16px 16px 0 0;
+    color: var(--color-text-muted);
+  }
+  .theme-toolbar__drag-handle:active { cursor: grabbing; }
+  .theme-toolbar__content {
+    padding: 1.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .theme-toolbar__bubbles {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  .toolbar-bubble-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+  }
+  .toolbar-bubble {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .toolbar-bubble-wrapper:hover .toolbar-bubble { transform: scale(1.15); }
+  .toolbar-bubble-wrapper span {
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  .theme-toolbar__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.25rem;
+  }
+  .btn-cancel, .btn-confirm {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .btn-cancel:active, .btn-confirm:active { transform: scale(0.95); }
+  .btn-cancel { background: transparent; border: 1px solid var(--color-border); color: var(--color-text); }
+  .btn-confirm { background: var(--color-accent-2); border: none; color: #fff; }
+  @media (max-width: 600px) {
+    .theme-toolbar__content { padding: 1rem; gap: 1rem; }
+    .theme-toolbar__bubbles { gap: 0.75rem; }
+    .toolbar-bubble { width: 36px; height: 36px; }
+    .toolbar-bubble-wrapper span { font-size: 0.65rem; }
+    .theme-toolbar { margin-left: 0; left: 50%; transform: translateX(-50%) !important; /* disable horizontal drag on mobile */ }
+  }
+</style>
