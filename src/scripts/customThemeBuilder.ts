@@ -99,7 +99,15 @@ document.addEventListener('astro:page-load', () => {
       '--color-code-text: var(--color-accent-1); ' +
       '--color-success: #10b981; ' +
     '}';
-  }
+
+      if (parsed.bg) {
+        try {
+          const r = parseInt(parsed.bg.slice(1,3), 16), g = parseInt(parsed.bg.slice(3,5), 16), b = parseInt(parsed.bg.slice(5,7), 16);
+          const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          document.documentElement.setAttribute('data-theme-mode', luma < 128 ? 'dark' : 'light');
+        } catch(e) {}
+      }
+    }
 
   const saved = localStorage.getItem('customTheme');
   let config = { bg: '#ffffff', card: '#f8f9fa', text: '#0f172a', accent1: '#3b82f6', accent2: '#2563eb', accent3: '#60a5fa', accent4: '#1d4ed8' };
