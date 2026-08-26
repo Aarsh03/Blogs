@@ -18,25 +18,9 @@
         <button class="font-option" data-font="sans">DM Sans</button>
         <button class="font-option" data-font="playfair">Playfair</button>
         <button class="font-option" data-font="sourceserif">Source Serif</button>
-      
-        <div class="theme-swatch-wrapper">
-          <button class="theme-swatch" data-theme-val="custom" aria-label="Custom Theme" style="background: conic-gradient(red, yellow, green, cyan, blue, magenta, red); border: 1px solid var(--color-border);"></button>
-          <span class="theme-label">Custom</span>
-        </div>
       </div>
     </div>
     <div class="settings-divider"></div>
-    <div class="settings-section" id="custom-theme-builder" style="display: none;">
-      <p class="settings-label">Custom Theme Builder</p>
-      <div class="custom-theme-inputs">
-        <label><span>Background</span><input type="color" id="custom-bg" value="#ffffff"></label>
-        <label><span>Card</span><input type="color" id="custom-card" value="#f8f9fa"></label>
-        <label><span>Text</span><input type="color" id="custom-text" value="#0f172a"></label>
-        <label><span>Accent 1</span><input type="color" id="custom-accent1" value="#3b82f6"></label>
-        <label><span>Accent 2</span><input type="color" id="custom-accent2" value="#2563eb"></label>
-      </div>
-    </div>
-    <div class="settings-divider" id="custom-theme-divider" style="display: none;"></div>
     <div class="settings-section">
       <p class="settings-label">Theme</p>
       <div class="theme-palette">
@@ -80,7 +64,6 @@
           <button class="theme-swatch" data-theme-val="rose" aria-label="Rosé Pine Theme"></button>
           <span class="theme-label">Rosé</span>
         </div>
-
         <div class="theme-swatch-wrapper">
           <button class="theme-swatch" data-theme-val="obsidian" aria-label="Obsidian Theme"></button>
           <span class="theme-label">Obsidian</span>
@@ -90,6 +73,22 @@
           <span class="theme-label">Midnight</span>
         </div>
       </div>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="settings-section">
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Custom Theme</span>
+        </div>
+        <button class="eye-comfort-toggle" id="custom-theme-toggle" role="switch" aria-checked="false" aria-label="Custom Theme">
+          <span class="eye-comfort-thumb"></span>
+        </button>
+      </div>
+      <p class="settings-hint">Create your own DIY theme</p>
+      <button id="open-custom-theme-wizard" class="customize-bubble-btn" style="display: none; margin-top: 10px; width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-bg-code); color: var(--color-text); cursor: pointer; font-size: 0.8rem; font-family: var(--font-sans);">
+        Customize Theme
+      </button>
     </div>
     <div class="settings-divider"></div>
     <div class="settings-section">

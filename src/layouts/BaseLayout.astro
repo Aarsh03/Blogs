@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import FloatingActions from '../components/FloatingActions.astro';
 import SearchModal from '../components/SearchModal.astro';
+import CustomThemeWizard from '../components/CustomThemeWizard.astro';
 import '../styles/global.css';
 import '@fontsource-variable/dm-sans';
 import '@fontsource/playfair-display/700.css';
@@ -74,7 +75,7 @@ const imageURL = new URL(image, Astro.site).href;
   <script is:inline>
     (function() {
       var savedTheme = localStorage.getItem('theme');
-      var validThemes = ['obsidian', 'serenity', 'crimson', 'rose', 'nebula', 'barbie', 'solarized-light', 'frost-blue', 'midnight-black', 'snow', 'nature', 'spring'];
+      var validThemes = ['obsidian', 'serenity', 'crimson', 'rose', 'nebula', 'barbie', 'solarized-light', 'frost-blue', 'midnight-black', 'snow', 'nature', 'spring', 'custom'];
       var theme = savedTheme;
       
       if (theme === 'dark') theme = 'obsidian';
@@ -100,16 +101,16 @@ const imageURL = new URL(image, Astro.site).href;
               s.textContent = '[data-theme="custom"] { ' +
                 '--color-bg: ' + (parsed.bg || '#ffffff') + '; ' +
                 '--color-bg-card: ' + (parsed.card || '#f8f9fa') + '; ' +
-                '--color-bg-nav: ' + (parsed.nav || 'rgba(255,255,255,0.8)') + '; ' +
-                '--color-bg-code: ' + (parsed.code || '#f1f5f9') + '; ' +
+                '--color-bg-nav: ' + (parsed.bg ? parsed.bg + 'd9' : 'rgba(255,255,255,0.85)') + '; ' +
+                '--color-bg-code: ' + (parsed.card || '#f1f5f9') + '; ' +
                 '--color-accent-1: ' + (parsed.accent1 || '#3b82f6') + '; ' +
                 '--color-accent-2: ' + (parsed.accent2 || '#2563eb') + '; ' +
-                '--color-accent-3: ' + (parsed.accent3 || '#60a5fa') + '; ' +
-                '--color-accent-4: ' + (parsed.accent4 || '#1d4ed8') + '; ' +
+                '--color-accent-3: ' + (parsed.accent1 || '#60a5fa') + '; ' +
+                '--color-accent-4: ' + (parsed.accent2 || '#1d4ed8') + '; ' +
                 '--color-text: ' + (parsed.text || '#0f172a') + '; ' +
-                '--color-text-muted: ' + (parsed.textMuted || '#64748b') + '; ' +
-                '--color-text-light: ' + (parsed.textLight || '#94a3b8') + '; ' +
-                '--color-border: ' + (parsed.border || '#e2e8f0') + '; ' +
+                '--color-text-muted: ' + (parsed.text || '#64748b') + '; ' +
+                '--color-text-light: ' + (parsed.text || '#94a3b8') + '; ' +
+                '--color-border: ' + (parsed.card || '#e2e8f0') + '; ' +
                 '--color-link: var(--color-accent-2); ' +
                 '--color-code-text: var(--color-accent-1); ' +
                 '--color-success: #10b981; ' +
@@ -123,15 +124,7 @@ const imageURL = new URL(image, Astro.site).href;
       var isDark = darkThemes.indexOf(theme) !== -1;
       document.documentElement.setAttribute('data-theme-mode', isDark ? 'dark' : 'light');
 
-      // Inject critical CSS synchronously so icons are correct before first paint.
-      // MUST be inside is:inline — regular <style> tags are bundled by Astro
-      // into external .css files which load async and cause FOUC.
-      var s = document.createElement('style');
-      s.id = 'theme-icon-critical';
-      s.textContent = isDark
-        ? '.icon-sun{display:block!important}.icon-moon{display:none!important}'
-        : '.icon-sun{display:none!important}.icon-moon{display:block!important}';
-      document.head.appendChild(s);
+      
 
       var savedFont = localStorage.getItem('font') || 'serif';
       document.documentElement.setAttribute('data-font', savedFont);
@@ -175,16 +168,16 @@ const imageURL = new URL(image, Astro.site).href;
                 s.textContent = '[data-theme="custom"] { ' +
                   '--color-bg: ' + (parsed.bg || '#ffffff') + '; ' +
                   '--color-bg-card: ' + (parsed.card || '#f8f9fa') + '; ' +
-                  '--color-bg-nav: ' + (parsed.nav || 'rgba(255,255,255,0.8)') + '; ' +
-                  '--color-bg-code: ' + (parsed.code || '#f1f5f9') + '; ' +
+                  '--color-bg-nav: ' + (parsed.bg ? parsed.bg + 'd9' : 'rgba(255,255,255,0.85)') + '; ' +
+                  '--color-bg-code: ' + (parsed.card || '#f1f5f9') + '; ' +
                   '--color-accent-1: ' + (parsed.accent1 || '#3b82f6') + '; ' +
                   '--color-accent-2: ' + (parsed.accent2 || '#2563eb') + '; ' +
-                  '--color-accent-3: ' + (parsed.accent3 || '#60a5fa') + '; ' +
-                  '--color-accent-4: ' + (parsed.accent4 || '#1d4ed8') + '; ' +
+                  '--color-accent-3: ' + (parsed.accent1 || '#60a5fa') + '; ' +
+                  '--color-accent-4: ' + (parsed.accent2 || '#1d4ed8') + '; ' +
                   '--color-text: ' + (parsed.text || '#0f172a') + '; ' +
-                  '--color-text-muted: ' + (parsed.textMuted || '#64748b') + '; ' +
-                  '--color-text-light: ' + (parsed.textLight || '#94a3b8') + '; ' +
-                  '--color-border: ' + (parsed.border || '#e2e8f0') + '; ' +
+                  '--color-text-muted: ' + (parsed.text || '#64748b') + '; ' +
+                  '--color-text-light: ' + (parsed.text || '#94a3b8') + '; ' +
+                  '--color-border: ' + (parsed.card || '#e2e8f0') + '; ' +
                   '--color-link: var(--color-accent-2); ' +
                   '--color-code-text: var(--color-accent-1); ' +
                   '--color-success: #10b981; ' +
@@ -222,6 +215,7 @@ const imageURL = new URL(image, Astro.site).href;
   </main>
   <FloatingActions />
   <SearchModal />
+    <CustomThemeWizard />
   <Footer />
   <script src="../scripts/copy-code.ts"></script>
   <script src="../scripts/heading-links.ts"></script>
