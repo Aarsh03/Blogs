@@ -80,10 +80,12 @@ document.addEventListener('astro:page-load', () => {
     html.setAttribute('data-theme-mode', isDarkTheme(theme) ? 'dark' : 'light');
     localStorage.setItem('theme', theme);
     
-    if (customBuilder && customDivider) {
+    const builder = document.getElementById('custom-theme-builder');
+    const divider = document.getElementById('custom-theme-divider');
+    if (builder && divider) {
       const isCustom = theme === 'custom';
-      customBuilder.style.display = isCustom ? 'block' : 'none';
-      customDivider.style.display = isCustom ? 'block' : 'none';
+      builder.style.display = isCustom ? 'block' : 'none';
+      divider.style.display = isCustom ? 'block' : 'none';
     }
     
     // Update Swatches
