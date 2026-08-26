@@ -168,13 +168,13 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-card);
     transition: background-color 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 2;
   }
 
   [data-theme-mode="dark"] .fab-main {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .fab-icon-menu, .fab-icon-close {
@@ -225,7 +225,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card);
     opacity: 0;
     visibility: hidden;
     transform: scale(0.5) translate(0, 0);
@@ -302,7 +302,7 @@
     pointer-events: none;
     transform: translateX(10px);
     transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card);
   }
 
   .fab-toast.show {

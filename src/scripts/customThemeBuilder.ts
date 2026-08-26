@@ -21,9 +21,9 @@ document.addEventListener('astro:page-load', () => {
       '--color-accent-3: ' + (parsed.accent1 || '#60a5fa') + '; ' +
       '--color-accent-4: ' + (parsed.accent2 || '#1d4ed8') + '; ' +
       '--color-text: ' + (parsed.text || '#0f172a') + '; ' +
-      '--color-text-muted: ' + (parsed.text || '#64748b') + '; ' +
-      '--color-text-light: ' + (parsed.text || '#94a3b8') + '; ' +
-      '--color-border: ' + (parsed.card || '#e2e8f0') + '; ' +
+      '--color-text-muted: ' + (parsed.text ? 'color-mix(in srgb, ' + parsed.text + ' 70%, transparent)' : '#64748b') + '; ' +
+      '--color-text-light: ' + (parsed.text ? 'color-mix(in srgb, ' + parsed.text + ' 50%, transparent)' : '#94a3b8') + '; ' +
+      '--color-border: ' + (parsed.text ? 'color-mix(in srgb, ' + parsed.text + ' 15%, transparent)' : '#e2e8f0') + '; ' +
       '--color-link: var(--color-accent-2); ' +
       '--color-code-text: var(--color-accent-1); ' +
       '--color-success: #10b981; ' +
@@ -129,6 +129,14 @@ document.addEventListener('astro:page-load', () => {
   /* Drag Logic */
   const handle = document.getElementById('theme-toolbar-handle');
   let isDragging = false;
+    if (_dragMove) {
+      document.removeEventListener('mousemove', _dragMove);
+      document.removeEventListener('touchmove', _dragMove);
+    }
+    if (_dragEnd) {
+      document.removeEventListener('mouseup', _dragEnd);
+      document.removeEventListener('touchend', _dragEnd);
+    }
   let currentX = 0;
   let currentY = 0;
   let initialX = 0;
@@ -153,6 +161,10 @@ document.addEventListener('astro:page-load', () => {
       initialY = e.clientY - yOffset;
     }
     isDragging = true;
+    document.addEventListener('mousemove', _dragMove, { passive: false });
+    document.addEventListener('touchmove', _dragMove, { passive: false });
+    document.addEventListener('mouseup', _dragEnd);
+    document.addEventListener('touchend', _dragEnd);
   };
 
   _dragMove = (e: any) => {
@@ -176,10 +188,7 @@ document.addEventListener('astro:page-load', () => {
 
   handle?.addEventListener('mousedown', _dragStart);
   handle?.addEventListener('touchstart', _dragStart, { passive: true });
-  document.addEventListener('mousemove', _dragMove, { passive: false });
-  document.addEventListener('touchmove', _dragMove, { passive: false });
-  document.addEventListener('mouseup', _dragEnd);
-  document.addEventListener('touchend', _dragEnd);
+  
 });
 
 document.addEventListener('astro:before-swap', () => {
@@ -188,7 +197,13 @@ document.addEventListener('astro:before-swap', () => {
   if (_dragMove) document.removeEventListener('touchmove', _dragMove);
   if (_dragEnd) document.removeEventListener('mouseup', _dragEnd);
   if (_dragEnd) document.removeEventListener('touchend', _dragEnd);
+  if (_dragStart) {
+    const handle = document.getElementById('theme-toolbar-handle');
+    handle?.removeEventListener('mousedown', _dragStart);
+    handle?.removeEventListener('touchstart', _dragStart);
+  }
   _toolbarKeydown = null;
   _dragMove = null;
   _dragEnd = null;
+  _dragStart = null;
 });
