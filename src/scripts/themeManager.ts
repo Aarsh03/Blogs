@@ -26,7 +26,7 @@ document.addEventListener('astro:page-load', () => {
       customToggleBtn.classList.toggle('on', isCustom);
     }
     if (customBuilderBtn) {
-      customBuilderBtn.style.display = isCustom ? 'block' : 'none';
+      customBuilderBtn.style.display = isCustom ? 'flex' : 'none';
     }
     
     // Update Swatches
