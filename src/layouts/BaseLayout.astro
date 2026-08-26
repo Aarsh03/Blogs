@@ -74,8 +74,20 @@ const imageURL = new URL(image, Astro.site).href;
   <script is:inline>
     (function() {
       var savedTheme = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = savedTheme || 'crimson';
+      var validThemes = ['obsidian', 'serenity', 'crimson', 'rose', 'nebula', 'barbie', 'solarized-light', 'frost-blue', 'midnight-black', 'snow', 'nature', 'spring'];
+      var theme = savedTheme;
+      
+      if (theme === 'dark') theme = 'obsidian';
+      if (theme === 'light') theme = 'serenity';
+      if (theme === 'rose-pine') theme = 'rose';
+      if (theme === 'lavender-dark') theme = 'nebula';
+      if (theme === 'pastel-pink') theme = 'barbie';
+      
+      if (!theme || validThemes.indexOf(theme) === -1) {
+        theme = 'crimson';
+        try { localStorage.setItem('theme', theme); } catch(e) {}
+      }
+      
       document.documentElement.setAttribute('data-theme', theme);
       
       var darkThemes = ['obsidian', 'rose', 'nebula', 'midnight-black'];
@@ -107,8 +119,18 @@ const imageURL = new URL(image, Astro.site).href;
       // On View Transition swap, re-apply theme/font/comfort attributes.
       document.addEventListener('astro:after-swap', function() {
         var t = localStorage.getItem('theme');
-        var pd = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        t = t || 'crimson';
+        var validThemes = ['obsidian', 'serenity', 'crimson', 'rose', 'nebula', 'barbie', 'solarized-light', 'frost-blue', 'midnight-black', 'snow', 'nature', 'spring'];
+        
+        if (t === 'dark') t = 'obsidian';
+        if (t === 'light') t = 'serenity';
+        if (t === 'rose-pine') t = 'rose';
+        if (t === 'lavender-dark') t = 'nebula';
+        if (t === 'pastel-pink') t = 'barbie';
+        
+        if (!t || validThemes.indexOf(t) === -1) {
+          t = 'crimson';
+        }
+        
         document.documentElement.setAttribute('data-theme', t);
         
 
