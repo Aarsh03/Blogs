@@ -83,6 +83,10 @@ document.addEventListener('astro:page-load', () => {
       '--color-bg-card: ' + (parsed.card || '#f8f9fa') + '; ' +
       '--color-bg-nav: ' + (parsed.bg ? parsed.bg + 'd9' : 'rgba(255,255,255,0.85)') + '; ' +
       '--color-bg-code: ' + (parsed.card || '#f1f5f9') + '; ' +
+    '--color-bg-nav-links: ' + (parsed.card || '#f1f5f9') + '; ' +
+    '--color-nav-links-border: ' + (parsed.text ? 'color-mix(in srgb, ' + parsed.text + ' 10%, transparent)' : '#e2e8f0') + '; ' +
+    '--shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); ' +
+    '--shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); '
       '--color-accent-1: ' + (parsed.accent1 || '#3b82f6') + '; ' +
       '--color-accent-2: ' + (parsed.accent2 || '#2563eb') + '; ' +
       '--color-accent-3: ' + (parsed.accent3 || '#60a5fa') + '; ' +
