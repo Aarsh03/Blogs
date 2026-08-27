@@ -9,11 +9,11 @@ const baseUrl = import.meta.env.BASE_URL;
     
 
     // Track observers at module level to clean up on re-navigation
-    let _giscusThemeObserver = null;
-    let _giscusIntersectObserver = null;
+    let _giscusThemeObserver: MutationObserver | null = null;
+    let _giscusIntersectObserver: IntersectionObserver | null = null;
 
     document.addEventListener('astro:page-load', () => {
-      const container = document.querySelector('.giscus-container');
+      const container = document.querySelector('.giscus-container') as HTMLElement;
       if (!container) return;
 
       // Disconnect previous observer if it exists
@@ -66,7 +66,7 @@ const baseUrl = import.meta.env.BASE_URL;
       _giscusThemeObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.attributeName === 'data-theme' || mutation.attributeName === 'data-theme-mode') {
-            const iframe = document.querySelector('iframe.giscus-frame');
+            const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
             if (iframe && iframe.contentWindow) {
               iframe.contentWindow.postMessage(
                 { giscus: { setConfig: { theme: getGiscusTheme() } } },

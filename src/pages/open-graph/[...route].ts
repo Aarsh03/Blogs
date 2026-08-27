@@ -5,9 +5,8 @@ const collectionEntries = await getCollection('posts', ({ data }) => !data.draft
 const pages = Object.fromEntries(collectionEntries.map(({ id, data }) => [id, data]));
 
 export const { getStaticPaths, GET } = await OGImageRoute({
-  param: 'route',
   pages: pages,
-  getImageOptions: (path, page) => ({
+  getImageOptions: (_, page) => ({
     title: page.title,
     description: page.tags.join(' • '),
     bgGradient: [[18, 18, 22], [30, 30, 36]],

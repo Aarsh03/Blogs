@@ -84,6 +84,7 @@ const base = import.meta.env.BASE_URL;
                   if (themes.includes(targetTheme)) applyCommandTheme(targetTheme);
                 }
                 
+                const base = document.getElementById('search')?.getAttribute('data-base') || '/';
                 if (cmd === 'home') window.location.href = base;
                 if (cmd === 'about') window.location.href = base + (base.endsWith('/') ? 'about' : '/about');
               }

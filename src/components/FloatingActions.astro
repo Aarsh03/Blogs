@@ -21,8 +21,8 @@ import Icon from './Icon.astro';
 </div>
 
 <script>
-  let _scrollListener = null;
-  let _clickListener = null;
+  let _scrollListener: (() => void) | null = null;
+  let _clickListener: ((e: MouseEvent) => void) | null = null;
 
   document.addEventListener('astro:page-load', () => {
     const container = document.getElementById('fab-container');
@@ -91,8 +91,8 @@ import Icon from './Icon.astro';
     if (_clickListener) {
       document.removeEventListener('click', _clickListener);
     }
-    _clickListener = (e) => {
-      if (container && !container.contains(e.target)) {
+    _clickListener = (e: MouseEvent) => {
+      if (container && !container.contains(e.target as Node)) {
         closeMenu();
       }
     };

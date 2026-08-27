@@ -217,10 +217,9 @@ document.addEventListener('astro:page-load', () => {
 });
 
 document.addEventListener('astro:before-swap', () => {
-  if (_scrollObserver) {
-    _scrollObserver.disconnect();
-    _scrollObserver = null;
-  }
+  _scrollObserver?.disconnect();
+  _scrollObserver = null;
+  
   if (_popstateListener) {
     window.removeEventListener('popstate', _popstateListener);
     _popstateListener = null;

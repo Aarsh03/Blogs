@@ -197,7 +197,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
       threshold: 0
     });
 
-    headings.forEach(heading => _tocObserver.observe(heading));
+    headings.forEach(heading => _tocObserver?.observe(heading));
   });
 
   document.addEventListener('astro:before-swap', () => {
