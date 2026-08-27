@@ -141,15 +141,7 @@
   font-size: 0.875rem;
   margin: 1.75em 0;
   border: 1px solid var(--color-border);
-}
-
-[data-theme-mode="dark"] .prose pre {
-  background-color: var(--shiki-dark-bg) !important;
-  color: var(--shiki-dark) !important;
-}
-
-[data-theme-mode="dark"] .prose pre span {
-  color: var(--shiki-dark) !important;
+  background-color: transparent !important;
 }
 
 .prose pre code {
