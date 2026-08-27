@@ -21,4 +21,10 @@ main {
   --color-btn-primary-disabled-bg: rgba(71, 85, 105, 0.5) !important;
   --color-btn-primary-disabled-border: transparent !important;
   --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.4) !important;
+
+  /* Explicitly define text colors to prevent Giscus OS-level light mode overrides on initial load */
+  --color-fg-default: #c9d1d9 !important;
+  --color-fg-muted: #8b949e !important;
+  --color-fg-subtle: #484f58 !important;
+  --color-accent-fg: #58a6ff !important;
 }

@@ -18,6 +18,12 @@ main {
   
   --color-btn-hover-bg: rgba(0, 0, 0, 0.05) !important;
   --color-btn-hover-border: rgba(0, 0, 0, 0.1) !important;
+
+  /* Explicitly define text colors to prevent Giscus OS-level dark mode overrides on initial load */
+  --color-fg-default: #24292f !important;
+  --color-fg-muted: #57606a !important;
+  --color-fg-subtle: #6e7781 !important;
+  --color-accent-fg: #0969da !important;
 }
 
 body {
