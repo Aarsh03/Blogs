@@ -201,9 +201,7 @@ document.addEventListener('astro:page-load', () => {
   window.addEventListener('popstate', _popstateListener);
 
   // Infinite Scroll Logic
-  if (_scrollObserver) {
-    _scrollObserver.disconnect();
-  }
+  _scrollObserver?.disconnect();
   _scrollObserver = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
       currentLimit += 6; // Load 6 more on scroll

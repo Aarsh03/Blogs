@@ -104,7 +104,7 @@ const base = import.meta.env.BASE_URL;
       document.body.style.overflow = 'hidden';
       // Focus the input, wait for it to render if necessary
       const focusInput = () => {
-        const input = document.querySelector('.pagefind-ui__search-input');
+        const input = document.querySelector('.pagefind-ui__search-input') as HTMLInputElement | null;
         if (input) {
           input.focus();
         } else {
