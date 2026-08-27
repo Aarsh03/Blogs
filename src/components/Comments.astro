@@ -6,23 +6,24 @@ const baseUrl = import.meta.env.BASE_URL;
   <h2 class="comments-section__title">Comments</h2>
   <div class="giscus-container" data-repo={SITE.giscus.repo} data-repo-id={SITE.giscus.repoId} data-category={SITE.giscus.category} data-category-id={SITE.giscus.categoryId} data-base-url={baseUrl}></div>
   <script>
-    
-
-    // Track observers at module level to clean up on re-navigation
     let _giscusThemeObserver: MutationObserver | null = null;
     let _giscusIntersectObserver: IntersectionObserver | null = null;
+    let _giscusReadyListener: ((e: MessageEvent) => void) | null = null;
 
     document.addEventListener('astro:page-load', () => {
       const container = document.querySelector('.giscus-container') as HTMLElement;
       if (!container) return;
 
-      // Disconnect previous observer if it exists
       _giscusThemeObserver?.disconnect();
       _giscusThemeObserver = null;
       _giscusIntersectObserver?.disconnect();
       _giscusIntersectObserver = null;
 
-      // Prevent duplicate loading if already loaded
+      if (_giscusReadyListener) {
+        window.removeEventListener('message', _giscusReadyListener);
+        _giscusReadyListener = null;
+      }
+
       if (container.hasChildNodes()) return;
 
       const { repo, repoId, category, categoryId, baseUrl } = container.dataset;
@@ -30,9 +31,39 @@ const baseUrl = import.meta.env.BASE_URL;
       function getGiscusTheme() {
         const isDark = document.documentElement.getAttribute('data-theme-mode') === 'dark';
         const base = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
-        const themeBase = window.location.origin + base;
-        return isDark ? `${themeBase}giscus-dark.css` : `${themeBase}giscus-theme.css`;
+        return isDark
+          ? `${window.location.origin + base}giscus-dark.css`
+          : `${window.location.origin + base}giscus-theme.css`;
       }
+
+      function sendTheme() {
+        const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
+        if (iframe?.contentWindow) {
+          iframe.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: getGiscusTheme() } } },
+            'https://giscus.app'
+          );
+        }
+      }
+
+      // THE KEY FIX: Giscus sends a message to the parent window when its iframe
+      // has fully loaded and is ready. We intercept that message and immediately
+      // push the correct theme. This fixes the white-text-on-light-theme bug that
+      // occurred because Giscus renders with its own default dark colours while
+      // asynchronously fetching our custom CSS file.
+      _giscusReadyListener = (event: MessageEvent) => {
+        if (event.origin !== 'https://giscus.app') return;
+        if (typeof event.data !== 'object' || !event.data.giscus) return;
+        // Giscus sends this message type when the discussion data arrives —
+        // i.e. the iframe is rendered and ready to accept setConfig commands.
+        if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
+          sendTheme();
+          // Only need to do this once per load
+          window.removeEventListener('message', _giscusReadyListener!);
+          _giscusReadyListener = null;
+        }
+      };
+      window.addEventListener('message', _giscusReadyListener);
 
       _giscusIntersectObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -53,39 +84,35 @@ const baseUrl = import.meta.env.BASE_URL;
             script.setAttribute('crossorigin', 'anonymous');
             script.async = true;
             container.appendChild(script);
-            
             _giscusIntersectObserver?.disconnect();
           }
         });
       }, { rootMargin: '200px' });
-      
+
       _giscusIntersectObserver.observe(container);
 
-      // Listen for theme changes to update iframe dynamically
+      // Listen for theme changes after Giscus is already loaded
       _giscusThemeObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.attributeName === 'data-theme' || mutation.attributeName === 'data-theme-mode') {
-            const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
-            if (iframe && iframe.contentWindow) {
-              iframe.contentWindow.postMessage(
-                { giscus: { setConfig: { theme: getGiscusTheme() } } },
-                'https://giscus.app'
-              );
-            }
+            sendTheme();
           }
         });
       });
-      _giscusThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-theme-mode'] });
+      _giscusThemeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme', 'data-theme-mode'],
+      });
     });
 
     document.addEventListener('astro:before-swap', () => {
-      if (_giscusThemeObserver) {
-        _giscusThemeObserver.disconnect();
-        _giscusThemeObserver = null;
-      }
-      if (_giscusIntersectObserver) {
-        _giscusIntersectObserver.disconnect();
-        _giscusIntersectObserver = null;
+      _giscusThemeObserver?.disconnect();
+      _giscusThemeObserver = null;
+      _giscusIntersectObserver?.disconnect();
+      _giscusIntersectObserver = null;
+      if (_giscusReadyListener) {
+        window.removeEventListener('message', _giscusReadyListener);
+        _giscusReadyListener = null;
       }
     });
   </script>
