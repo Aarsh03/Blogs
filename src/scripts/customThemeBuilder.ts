@@ -329,7 +329,6 @@ document.addEventListener('astro:page-load', () => {
     
     
     const start = (e: any) => {
-      if (window.innerWidth <= 768) return;
       if (target.style.transform.includes('-50%')) {
         const rect = target.getBoundingClientRect();
         target.style.left = rect.left + 'px';
@@ -341,7 +340,7 @@ document.addEventListener('astro:page-load', () => {
       isDragging = true;
     };
     const move = (e: any) => {
-      if (!isDragging || window.innerWidth <= 768) return;
+      if (!isDragging) return;
       e.preventDefault();
       currentX = (e.touches ? e.touches[0].clientX : e.clientX) - initialX;
       currentY = (e.touches ? e.touches[0].clientY : e.clientY) - initialY;
