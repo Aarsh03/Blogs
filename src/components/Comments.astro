@@ -55,7 +55,7 @@ const baseUrl = import.meta.env.BASE_URL;
             script.async = true;
             container.appendChild(script);
             
-            _giscusIntersectObserver.disconnect();
+            _giscusIntersectObserver?.disconnect();
           }
         });
       }, { rootMargin: '200px' });
