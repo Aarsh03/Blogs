@@ -100,23 +100,23 @@ import Icon from './Icon.astro';
   .theme-toolbar.vertical-mode .theme-toolbar__actions { flex-direction: column; }
   .theme-toolbar.vertical-mode .theme-toolbar__divider { width: 24px; height: 1px; }
 
-  .theme-toolbar__divider { width: 1px; height: 32px; background: var(--color-border); }
+  .theme-toolbar__divider { width: 1px; height: 32px; background: var(--color-border); flex-shrink: 0; }
   .theme-toolbar__drag-handle {
-    display: flex; justify-content: center; align-items: center; cursor: grab;
+    display: flex; justify-content: center; align-items: center; cursor: grab; flex-shrink: 0;
     color: var(--color-text-muted); padding: 0.25rem 0.15rem; border-radius: 8px;
   }
   .theme-toolbar__drag-handle:hover { background: color-mix(in srgb, var(--color-text) 5%, transparent); }
   .theme-toolbar__drag-handle:active { cursor: grabbing; }
 
   .theme-toolbar__rotate {
-    display: flex; justify-content: center; align-items: center; background: transparent; border: none;
+    display: flex; justify-content: center; align-items: center; background: transparent; border: none; flex-shrink: 0;
     color: var(--color-text-muted); cursor: pointer; padding: 0.4rem; border-radius: 50%;
   }
   .theme-toolbar__rotate:hover { background: color-mix(in srgb, var(--color-text) 5%, transparent); color: var(--color-text); }
 
   .theme-toolbar__bubbles { display: flex; gap: 0.6rem; align-items: center; }
   .toolbar-bubble-wrapper {
-    display: flex; flex-direction: column; align-items: center; gap: 0.25rem; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 0.25rem; cursor: pointer; flex-shrink: 0;
   }
   .toolbar-bubble {
     width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--color-border); box-shadow: var(--shadow-card);
@@ -127,10 +127,11 @@ import Icon from './Icon.astro';
     font-size: 0.55rem; font-family: var(--font-sans); color: var(--color-text-muted); font-weight: 500; text-transform: uppercase;
   }
 
-  .theme-toolbar__actions { display: flex; gap: 0.5rem; align-items: center; }
+  .theme-toolbar__actions { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
   .btn-icon {
     display: flex; justify-content: center; align-items: center; width: 34px; height: 34px; border-radius: 50%;
     cursor: pointer; transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
   }
   .btn-icon:active { transform: scale(0.9); }
   .btn-cancel { background: transparent; border: 1px solid var(--color-border); color: var(--color-text); }
@@ -140,11 +141,8 @@ import Icon from './Icon.astro';
   .theme-toolbar { max-width: 95vw; overflow-x: auto; box-sizing: border-box; }
   .theme-toolbar::-webkit-scrollbar { display: none; }
   @media (max-width: 768px) {
-    .theme-toolbar { top: auto !important; bottom: 80px !important; width: 95vw; border-radius: 20px; }
-    .theme-toolbar__row { flex-wrap: wrap; justify-content: center; }
-    .theme-toolbar__bubbles { flex-wrap: wrap; justify-content: center; max-width: 100%; }
-    .theme-toolbar.vertical-mode .theme-toolbar__row { flex-direction: row; flex-wrap: wrap; }
-    .theme-toolbar.vertical-mode .theme-toolbar__bubbles { flex-direction: row; flex-wrap: wrap; }
+    .theme-toolbar { top: auto !important; bottom: 80px !important; width: 95vw; border-radius: 32px; max-height: 70vh; overflow-y: auto; }
+    .theme-toolbar.vertical-mode { border-radius: 32px; width: max-content; }
   }
   .drag-pill { width: 3px; height: 16px; border-radius: 2px; background: currentColor; opacity: 0.6; }
 </style>
