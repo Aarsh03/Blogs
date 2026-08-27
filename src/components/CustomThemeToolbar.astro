@@ -108,7 +108,8 @@ import Icon from './Icon.astro';
 
   .theme-toolbar__rotate {
     display: flex; justify-content: center; align-items: center; background: transparent; border: none; flex-shrink: 0;
-    color: var(--color-text-muted); cursor: pointer; padding: 0.4rem; border-radius: 50%;
+    color: var(--color-text-muted); cursor: pointer; padding: 0; border-radius: 50%;
+    width: 34px; height: 34px; transition: all 0.2s ease;
   }
   .theme-toolbar__rotate:hover { background: color-mix(in srgb, var(--color-text) 5%, transparent); color: var(--color-text); }
 
@@ -149,10 +150,10 @@ import Icon from './Icon.astro';
     .theme-toolbar__drag-handle { 
       display: flex; 
       position: absolute;
-      top: 0.1rem;
+      top: 0.4rem;
       left: 50%;
       transform: translateX(-50%) rotate(90deg); 
-      padding: 0.2rem;
+      padding: 0.3rem;
     }
     .theme-toolbar__divider { display: none; }
     .theme-toolbar__bubbles, .theme-toolbar__actions { display: contents; }
@@ -162,8 +163,9 @@ import Icon from './Icon.astro';
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 1rem 0.8rem;
-      padding: 1rem 0.5rem 0.5rem 0.5rem; /* extra top padding for drag handle */
+      padding: 1.5rem 0.6rem 0.6rem 0.6rem;
       justify-items: center;
+      align-items: center;
     }
 
     /* Vertical Mode - 1 column of 10 */
@@ -174,7 +176,7 @@ import Icon from './Icon.astro';
     .theme-toolbar.vertical-mode .theme-toolbar__row { 
       display: grid;
       grid-template-columns: 1fr;
-      padding: 1rem 0.6rem;
+      padding: 1.5rem 0.6rem 0.6rem 0.6rem;
     }
   }
   .drag-pill { width: 3px; height: 16px; border-radius: 2px; background: currentColor; opacity: 0.6; }

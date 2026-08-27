@@ -136,6 +136,38 @@ document.addEventListener('astro:page-load', () => {
   rotateBtn?.addEventListener('click', () => {
     isVertical = !isVertical;
     toolbar?.classList.toggle('vertical-mode', isVertical);
+    
+    // Bounds check after rotation
+    if (toolbar && toolbar.style.top) {
+      requestAnimationFrame(() => {
+        const rect = toolbar.getBoundingClientRect();
+        let newTop = parseFloat(toolbar.style.top) || rect.top;
+        let newLeft = parseFloat(toolbar.style.left) || rect.left;
+        
+        let needsUpdate = false;
+        if (rect.bottom > window.innerHeight) {
+          newTop = Math.max(0, window.innerHeight - rect.height);
+          needsUpdate = true;
+        }
+        if (rect.right > window.innerWidth) {
+          newLeft = Math.max(0, window.innerWidth - rect.width);
+          needsUpdate = true;
+        }
+        if (rect.top < 0) {
+          newTop = 0;
+          needsUpdate = true;
+        }
+        if (rect.left < 0) {
+          newLeft = 0;
+          needsUpdate = true;
+        }
+        
+        if (needsUpdate) {
+          toolbar.style.top = newTop + 'px';
+          toolbar.style.left = newLeft + 'px';
+        }
+      });
+    }
   });
 
   /* Custom Color Picker Logic */
