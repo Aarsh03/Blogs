@@ -65,7 +65,7 @@ const baseUrl = import.meta.env.BASE_URL;
       // Listen for theme changes to update iframe dynamically
       _giscusThemeObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          if (mutation.attributeName === 'data-theme') {
+          if (mutation.attributeName === 'data-theme' || mutation.attributeName === 'data-theme-mode') {
             const iframe = document.querySelector('iframe.giscus-frame');
             if (iframe && iframe.contentWindow) {
               iframe.contentWindow.postMessage(
@@ -76,7 +76,7 @@ const baseUrl = import.meta.env.BASE_URL;
           }
         });
       });
-      _giscusThemeObserver.observe(document.documentElement, { attributes: true });
+      _giscusThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-theme-mode'] });
     });
 
     document.addEventListener('astro:before-swap', () => {
