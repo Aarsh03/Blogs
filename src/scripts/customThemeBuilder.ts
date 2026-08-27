@@ -236,7 +236,12 @@ document.addEventListener('astro:page-load', () => {
   });
 
   let isDraggingSV = false;
-  const svMove = (e: MouseEvent | TouchEvent) => { if (isDraggingSV) updateSVFromEvent(e); };
+  const svMove = (e: MouseEvent | TouchEvent) => { 
+    if (isDraggingSV) {
+      if (e.cancelable) e.preventDefault();
+      updateSVFromEvent(e); 
+    }
+  };
   const svUp = () => { isDraggingSV = false; };
   
   const svDown = (e: MouseEvent | TouchEvent) => {
@@ -245,7 +250,7 @@ document.addEventListener('astro:page-load', () => {
   };
   
   svArea?.addEventListener('mousedown', svDown);
-  svArea?.addEventListener('touchstart', svDown, { passive: true });
+  svArea?.addEventListener('touchstart', svDown, { passive: false });
   document.addEventListener('mousemove', svMove);
   document.addEventListener('touchmove', svMove, { passive: false });
   document.addEventListener('mouseup', svUp);

@@ -146,7 +146,14 @@ import Icon from './Icon.astro';
       overflow: hidden;
     }
     
-    .theme-toolbar__drag-handle { display: none; }
+    .theme-toolbar__drag-handle { 
+      display: flex; 
+      position: absolute;
+      top: 0.1rem;
+      left: 50%;
+      transform: translateX(-50%) rotate(90deg); 
+      padding: 0.2rem;
+    }
     .theme-toolbar__divider { display: none; }
     .theme-toolbar__bubbles, .theme-toolbar__actions { display: contents; }
 
@@ -155,7 +162,7 @@ import Icon from './Icon.astro';
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 1rem 0.8rem;
-      padding: 0.5rem;
+      padding: 1rem 0.5rem 0.5rem 0.5rem; /* extra top padding for drag handle */
       justify-items: center;
     }
 
