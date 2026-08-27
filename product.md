@@ -1,226 +1,171 @@
 # Product Spec: Aarsh's Blog (GitHub Pages)
 
 ## 1. Overview
-A personal blog site hosted on **GitHub Pages** at `https://aarsh03.github.io/Blogs/`. Blog posts are authored as Markdown (`.md`) files with frontmatter metadata. Dropping a new `.md` file into `src/content/posts/` and pushing to `main` automatically builds and publishes it — no manual index editing, no local build step required.
+A personal blog site hosted on **GitHub Pages** at https://aarsh03.github.io/Blogs/. Blog posts are authored as Markdown (.md or .mdx) files with frontmatter metadata. Dropping a new file into src/content/posts/ and pushing to main automatically builds and publishes it � no manual index editing, no local build step required.
 
 ## 2. Tech Stack (Implemented)
 | Concern | Choice | Reason |
 |---|---|---|
-| Site generator | Astro v7 (static output) | Native Content Collections, Shiki, fast build, View Transitions |
-| Styling | Vanilla CSS with custom properties | Full control, no framework overhead |
+| Site generator | Astro v7 (static output) | Native Content Collections, Shiki, fast build, View Transitions, Loaders API |
+| Styling | Vanilla CSS with custom properties | Full control, no framework overhead, granular modular CSS |
 | Syntax highlighting | Astro built-in Shiki | Zero config, beautiful output in both themes |
 | Search | Pagefind (post-build index) | Zero backend, fully static |
-| Comments | Giscus (GitHub Discussions) | Free, no backend, repo: `Aarsh03/Blogs` |
+| Comments | Giscus (GitHub Discussions) | Free, no backend, repo: Aarsh03/Blogs |
 | Likes & Views | Cloudflare Workers + Workers KV | Free tier, serverless, persistent |
-| CI/CD | GitHub Actions (`withastro/action@v6`, Node 22) | Auto-deploy on push to `main` |
-| Fonts | `@fontsource` packages | Self-hosted, no render-blocking requests |
+| CI/CD | GitHub Actions (withastro/action@v6, Node 22) | Auto-deploy on push to main |
+| Fonts | @fontsource packages | Self-hosted, no render-blocking requests |
 
 ## 3. Content Model
 
 ### 3.1 Folder structure
-```
+`	ext
 /src
-  config.ts             ← global site metadata & config
-  content.config.ts     ← Astro Content Collections schema
+  config.ts               ? global site metadata & config
+  content.config.ts       ? Astro Content Collections schema (using glob loader)
   /content
     /posts
-      my-post.md        ← drop any .md file here to publish
+      my-post.md          ? drop any .md/.mdx file here to publish
   /pages
-    index.astro         ← home / post list / tag filtering
-    about.astro         ← static about page
-    rss.xml.ts          ← auto-generated RSS feed
+    index.astro           ? home / post list / tag filtering
+    about.astro           ? static about page
+    rss.xml.ts            ? auto-generated RSS feed
     /blog
-      [...slug].astro   ← individual post template
+      [...slug].astro     ? individual post template
     /open-graph
-      [...route].ts     ← dynamic OG image generation
+      [...route].ts       ? dynamic OG image generation
   /components
-    Navbar.astro
-    Footer.astro
-    PostCard.astro
-    TagChip.astro
     AuthorBio.astro
-    PostActions.astro   ← like & view counter logic
     Comments.astro
-    SearchModal.astro   ← Ctrl+K overlay search
+    CustomColorPicker.astro ? UI for creating custom theme colors
+    CustomThemeToolbar.astro? Toolbar for customizing themes
+    FloatingActions.astro ? speed dial (Top, Comments, Share)
+    Footer.astro
+    Icon.astro            ? centralized SVG icon component
+    Navbar.astro
+    PostActions.astro     ? like logic
+    PostCard.astro
     ReadingProgress.astro
+    RelatedPosts.astro    ? algorithmic recommendations
+    SearchModal.astro     ? Ctrl+K overlay search
+    SeriesBox.astro       ? multi-part series navigation
     ShareButtons.astro
     TableOfContents.astro
-    RelatedPosts.astro  ← algorithmic recommendations
-    SeriesBox.astro     ← multi-part series navigation
-    FloatingActions.astro ← speed dial (Top, Comments, Share)
+    TagChip.astro
+    TagFilterModal.astro  ? modal for multi-select tag filtering
+    ViewCounter.astro     ? dynamic view count display
     /navbar
-      SettingsPanel.astro ← Font, Theme, Layout, Eye Comfort
+      SettingsPanel.astro ? Font, Theme, Layout, Eye Comfort settings
       MobileMenu.astro
   /layouts
     BaseLayout.astro
     PostLayout.astro
   /scripts
     copy-code.ts
+    customThemeBuilder.ts ? dynamic custom theme builder logic
     heading-links.ts
-    post-filter.ts
     navbar.ts
+    post-filter.ts
+    settings.ts           ? manages settings panel functionality
+    themeManager.ts       ? theme lifecycle and dark/light switching logic
   /styles
+    alerts.css
+    base.css
     global.css
-    /themes             ← 12 modular CSS theme stylesheets
+    navbar.css
+    pagefind.css
+    prose.css
+    tags.css
+    transitions.css
+    /themes               ? modular CSS theme stylesheets
   /utils
-    theme.ts            ← dark/light mode detection
+    posts.ts              ? post filtering and sorting utils
+    theme.ts              ? dark/light mode detection helper
 /public
   favicon.png
-  og-image.png          ← fallback open graph image
-  giscus-theme.css      ← custom Giscus light theme
-  giscus-dark.css       ← custom Giscus dark theme
+  og-image.png            ? fallback open graph image
+  giscus-theme.css        ? custom Giscus light theme
+  giscus-dark.css         ? custom Giscus dark theme
 /workers
-  likes-worker.js       ← Cloudflare Worker source (handles views & likes)
-  wrangler.toml         ← Cloudflare deployment config
+  likes-worker.js         ? Cloudflare Worker source (handles views & likes)
+  wrangler.toml           ? Cloudflare deployment config
 /.github/workflows
-  deploy.yml            ← GitHub Actions CI/CD
-```
+  deploy.yml              ? GitHub Actions CI/CD
+`
 
-### 3.2 Frontmatter schema (required at top of every `.md` file)
-```yaml
+### 3.2 Frontmatter schema
+Requires exactly the following fields (defined and validated in src/content.config.ts using Astro's z schema and glob loader):
+`yaml
 ---
 title: "My Post Title"
 date: 2026-07-31
 tags: ["tag1", "tag2"]
 description: "A short summary shown on post cards and meta tags."
 series: "Series Name"   # optional; groups related posts together
-draft: false            # optional; true = excluded from build
+draft: false            # optional; true = excluded from build, defaults to false
 ---
-```
-
-Fields validated at build time via Zod schema in `src/content.config.ts`. A malformed post fails the build with a clear error.
+`
 
 ## 4. Pages & Navigation
 
-**Navbar:** Home · About (pill-shaped segmented control, active page highlighted, frosted glass background, mobile hamburger menu). Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel (Font selection, 12-Palette Theme switcher, Narrow/Wide Layout toggle, Eye Comfort mode slider).
+**Navbar:** Home � About. Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel. The settings panel integrates font selection, layout toggles, eye comfort sliders, and the **Custom Theme Builder** to configure personalized palettes.
 
 ### 4.1 Home / Blog List
-- Lists all non-draft posts newest-first as cards
-- **Multi-Select Tag Filter Modal:** A frosted glass modal that allows users to filter posts by multiple tags using AND logic (posts must contain all selected tags). Active filters appear as removable chips directly on the homepage.
-- **Glassmorphism Search Modal (`SearchModal.astro`):** Full-screen frosted backdrop (`backdrop-filter: blur(20px) saturate(180%)`) with an isolated translucent card layer to prevent browser backdrop rendering conflicts. Features full keyboard navigation (`Ctrl+K`/`Cmd+K` toggle, `Esc` dismiss, `↑`/`↓` result traversal, `Enter` to select first hit).
-- Infinite scroll / pagination (`IntersectionObserver` loading 10 initial posts + 6 posts per scroll)
-- Each card: title, date, estimated reading time, description, tag chips
-- Hover reading-time tooltip on post cards with cubic-bezier float animation
-- Empty state message when no posts exist
+- Lists all non-draft posts newest-first as cards.
+- **Tag Filter Modal (TagFilterModal.astro):** Allows users to filter posts by multiple tags using AND logic. Active filters appear as removable chips.
+- **Glassmorphism Search Modal (SearchModal.astro):** Features full keyboard navigation (Ctrl+K/Cmd+K).
+- Infinite scroll / pagination (IntersectionObserver loading logic).
+- Hover reading-time tooltip on post cards.
 
-### 4.2 Individual Post (`/blog/[slug]`)
-- Full Markdown render with Shiki syntax highlighting and language badges
-- Markdown Callouts support (`> [!NOTE]`, etc.)
-- Header: title, date, tags, reading time, view count (`ViewCounter.astro`)
-- Table of Contents: Auto-generated from headings, collapsible, sleek frosted glass design, and features an `IntersectionObserver` scrollspy to highlight the active section.
-- Reading Progress Bar: Fixed at the top, fills as you read
-- Series Navigation: `SeriesBox.astro` for multi-part posts
-- Code Blocks: IDE-style language badges and mobile-visible copy buttons
-- Headings: Deep link copy buttons on h2/h3 headings
-- Prev/Next Post navigation at the bottom
-- Author Bio card (`AuthorBio.astro`) with animated gradient avatar
-- Jump-to-comments button (`.comment-btn` navigating to `#comments`)
-- Related Posts: Algorithmic recommendations based on tags
-- Like button → Cloudflare Worker (`https://blog-likes.aarsh-blog-likes.workers.dev`)
-- Share buttons: Twitter, LinkedIn, and Copy Link to clipboard
-- Comments → Lazy-loaded Giscus widget (repo: `Aarsh03/Blogs`, category: Announcements, custom themes dynamically adapt to dark/light mode)
-- Image Zoom: Medium-style zoom capability
-- Dynamic OG Images: Generated via `/open-graph/[slug].png`
+### 4.2 Individual Post (/blog/[slug])
+- Full Markdown render with Shiki syntax highlighting, language badges, and prose.css styling.
+- Markdown Callouts support (lerts.css).
+- View counter integrated via ViewCounter.astro.
+- Table of Contents (TableOfContents.astro): Auto-generated, collapsible, with IntersectionObserver scrollspy.
+- Reading Progress Bar (ReadingProgress.astro): Fixed at the top.
+- Code Blocks: IDE-style badges and mobile-visible copy buttons.
+- Related Posts (RelatedPosts.astro), Series Box (SeriesBox.astro), and Author Bio (AuthorBio.astro).
+- Like button & Share buttons.
+- Giscus Comments (Comments.astro).
+- Image Zoom capabilities.
+- Dynamic OG Images generated via stro-og-canvas.
 
-### 4.3 About (`/about`)
-- Static page with bio, what I write about, contact buttons (Email, GitHub, LinkedIn)
-
-### 4.4 Circular Animated FAB (`FloatingActions.astro`)
-- Fixed bottom-right speed-dial menu activated when scrolled past 300px (rAF throttled).
-- Features spring physics expansion (`cubic-bezier(0.175, 0.885, 0.32, 1.275)`) and morphing menu/close icon.
-- Provides 3 radial action buttons:
-  1. **Scroll to Top:** Smooth scroll to page top.
-  2. **Jump to Comments:** Smooth scroll directly to the `#comments` Giscus section.
-  3. **Quick Share:** Copies current page URL to clipboard with an animated confirmation toast ("Link copied!").
-- Includes click-outside dismissal and cleanup on `astro:before-swap`.
+### 4.3 Circular Animated FAB (FloatingActions.astro)
+- Fixed bottom-right speed-dial menu (Top, Comments, Share). Includes strict click-outside dismissal and cleanup on stro:before-swap.
 
 ## 5. Design System
-- **Aesthetic:** Minimal, clean, generous whitespace — pastel accent theme
-- **Color palette** (defined in `src/styles/global.css` as CSS custom properties):
-  - `--color-accent-1`: `#e8b4cb` (soft pink)
-  - `--color-accent-2`: `#b8a9d4` (lavender)
-  - `--color-accent-3`: `#a7d5d2` (mint)
-  - `--color-accent-4`: `#f2c4a0` (peach)
-  - `--color-bg`: `#fdf6f9`
-- **Typography:** Self-hosted via `@fontsource` — DM Sans (UI), Playfair Display (headings), Lora and Source Serif 4 (selectable body fonts), JetBrains Mono (code)
-- **Dark mode:** Fully implemented. Users can toggle themes via the Navbar. Code blocks, Giscus comments, and Pagefind search adapt dynamically. Features specific dark mode tag colors, frosted glass UI, and subtle glow effects.
-- **Frosted Glass UI:** Applied via `backdrop-filter: blur(...)` across the Navbar, Settings Panel, Mobile Drawer, Table of Contents, and Search Modal.
-- **Mobile Touch & Hover Protection:** All interactive hover states (card lift effects, FAB speed-dial expansions, like buttons, tooltips) are strictly wrapped inside `@media (hover: hover)` media queries to eliminate persistent sticky hover bugs on touch/mobile devices.
-- **Performance (120fps):** Uses `requestAnimationFrame` debouncing and `{ passive: true }` listeners for scroll handlers. View Transitions manage memory with strict `astro:before-swap` cleanups.
-- **Responsive:** Fully responsive — mobile hamburger menu, fluid typography, responsive cards and footer
-
-### 5.1 Theme & Layout Initialization
-- **FOUC Prevention & Critical CSS:** To eliminate Flash of Unstyled Content and theme/icon flickering before external CSS bundles finish loading, `BaseLayout.astro` uses a synchronous `<script is:inline>` in `<head>` that immediately applies `data-theme`, `data-font`, and `data-eye-comfort`, while injecting a critical inline `<style id="theme-icon-critical">` element for theme icons. Theme and font states are synchronized on `astro:after-swap` during View Transitions.
-
+- **Custom Theme Builder:** Users can build and switch themes dynamically (CustomThemeToolbar.astro, CustomColorPicker.astro, customThemeBuilder.ts).
+- **Granular Styling:** CSS is modularized (ase.css, 
+avbar.css, prose.css, pagefind.css, 	ags.css, 	ransitions.css, lerts.css).
+- **Typography:** Self-hosted via @fontsource.
+- **FOUC Prevention:** BaseLayout.astro uses a synchronous inline script in <head> to set attributes, preventing flash of unstyled content during View Transitions. 	hemeManager.ts strictly coordinates updates.
+- **Mobile Touch Protection:** Interactive :hover styling is wrapped in @media (hover: hover).
 
 ## 6. Infrastructure
 
-### 6.1 Comments (Giscus) — ✅ Live
-- Repo: `Aarsh03/Blogs`
-- Repo ID: `R_kgDOTgdeGA`
+### 6.1 Comments (Giscus)
+- Repo: Aarsh03/Blogs
 - Category: Announcements
-- Category ID: `DIC_kwDOTgdeGM4DCaJT`
-- Theme: `giscus-theme.css` and `giscus-dark.css` dynamically swapped when switching modes.
+- Adapts dynamically to dark/light modes.
 
-### 6.2 Likes & Views (Cloudflare Worker) — ✅ Live
-- Worker URL: `https://blog-likes.aarsh-blog-likes.workers.dev`
-- KV Namespace ID: `0560a131bd22403b9b8053b57db6606a`
-- Routes: `GET /likes/:slug`, `POST /likes/:slug`, `GET /views/:slug`, `POST /views/:slug`
-- Anti-spam: 1 like per browser via `localStorage`, session storage for views, IP throttling on worker
+### 6.2 Likes & Views
+- Worker URL: https://blog-likes.aarsh-blog-likes.workers.dev
+- Routes: GET /likes/:slug, POST /likes/:slug, GET /views/:slug, POST /views/:slug
 
 ## 7. Build & Deploy Pipeline
-
-### GitHub Actions (`deploy.yml`)
-- Trigger: push to `main` or manual `workflow_dispatch`
-- Node: 22 (explicitly set via `withastro/action@v6 with: node-version: 22`)
-- Steps: checkout → install → `astro build && pagefind --site dist` → upload artifact → deploy to GitHub Pages
-- Source in Pages settings: **GitHub Actions** (not "Deploy from a branch")
-
-### Publishing a new post
-1. Create `src/content/posts/my-new-post.md` with valid frontmatter
-2. `git add . && git commit -m "Add post: my-new-post" && git push`
-3. GitHub Actions builds and deploys automatically (~60s)
-4. Live at `https://aarsh03.github.io/Blogs/blog/my-new-post`
+- Runs on Node 22 via GitHub Actions.
+- stro build && pagefind --site dist generates the static site and search index.
 
 ## 8. Feature Checklist
-- [x] Auto-detect new `.md` and `.mdx` posts on build
-- [x] Frontmatter schema validated with Zod
-- [x] Minimal design with pastel accent theme
-- [x] Dark/light mode toggle with dynamic theme sync
-- [x] Pill-shaped navbar with active-state highlight & auto-hiding on scroll
-- [x] View Transitions (smooth page loads without hard refreshes)
-- [x] Mobile responsive (hamburger menu, fluid layout)
-- [x] Multi-Select Tag Filter Modal (AND logic) on homepage
-- [x] `Ctrl+K` / `Cmd+K` Quick Search Modal overlay via Pagefind
-- [x] Shiki syntax highlighting with IDE-style Language Badges
-- [x] Reading time estimate on posts and cards
-- [x] Table of Contents & Reading progress bar
-- [x] Prev/Next post navigation & Social share buttons
-- [x] Like button & Page View Counter (Cloudflare Worker + KV)
-- [x] Lazy-loaded Giscus comments (Dual light/dark theme switching)
-- [x] Full SEO (JSON-LD, dynamic OG tags via `astro-og-canvas`, canonical URLs, Twitter Cards)
-- [x] Auto-generated Sitemap (`sitemap-index.xml`) and RSS Feed (`rss.xml`)
-- [x] Favicon (custom anime character icon)
-- [x] GitHub Actions auto-build & deploy on push
-- [x] Self-hosted fonts (zero render-blocking requests)
-- [x] BASE_URL prefix throughout for `/Blogs/` subpath
-- [x] MDX integration for rendering components inside posts
-- [x] Image zoom capabilities with `medium-zoom`
-- [x] Astro Image Optimization enabled
-- [x] Skip-to-Content button for accessibility
-- [x] Scroll-to-Top Floating Action Menu (FAB with multi-action Speed Dial, Share Toast, and Comments Jump)
-- [x] Reading time hover tooltips on post cards
-- [x] Author Bio component on post pages
-- [x] Heading anchor link copy buttons
-- [x] 120fps performance optimizations (rAF throttled scroll, passive listeners)
-- [x] Frosted glass UI styling across navigation and modals
-- [x] Algorithmic "Related Posts" (via tag intersection)
-- [x] Multi-part "Series" Support (auto-linking parts)
-- [x] Infinite Scroll (Continuous Feed) on the homepage
-- [x] Markdown Callouts (`> [!NOTE]`, etc.)
-- [x] Mobile-visible Copy Button
-- [x] Jump to comments button
+- [x] Astro v7 Content Collections with Loaders (glob)
+- [x] Granular modular CSS and dynamic Custom Theme Builder
+- [x] View Transitions and 120fps performance optimizations
+- [x] Multi-Select Tag Filter Modal & Ctrl+K Search Modal
+- [x] Markdown Callouts & Shiki highlighting
+- [x] Floating Action Menu & Reading Time Tooltips
+- [x] Giscus comments & Cloudflare Views/Likes
+- [x] SEO, Sitemap, RSS Feed, dynamic OG Images
+- [x] Image zoom & Astro Image Optimization
+- [x] Frosted glass UI styling
 
 ## 9. Out of Scope / Declined
-- Manual post listing/config file
 - Backend database for posts (strictly static markdown)
