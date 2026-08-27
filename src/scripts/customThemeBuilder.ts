@@ -236,24 +236,39 @@ document.addEventListener('astro:page-load', () => {
   });
 
   let isDraggingSV = false;
-  const svMove = (e: MouseEvent) => { if (isDraggingSV) updateSVFromEvent(e); };
+  const svMove = (e: MouseEvent | TouchEvent) => { if (isDraggingSV) updateSVFromEvent(e); };
   const svUp = () => { isDraggingSV = false; };
-  svArea?.addEventListener('mousedown', (e) => {
+  
+  const svDown = (e: MouseEvent | TouchEvent) => {
     isDraggingSV = true;
     updateSVFromEvent(e);
-  });
+  };
+  
+  svArea?.addEventListener('mousedown', svDown);
+  svArea?.addEventListener('touchstart', svDown, { passive: true });
   document.addEventListener('mousemove', svMove);
+  document.addEventListener('touchmove', svMove, { passive: false });
   document.addEventListener('mouseup', svUp);
+  document.addEventListener('touchend', svUp);
+  
   document.addEventListener('astro:before-swap', () => {
     document.removeEventListener('mousemove', svMove);
+    document.removeEventListener('touchmove', svMove);
     document.removeEventListener('mouseup', svUp);
+    document.removeEventListener('touchend', svUp);
   }, { once: true });
   
-  function updateSVFromEvent(e: MouseEvent) {
+  function updateSVFromEvent(e: MouseEvent | TouchEvent) {
     if (!svArea) return;
     const rect = svArea.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
+    
+    // @ts-ignore
+    const clientX = e.touches ? e.touches[0].clientX : (e as MouseEvent).clientX;
+    // @ts-ignore
+    const clientY = e.touches ? e.touches[0].clientY : (e as MouseEvent).clientY;
+    
+    let x = clientX - rect.left;
+    let y = clientY - rect.top;
     x = Math.max(0, Math.min(x, rect.width));
     y = Math.max(0, Math.min(y, rect.height));
     curS = (x / rect.width) * 100;

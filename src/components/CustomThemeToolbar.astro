@@ -137,8 +137,15 @@ import Icon from './Icon.astro';
   .btn-cancel:hover { background: color-mix(in srgb, var(--color-caution) 15%, transparent); color: var(--color-caution); border-color: transparent; }
   .btn-confirm { background: var(--color-accent-2); border: none; color: var(--color-bg); }
   .btn-confirm:hover { background: var(--color-success); }
+  .theme-toolbar { max-width: 95vw; overflow-x: auto; }
+  .theme-toolbar::-webkit-scrollbar { display: none; }
   @media (max-width: 768px) {
-    .theme-toolbar__drag-handle, .theme-toolbar__rotate { display: none; }
+    .theme-toolbar { top: auto !important; bottom: 80px !important; }
+    .theme-toolbar__drag-handle { display: none; }
+    .theme-toolbar__bubbles { flex-wrap: wrap; justify-content: center; max-width: 100%; }
+    .theme-toolbar.vertical-mode .theme-toolbar__row { flex-direction: row; }
+    .theme-toolbar.vertical-mode .theme-toolbar__bubbles { flex-direction: row; }
+    .theme-toolbar__rotate { display: none; }
   }
   .drag-pill { width: 3px; height: 16px; border-radius: 2px; background: currentColor; opacity: 0.6; }
 </style>
