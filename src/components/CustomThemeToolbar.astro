@@ -2,19 +2,35 @@
 import Icon from './Icon.astro';
 ---
 <div id="custom-theme-toolbar" class="theme-toolbar" aria-hidden="true" style="transform: translateX(-50%);">
-  <div class="theme-toolbar__row">
-    <!-- Drag Handle -->
+  <!-- Mobile-only control strip: drag handle + rotate button -->
+  <div class="theme-toolbar__mobile-strip">
     <div class="theme-toolbar__drag-handle" id="theme-toolbar-handle" title="Drag to move">
       <div class="drag-pill"></div>
+      <div class="drag-pill"></div>
+      <div class="drag-pill"></div>
     </div>
-    
-    <!-- Rotate Toggle -->
     <button class="theme-toolbar__rotate" id="theme-toolbar-rotate" title="Rotate Toolbar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="theme-toolbar__row">
+    <!-- Desktop-only: drag handle inline -->
+    <div class="theme-toolbar__drag-handle theme-toolbar__drag-handle--desktop" id="theme-toolbar-handle-desktop" title="Drag to move">
+      <div class="drag-pill"></div>
+      <div class="drag-pill"></div>
+      <div class="drag-pill"></div>
+    </div>
+
+    <!-- Desktop-only: rotate button inline -->
+    <button class="theme-toolbar__rotate theme-toolbar__rotate--desktop" id="theme-toolbar-rotate-desktop" title="Rotate Toolbar">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
       </svg>
     </button>
-    
+
     <div class="theme-toolbar__divider"></div>
 
     <!-- Bubbles -->
@@ -64,6 +80,7 @@ import Icon from './Icon.astro';
 </div>
 
 <style is:global>
+  /* ── Base toolbar ── */
   .theme-toolbar {
     position: fixed;
     top: 90px; left: 50%;
@@ -71,7 +88,7 @@ import Icon from './Icon.astro';
     z-index: 10000;
     background: color-mix(in srgb, var(--color-bg-card) 90%, transparent);
     border: 1px solid var(--color-border);
-    border-radius: 999px; /* Pill shape */
+    border-radius: 999px;
     box-shadow: var(--shadow-card-hover);
     opacity: 0;
     visibility: hidden;
@@ -80,28 +97,35 @@ import Icon from './Icon.astro';
     -webkit-backdrop-filter: blur(12px);
     width: max-content;
     max-width: 95vw;
+    box-sizing: border-box;
   }
-  .theme-toolbar[aria-hidden="false"] {
-    opacity: 1; visibility: visible;
-  }
+  .theme-toolbar[aria-hidden="false"] { opacity: 1; visibility: visible; }
+
+  /* ── Desktop row (pill layout) ── */
   .theme-toolbar__row {
     display: flex;
     align-items: center;
     padding: 0.5rem 0.75rem;
     gap: 0.75rem;
-    transition: flex-direction 0.3s ease, padding 0.3s ease;
   }
   .theme-toolbar.vertical-mode { border-radius: 32px; }
   .theme-toolbar.vertical-mode .theme-toolbar__row { flex-direction: column; padding: 1rem 0.6rem; }
-  .theme-toolbar.vertical-mode .theme-toolbar__drag-handle { transform: rotate(90deg); }
+  .theme-toolbar.vertical-mode .theme-toolbar__drag-handle--desktop { transform: rotate(90deg); }
   .theme-toolbar.vertical-mode .theme-toolbar__bubbles { flex-direction: column; }
   .theme-toolbar.vertical-mode .theme-toolbar__actions { flex-direction: column; }
   .theme-toolbar.vertical-mode .theme-toolbar__divider { width: 24px; height: 1px; }
 
+  /* ── Mobile strip: hidden on desktop ── */
+  .theme-toolbar__mobile-strip { display: none; }
+
+  /* ── Divider ── */
   .theme-toolbar__divider { width: 1px; height: 32px; background: var(--color-border); flex-shrink: 0; }
+
+  /* ── Desktop drag handle ── */
   .theme-toolbar__drag-handle {
-    display: flex; justify-content: center; align-items: center; cursor: grab; flex-shrink: 0;
-    color: var(--color-text-muted); padding: 0.25rem 0.15rem; border-radius: 8px;
+    display: flex; gap: 2px; justify-content: center; align-items: center;
+    cursor: grab; flex-shrink: 0; color: var(--color-text-muted);
+    padding: 0.25rem 0.15rem; border-radius: 8px;
   }
   .theme-toolbar__drag-handle:hover { background: color-mix(in srgb, var(--color-text) 5%, transparent); }
   .theme-toolbar__drag-handle:active { cursor: grabbing; }

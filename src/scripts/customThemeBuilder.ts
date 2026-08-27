@@ -131,44 +131,8 @@ document.addEventListener('astro:page-load', () => {
   });
   openBtn?.addEventListener('click', openToolbar);
 
-  const rotateBtn = document.getElementById('theme-toolbar-rotate');
   let isVertical = false;
-  rotateBtn?.addEventListener('click', () => {
-    isVertical = !isVertical;
-    toolbar?.classList.toggle('vertical-mode', isVertical);
-    
-    // Bounds check after rotation
-    if (toolbar && toolbar.style.top) {
-      requestAnimationFrame(() => {
-        const rect = toolbar.getBoundingClientRect();
-        let newTop = parseFloat(toolbar.style.top) || rect.top;
-        let newLeft = parseFloat(toolbar.style.left) || rect.left;
-        
-        let needsUpdate = false;
-        if (rect.bottom > window.innerHeight) {
-          newTop = Math.max(0, window.innerHeight - rect.height);
-          needsUpdate = true;
-        }
-        if (rect.right > window.innerWidth) {
-          newLeft = Math.max(0, window.innerWidth - rect.width);
-          needsUpdate = true;
-        }
-        if (rect.top < 0) {
-          newTop = 0;
-          needsUpdate = true;
-        }
-        if (rect.left < 0) {
-          newLeft = 0;
-          needsUpdate = true;
-        }
-        
-        if (needsUpdate) {
-          toolbar.style.top = newTop + 'px';
-          toolbar.style.left = newLeft + 'px';
-        }
-      });
-    }
-  });
+  // Rotation is wired via setupRotate() later in this file.
 
   /* Custom Color Picker Logic */
   const picker = document.getElementById('custom-color-picker');
@@ -353,50 +317,68 @@ document.addEventListener('astro:page-load', () => {
     closePicker();
   });
 
-  /* Drag Logic for Toolbar and Picker */
-  function makeDraggable(handleId: string, targetId: string) {
-    const handle = document.getElementById(handleId);
-    const target = document.getElementById(targetId);
-    if (!handle || !target) return;
-    
+  /* ── Drag Logic ────────────────────────────────────────────── */
+  function makeDraggable(handleEl: HTMLElement | null, targetEl: HTMLElement | null) {
+    if (!handleEl || !targetEl) return () => {};
+
     let isDragging = false;
-    let currentX = 0; let currentY = 0;
-    let initialX = 0; let initialY = 0;
-    let xOffset = 0; let yOffset = 0;
-    
-    const start = (e: any) => {
-      if (targetId === 'custom-color-picker' && window.innerWidth <= 768) return;
-      if (target.style.transform.includes('-50%')) {
-        const rect = target.getBoundingClientRect();
-        target.style.left = rect.left + 'px';
-        target.style.top = rect.top + 'px';
-        target.style.transform = 'translate(0px, 0px)';
+    let startClientX = 0, startClientY = 0;
+    let startLeft = 0, startTop = 0;
+
+    /** Convert the toolbar from CSS-positioned to JS-positioned */
+    function anchorToAbsolute() {
+      const rect = targetEl.getBoundingClientRect();
+      targetEl.style.left = rect.left + 'px';
+      targetEl.style.top = rect.top + 'px';
+      targetEl.style.bottom = 'auto';
+      targetEl.style.transform = 'none';
+    }
+
+    function clamp(value: number, min: number, max: number) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    const start = (e: MouseEvent | TouchEvent) => {
+      // On mobile, only allow toolbar drag (not color picker)
+      if (targetEl.id === 'custom-color-picker' && window.innerWidth <= 768) return;
+      // Switch from CSS bottom/transform anchoring to JS absolute positioning
+      if (!targetEl.style.left || targetEl.style.transform !== 'none') {
+        anchorToAbsolute();
       }
-      initialX = (e.touches ? e.touches[0].clientX : e.clientX) - xOffset;
-      initialY = (e.touches ? e.touches[0].clientY : e.clientY) - yOffset;
+      const touch = (e as TouchEvent).touches?.[0];
+      startClientX = touch ? touch.clientX : (e as MouseEvent).clientX;
+      startClientY = touch ? touch.clientY : (e as MouseEvent).clientY;
+      startLeft = parseFloat(targetEl.style.left) || 0;
+      startTop = parseFloat(targetEl.style.top) || 0;
       isDragging = true;
     };
-    const move = (e: any) => {
-      if (targetId === 'custom-color-picker' && window.innerWidth <= 768) return;
+
+    const move = (e: MouseEvent | TouchEvent) => {
+      if (targetEl.id === 'custom-color-picker' && window.innerWidth <= 768) return;
       if (!isDragging) return;
       e.preventDefault();
-      currentX = (e.touches ? e.touches[0].clientX : e.clientX) - initialX;
-      currentY = (e.touches ? e.touches[0].clientY : e.clientY) - initialY;
-      xOffset = currentX; yOffset = currentY;
-      target.style.transform = `translate(${currentX}px, ${currentY}px)`;
+      const touch = (e as TouchEvent).touches?.[0];
+      const clientX = touch ? touch.clientX : (e as MouseEvent).clientX;
+      const clientY = touch ? touch.clientY : (e as MouseEvent).clientY;
+      const rect = targetEl.getBoundingClientRect();
+      const newLeft = clamp(startLeft + clientX - startClientX, 0, window.innerWidth - rect.width);
+      const newTop = clamp(startTop + clientY - startClientY, 0, window.innerHeight - rect.height);
+      targetEl.style.left = newLeft + 'px';
+      targetEl.style.top = newTop + 'px';
     };
+
     const end = () => { isDragging = false; };
-    
-    handle.addEventListener('mousedown', start);
-    handle.addEventListener('touchstart', start, { passive: true });
+
+    handleEl.addEventListener('mousedown', start);
+    handleEl.addEventListener('touchstart', start, { passive: true });
     document.addEventListener('mousemove', move, { passive: false });
     document.addEventListener('touchmove', move, { passive: false });
     document.addEventListener('mouseup', end);
     document.addEventListener('touchend', end);
-    
+
     return () => {
-      handle.removeEventListener('mousedown', start);
-      handle.removeEventListener('touchstart', start);
+      handleEl.removeEventListener('mousedown', start);
+      handleEl.removeEventListener('touchstart', start);
       document.removeEventListener('mousemove', move);
       document.removeEventListener('touchmove', move);
       document.removeEventListener('mouseup', end);
@@ -404,11 +386,57 @@ document.addEventListener('astro:page-load', () => {
     };
   }
 
-  let cleanupToolbarDrag = makeDraggable('theme-toolbar-handle', 'custom-theme-toolbar');
-  let cleanupPickerDrag = makeDraggable('picker-drag-handle', 'custom-color-picker');
+  /* Wire up both drag handles (desktop inline + mobile strip) */
+  const toolbarEl = document.getElementById('custom-theme-toolbar') as HTMLElement | null;
+  const desktopHandle = document.getElementById('theme-toolbar-handle-desktop');
+  const mobileHandle = document.getElementById('theme-toolbar-handle');
+  let cleanupDesktopDrag = makeDraggable(desktopHandle, toolbarEl);
+  let cleanupMobileDrag = makeDraggable(mobileHandle, toolbarEl);
+  let cleanupPickerDrag = makeDraggable(
+    document.getElementById('picker-drag-handle'),
+    document.getElementById('custom-color-picker')
+  );
+
+  /* ── Rotate Logic ───────────────────────────────────────────── */
+  function setupRotate(btnId: string) {
+    const btn = document.getElementById(btnId);
+    btn?.addEventListener('click', () => {
+      isVertical = !isVertical;
+      toolbar?.classList.toggle('vertical-mode', isVertical);
+      // After class toggle, wait one frame for layout, then bounds-check
+      requestAnimationFrame(() => {
+        if (!toolbar) return;
+        const rect = toolbar.getBoundingClientRect();
+        // If still CSS-positioned (no style.left yet), just check if we're offscreen
+        // and switch to absolute if needed
+        const isAbsolute = toolbar.style.transform === 'none' && toolbar.style.left;
+        if (isAbsolute) {
+          let newLeft = parseFloat(toolbar.style.left);
+          let newTop = parseFloat(toolbar.style.top);
+          if (rect.right > window.innerWidth) newLeft = Math.max(0, window.innerWidth - rect.width);
+          if (rect.bottom > window.innerHeight) newTop = Math.max(0, window.innerHeight - rect.height);
+          if (rect.left < 0) newLeft = 0;
+          if (rect.top < 0) newTop = 0;
+          toolbar.style.left = newLeft + 'px';
+          toolbar.style.top = newTop + 'px';
+        } else {
+          // CSS-positioned — if it went offscreen, anchor it to absolute safe position
+          if (rect.right > window.innerWidth || rect.bottom > window.innerHeight || rect.left < 0 || rect.top < 0) {
+            toolbar.style.left = Math.max(0, Math.min(rect.left, window.innerWidth - rect.width)) + 'px';
+            toolbar.style.top = Math.max(0, Math.min(rect.top, window.innerHeight - rect.height)) + 'px';
+            toolbar.style.bottom = 'auto';
+            toolbar.style.transform = 'none';
+          }
+        }
+      });
+    });
+  }
+  setupRotate('theme-toolbar-rotate');
+  setupRotate('theme-toolbar-rotate-desktop');
 
   document.addEventListener('astro:before-swap', () => {
-    if (cleanupToolbarDrag) cleanupToolbarDrag();
-    if (cleanupPickerDrag) cleanupPickerDrag();
+    cleanupDesktopDrag();
+    cleanupMobileDrag();
+    cleanupPickerDrag();
   }, { once: true });
 });
