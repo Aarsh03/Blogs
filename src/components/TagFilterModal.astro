@@ -167,7 +167,7 @@ const { tags } = Astro.props;
     transition: all 0.2s ease;
   }
 
-  .tag-modal-chip__icon {
+  :global(.tag-modal-chip__icon) {
     opacity: 0;
     transform: scale(0.5);
     width: 0;
@@ -176,6 +176,7 @@ const { tags } = Astro.props;
 
   @media (hover: hover) {
     .tag-modal-chip:hover {
+      background: color-mix(in srgb, var(--color-accent-2) 5%, transparent);
       border-color: var(--color-accent-2);
       color: var(--color-accent-2);
     }
@@ -188,7 +189,7 @@ const { tags } = Astro.props;
     font-weight: 600;
   }
 
-  .tag-modal-chip.selected .tag-modal-chip__icon {
+  .tag-modal-chip.selected :global(.tag-modal-chip__icon) {
     opacity: 1;
     transform: scale(1);
     width: 14px;
