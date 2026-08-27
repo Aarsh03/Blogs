@@ -19,8 +19,16 @@ const base = import.meta.env.BASE_URL;
       <div class="search-modal__keyhint"><kbd>Esc</kbd> to close</div>
       <div class="search-modal__keyhint"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</div>
       <div class="search-modal__keyhint"><kbd>Enter</kbd> to select</div>
-      <div class="search-modal__keyhint search-modal__keyhint--right">
-        Try <kbd>&gt;dark</kbd> or <kbd>&gt;theme snow</kbd>
+      <div class="search-modal__keyhint search-modal__keyhint--right cmd-info">
+        <button class="cmd-info__btn" aria-label="Search Commands Info">i</button>
+        <div class="cmd-info__tooltip">
+          <strong>Slash Commands</strong><br/>
+          Type <code>&gt;</code> to run a command:<br/>
+          <code>&gt;dark</code> | <code>&gt;light</code><br/>
+          <code>&gt;theme &lt;name&gt;</code><br/>
+          <code>&gt;home</code> | <code>&gt;about</code><br/>
+          <code>&gt;rss</code> | <code>&gt;github</code>
+        </div>
       </div>
     </div>
   </div>
@@ -87,6 +95,8 @@ const base = import.meta.env.BASE_URL;
                 const base = document.getElementById('search')?.getAttribute('data-base') || '/';
                 if (cmd === 'home') window.location.href = base;
                 if (cmd === 'about') window.location.href = base + (base.endsWith('/') ? 'about' : '/about');
+                if (cmd === 'rss') window.location.href = base + (base.endsWith('/') ? 'rss.xml' : '/rss.xml');
+                if (cmd === 'github') window.location.href = 'https://github.com/Aarsh03/Blogs';
               }
             });
             obs.disconnect(); // Stop observing once found
@@ -326,6 +336,72 @@ const base = import.meta.env.BASE_URL;
 
   .search-modal__keyhint--right {
     margin-left: auto;
+  }
+
+  .cmd-info {
+    position: relative;
+    overflow: visible;
+  }
+
+  .cmd-info__btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-bg-code);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-style: italic;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: help;
+    transition: all 0.2s ease;
+  }
+
+  .cmd-info:hover .cmd-info__btn {
+    background: var(--color-accent-2);
+    color: var(--color-bg);
+    border-color: var(--color-accent-2);
+  }
+
+  .cmd-info__tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: var(--shadow-card-hover);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .cmd-info:hover .cmd-info__tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .cmd-info__tooltip code {
+    background: var(--color-bg-code);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent-2);
   }
 
   .search-modal__keyhint kbd {
