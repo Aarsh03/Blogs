@@ -327,11 +327,12 @@ document.addEventListener('astro:page-load', () => {
 
     /** Convert the toolbar from CSS-positioned to JS-positioned */
     function anchorToAbsolute() {
-      const rect = targetEl.getBoundingClientRect();
-      targetEl.style.left = rect.left + 'px';
-      targetEl.style.top = rect.top + 'px';
-      targetEl.style.bottom = 'auto';
-      targetEl.style.transform = 'none';
+      const el = targetEl!;
+      const rect = el.getBoundingClientRect();
+      el.style.left = rect.left + 'px';
+      el.style.top = rect.top + 'px';
+      el.style.bottom = 'auto';
+      el.style.transform = 'none';
     }
 
     function clamp(value: number, min: number, max: number) {
