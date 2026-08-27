@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 interface Props {
   title: string;
 }
@@ -16,21 +17,12 @@ const { title } = Astro.props;
   </a>
   
   <a href="#" target="_blank" rel="noopener noreferrer" class="share-btn linkedin-share" aria-label="Share on LinkedIn">
-    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-      <rect x="2" y="9" width="4" height="12"></rect>
-      <circle cx="4" cy="4" r="2"></circle>
-    </svg>
+    <Icon name="linkedin" />
   </a>
 
   <button class="share-btn copy-link-btn" aria-label="Copy Link" id="copy-link-btn">
-    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="copy-icon">
-      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-    </svg>
-    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="check-icon" style="display: none;">
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
+    <Icon name="copy" class="copy-icon" />
+    <Icon name="check" class="check-icon" />
     <span class="share-feedback">Link copied!</span>
   </button>
 </div>
@@ -42,27 +34,27 @@ const { title } = Astro.props;
     const encodedUrl = encodeURIComponent(cleanUrl);
     
     document.querySelectorAll('.twitter-share').forEach((a) => {
-      const anchor = a;
+      const anchor = a as HTMLAnchorElement;
       const title = anchor.dataset.shareTitle || '';
       anchor.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodedUrl}`;
     });
     
     document.querySelectorAll('.linkedin-share').forEach((a) => {
-      const anchor = a;
+      const anchor = a as HTMLAnchorElement;
       anchor.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
     });
 
     const copyBtn = document.getElementById('copy-link-btn');
     if (copyBtn) {
       // Re-attach listener cleanly
-      const newCopyBtn = copyBtn.cloneNode(true);
+      const newCopyBtn = copyBtn.cloneNode(true) as HTMLElement;
       copyBtn.parentNode?.replaceChild(newCopyBtn, copyBtn);
       
       newCopyBtn.addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText(cleanUrl);
-          const copyIcon = newCopyBtn.querySelector('.copy-icon');
-          const checkIcon = newCopyBtn.querySelector('.check-icon');
+          const copyIcon = newCopyBtn.querySelector('.copy-icon') as HTMLElement;
+          const checkIcon = newCopyBtn.querySelector('.check-icon') as HTMLElement;
           
           if (copyIcon && checkIcon) {
             copyIcon.style.display = 'none';

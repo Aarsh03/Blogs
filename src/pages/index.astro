@@ -30,7 +30,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
   <section class="posts-grid">
     {allPosts.map((post) => {
       const { title, date, description, tags = [] } = post.data;
-      const readTime = getReadingTime(post.body);
+      const readTime = getReadingTime(post.body || '');
       return (
         <PostCard
           title={title}

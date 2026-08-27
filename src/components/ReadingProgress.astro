@@ -6,7 +6,7 @@
 
 <script>
   // Module-level: attach once, check for element each time
-  let _scrollListener = null;
+  let _scrollListener: (() => void) | null = null;
 
   document.addEventListener('astro:page-load', () => {
     const progressBar = document.getElementById('reading-progress');

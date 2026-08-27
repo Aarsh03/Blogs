@@ -1,11 +1,3 @@
-let _toolbarKeydown: EventListener | null = null;
-let _dragStart: EventListener | null = null;
-let _dragMove: EventListener | null = null;
-let _dragEnd: EventListener | null = null;
-let _pickerDragStart: EventListener | null = null;
-let _pickerDragMove: EventListener | null = null;
-let _pickerDragEnd: EventListener | null = null;
-
 // Color conversions
 function hexToRgb(hex: string) {
   let r = 0, g = 0, b = 0;
@@ -31,23 +23,6 @@ function rgbToHsl(r: number, g: number, b: number) {
     h/=6;
   }
   return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
-}
-function hslToRgb(h: number, s: number, l: number) {
-  h/=360; s/=100; l/=100;
-  let r, g, b;
-  if (s===0) { r=g=b=l; } else {
-    const hue2rgb = (p: number, q: number, t: number) => {
-      if(t<0) t+=1; if(t>1) t-=1;
-      if(t<1/6) return p+(q-p)*6*t;
-      if(t<1/2) return q;
-      if(t<2/3) return p+(q-p)*(2/3-t)*6;
-      return p;
-    };
-    let q = l < 0.5 ? l*(1+s) : l+s-l*s;
-    let p = 2*l-q;
-    r = hue2rgb(p,q,h+1/3); g = hue2rgb(p,q,h); b = hue2rgb(p,q,h-1/3);
-  }
-  return { r: Math.round(r*255), g: Math.round(g*255), b: Math.round(b*255) };
 }
 function rgbToCmyk(r: number, g: number, b: number) {
   let c = 1 - (r/255); let m = 1 - (g/255); let y = 1 - (b/255);
@@ -180,7 +155,6 @@ document.addEventListener('astro:page-load', () => {
   const hueSlider = document.getElementById('hue-slider') as HTMLInputElement;
 
   let activeKey: string | null = null;
-  let tempColor = '#000000';
   let curH = 0, curS = 100, curV = 100;
 
   function HSVtoRGB(h: number, s: number, v: number) {
@@ -222,7 +196,6 @@ document.addEventListener('astro:page-load', () => {
   function updatePickerUIFromHSV() {
     const {r,g,b} = HSVtoRGB(curH, curS, curV);
     const hex = rgbToHex(r,g,b);
-    tempColor = hex;
     if (pPreview) pPreview.style.backgroundColor = hex;
     const hsl = rgbToHsl(r,g,b);
     const cmyk = rgbToCmyk(r,g,b);
@@ -295,7 +268,7 @@ document.addEventListener('astro:page-load', () => {
 
   // Open picker when bubble clicked
   document.querySelectorAll('.toolbar-bubble-wrapper').forEach(el => {
-    el.addEventListener('click', (e) => {
+    el.addEventListener('click', () => {
       activeKey = el.getAttribute('data-key');
       if (pTitle) pTitle.textContent = el.getAttribute('data-title');
       // @ts-ignore

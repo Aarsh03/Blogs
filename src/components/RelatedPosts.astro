@@ -47,7 +47,7 @@ const relatedPosts = scoredPosts.slice(0, 3).map(s => s.post);
           date={post.data.date}
           description={post.data.description}
           tags={post.data.tags}
-          readingTime={getReadingTime(post.body)}
+          readingTime={getReadingTime(post.body || '')}
           slug={post.id}
         />
       ))}

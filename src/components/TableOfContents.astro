@@ -165,7 +165,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 </style>
 
 <script>
-  let _tocObserver = null;
+  let _tocObserver: IntersectionObserver | null = null;
 
   document.addEventListener('astro:page-load', () => {
     if (_tocObserver) {

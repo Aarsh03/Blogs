@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -8,10 +9,7 @@ const base = import.meta.env.BASE_URL;
     <div class="search-modal__header">
       <span class="search-modal__title">Search Posts</span>
       <button class="search-modal__close" id="search-modal-close" aria-label="Close search">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+        <Icon name="close" />
       </button>
     </div>
     
@@ -32,7 +30,8 @@ const base = import.meta.env.BASE_URL;
 <script is:inline src={`${base}pagefind/pagefind-ui.js`}></script>
 
 <script>
-  let _keydownListener = null;
+  let _keydownListener: ((e: KeyboardEvent) => void) | null = null;
+  declare var PagefindUI: any;
 
   document.addEventListener('astro:page-load', () => {
     const modal = document.getElementById('search-modal');
@@ -85,9 +84,8 @@ const base = import.meta.env.BASE_URL;
                   if (themes.includes(targetTheme)) applyCommandTheme(targetTheme);
                 }
                 
-                if (cmd === 'home') window.location.href = '/';
-                if (cmd === 'about') window.location.href = '/about';
-                if (cmd === 'projects') window.location.href = '/projects';
+                if (cmd === 'home') window.location.href = base;
+                if (cmd === 'about') window.location.href = base + (base.endsWith('/') ? 'about' : '/about');
               }
             });
             obs.disconnect(); // Stop observing once found
@@ -129,7 +127,7 @@ const base = import.meta.env.BASE_URL;
       document.removeEventListener('keydown', _keydownListener);
     }
 
-    _keydownListener = (e) => {
+    _keydownListener = (e: KeyboardEvent) => {
       // Cmd+K or Ctrl+K to open
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -148,12 +146,12 @@ const base = import.meta.env.BASE_URL;
 
       // Arrow up/down and Enter navigation for results
       if (modal.getAttribute('aria-hidden') === 'false') {
-        const active = document.activeElement;
+        const active = document.activeElement as HTMLElement | null;
 
         if (e.key === 'Enter') {
           if (active && active.classList.contains('pagefind-ui__search-input')) {
             e.preventDefault();
-            const firstResult = modal.querySelector('.pagefind-ui__result-link');
+            const firstResult = modal.querySelector('.pagefind-ui__result-link') as HTMLElement;
             if (firstResult) {
               firstResult.click();
             }
@@ -162,8 +160,8 @@ const base = import.meta.env.BASE_URL;
 
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
-          const focusable = Array.from(modal.querySelectorAll('.pagefind-ui__search-input, .pagefind-ui__result-link, .pagefind-ui__search-clear'));
-          let index = focusable.indexOf(active);
+          const focusable = Array.from(modal.querySelectorAll('.pagefind-ui__search-input, .pagefind-ui__result-link, .pagefind-ui__search-clear')) as HTMLElement[];
+          let index = active ? focusable.indexOf(active) : -1;
           
           if (e.key === 'ArrowDown') {
             index = index + 1 < focusable.length ? index + 1 : 0;
@@ -179,7 +177,7 @@ const base = import.meta.env.BASE_URL;
 
       // Focus trap
       if (modal.getAttribute('aria-hidden') === 'false' && e.key === 'Tab') {
-        const focusable = Array.from(modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'));
+        const focusable = Array.from(modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')) as HTMLElement[];
         if (focusable.length) {
           const first = focusable[0];
           const last = focusable[focusable.length - 1];
