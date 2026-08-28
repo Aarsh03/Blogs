@@ -28,12 +28,13 @@ const baseUrl = import.meta.env.BASE_URL;
 
       function getGiscusTheme() {
         const isDark = document.documentElement.getAttribute('data-theme-mode') === 'dark';
-        const base = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
-        // Force absolute fresh fetch to bypass aggressive browser caching and Giscus localStorage staleness
-        const cb = '?t=' + Date.now(); 
-        return isDark
-          ? `${window.location.origin + base}giscus-dark.css${cb}`
-          : `${window.location.origin + base}giscus-theme.css${cb}`;
+        
+        const lightCSS = `@import url('https://giscus.app/themes/light.css');main{--color-canvas-default:transparent!important;--color-canvas-overlay:transparent!important;--color-canvas-inset:rgba(0,0,0,0.04)!important;--color-canvas-subtle:rgba(0,0,0,0.04)!important;background:transparent!important;--color-border-default:rgba(0,0,0,0.1)!important;--color-border-muted:rgba(0,0,0,0.05)!important;--color-btn-primary-bg:#64748b!important;--color-btn-primary-border:#64748b!important;--color-btn-primary-hover-bg:#475569!important;--color-btn-primary-hover-border:#475569!important;--color-btn-primary-selected-bg:#334155!important;--color-btn-hover-bg:rgba(0,0,0,0.05)!important;--color-btn-hover-border:rgba(0,0,0,0.1)!important;--color-btn-primary-disabled-bg:rgba(100,116,139,0.5)!important;--color-btn-primary-disabled-border:transparent!important;--color-btn-primary-disabled-text:rgba(255,255,255,0.7)!important;--color-fg-default:#24292f!important;--color-fg-muted:#57606a!important;--color-fg-subtle:#6e7781!important;--color-accent-fg:#0969da!important}body{background-color:transparent!important}`;
+        
+        const darkCSS = `@import url('https://giscus.app/themes/transparent_dark.css');main{background:transparent!important;--color-btn-primary-bg:#475569!important;--color-btn-primary-border:#475569!important;--color-btn-primary-hover-bg:#64748b!important;--color-btn-primary-hover-border:#64748b!important;--color-btn-primary-selected-bg:#94a3b8!important;--color-btn-hover-bg:rgba(255,255,255,0.1)!important;--color-btn-hover-border:rgba(255,255,255,0.2)!important;--color-border-default:rgba(255,255,255,0.15)!important;--color-border-muted:rgba(255,255,255,0.1)!important;--color-btn-primary-disabled-bg:rgba(71,85,105,0.5)!important;--color-btn-primary-disabled-border:transparent!important;--color-btn-primary-disabled-text:rgba(255,255,255,0.4)!important;--color-fg-default:#c9d1d9!important;--color-fg-muted:#8b949e!important;--color-fg-subtle:#484f58!important;--color-accent-fg:#58a6ff!important}`;
+
+        const css = isDark ? darkCSS : lightCSS;
+        return 'data:text/css;base64,' + btoa(css);
       }
 
       function sendTheme() {
