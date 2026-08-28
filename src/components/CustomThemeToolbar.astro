@@ -58,7 +58,7 @@ import Icon from './Icon.astro';
         <Icon name="close" />
       </button>
       <button id="toolbar-confirm" class="btn-icon btn-confirm" title="Save Theme">
-        <Icon name="check" />
+        <Icon name="circle" />
       </button>
     </div>
   </div>
@@ -167,7 +167,7 @@ import Icon from './Icon.astro';
     .theme-toolbar__mobile-strip .theme-toolbar__drag-handle {
       flex: 1; justify-content: center; padding: 0.2rem;
     }
-    .theme-toolbar__mobile-strip .drag-pill { width: 4px; height: 24px; }
+    .theme-toolbar__mobile-strip .drag-pill { width: 24px; height: 4px; }
     .theme-toolbar__mobile-strip .theme-toolbar__rotate { width: 32px; height: 32px; flex-shrink: 0; }
 
     .theme-toolbar__bubbles, .theme-toolbar__actions { display: contents; }
@@ -180,7 +180,7 @@ import Icon from './Icon.astro';
     }
 
     .theme-toolbar.vertical-mode { max-height: calc(100vh - 100px); }
-    .theme-toolbar.vertical-mode .theme-toolbar__mobile-strip .drag-pill { width: 24px; height: 4px; }
+    .theme-toolbar.vertical-mode .theme-toolbar__mobile-strip .drag-pill { width: 4px; height: 24px; }
     .theme-toolbar.vertical-mode .theme-toolbar__mobile-strip {
       flex-direction: column-reverse;
       padding: 0.5rem 0.4rem;
