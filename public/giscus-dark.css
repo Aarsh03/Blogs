@@ -29,10 +29,18 @@ main {
   --color-accent-fg: #58a6ff !important;
 }
 
-html, html[data-color-mode="dark"], html[data-color-mode="light"], body, main, .gsc-main {
+:root, html, body, main, .gsc-main, .giscus, .gsc-comments, .gsc-comment, .gsc-comment-content, .gsc-reply-content, .gsc-header {
   background-color: transparent !important;
   --color-fg-default: #c9d1d9 !important;
   --color-fg-muted: #8b949e !important;
   --color-fg-subtle: #484f58 !important;
   color: var(--color-fg-default) !important;
+}
+
+/* Hardcode fallback for all text elements just in case variables fail */
+.gsc-comment-content, .gsc-reply-content, .gsc-comment-author, h1, h2, h3, h4, h5, h6, p, span, div {
+  color: #c9d1d9;
+}
+.gsc-comment-author, .gsc-comment-date {
+  color: #8b949e !important;
 }
