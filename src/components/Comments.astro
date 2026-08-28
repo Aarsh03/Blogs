@@ -24,8 +24,6 @@ const baseUrl = import.meta.env.BASE_URL;
         _giscusReadyListener = null;
       }
 
-      if (container.hasChildNodes()) return;
-
       const { repo, repoId, category, categoryId, baseUrl } = container.dataset;
 
       function getGiscusTheme() {
@@ -46,19 +44,33 @@ const baseUrl = import.meta.env.BASE_URL;
         }
       }
 
-      // THE KEY FIX: Giscus sends a message to the parent window when its iframe
-      // has fully loaded and is ready. We intercept that message and immediately
-      // push the correct theme. This fixes the white-text-on-light-theme bug that
-      // occurred because Giscus renders with its own default dark colours while
-      // asynchronously fetching our custom CSS file.
+      // Always wire up MutationObserver so theme switches work after any navigation
+      _giscusThemeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme' || mutation.attributeName === 'data-theme-mode') {
+            sendTheme();
+          }
+        });
+      });
+      _giscusThemeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme', 'data-theme-mode'],
+      });
+
+      // If Giscus is already in the DOM (View Transition re-use), sync theme immediately
+      if (container.hasChildNodes()) {
+        // Small delay to let the iframe finish any pending re-render
+        setTimeout(sendTheme, 100);
+        return;
+      }
+
+      // Listen for Giscus "ready" message to push the correct theme the instant
+      // the iframe finishes rendering (before the CSS URL fetch completes).
       _giscusReadyListener = (event: MessageEvent) => {
         if (event.origin !== 'https://giscus.app') return;
         if (typeof event.data !== 'object' || !event.data.giscus) return;
-        // Giscus sends this message type when the discussion data arrives —
-        // i.e. the iframe is rendered and ready to accept setConfig commands.
         if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
           sendTheme();
-          // Only need to do this once per load
           window.removeEventListener('message', _giscusReadyListener!);
           _giscusReadyListener = null;
         }
@@ -90,19 +102,6 @@ const baseUrl = import.meta.env.BASE_URL;
       }, { rootMargin: '200px' });
 
       _giscusIntersectObserver.observe(container);
-
-      // Listen for theme changes after Giscus is already loaded
-      _giscusThemeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === 'data-theme' || mutation.attributeName === 'data-theme-mode') {
-            sendTheme();
-          }
-        });
-      });
-      _giscusThemeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme', 'data-theme-mode'],
-      });
     });
 
     document.addEventListener('astro:before-swap', () => {
