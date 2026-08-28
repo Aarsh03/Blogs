@@ -410,26 +410,31 @@ document.addEventListener('astro:page-load', () => {
       requestAnimationFrame(() => {
         if (!toolbar) return;
         const rect = toolbar.getBoundingClientRect();
-        // If still CSS-positioned (no style.left yet), just check if we're offscreen
-        // and switch to absolute if needed
-        const isAbsolute = toolbar.style.transform === 'none' && toolbar.style.left;
+        const isAbsolute = !!toolbar.style.getPropertyValue('left');
+        
+        let newLeft = 0;
+        let newTop = 0;
+        let needsAbsolute = false;
+
         if (isAbsolute) {
-          let newLeft = parseFloat(toolbar.style.left);
-          let newTop = parseFloat(toolbar.style.top);
+          newLeft = parseFloat(toolbar.style.getPropertyValue('left'));
+          newTop = parseFloat(toolbar.style.getPropertyValue('top'));
           if (rect.right > window.innerWidth) newLeft = Math.max(0, window.innerWidth - rect.width);
           if (rect.bottom > window.innerHeight) newTop = Math.max(0, window.innerHeight - rect.height);
           if (rect.left < 0) newLeft = 0;
           if (rect.top < 0) newTop = 0;
-          toolbar.style.left = newLeft + 'px';
-          toolbar.style.top = newTop + 'px';
+          needsAbsolute = true;
         } else {
           // CSS-positioned — if it went offscreen, anchor it to absolute safe position
           if (rect.right > window.innerWidth || rect.bottom > window.innerHeight || rect.left < 0 || rect.top < 0) {
-            toolbar.style.left = Math.max(0, Math.min(rect.left, window.innerWidth - rect.width)) + 'px';
-            toolbar.style.top = Math.max(0, Math.min(rect.top, window.innerHeight - rect.height)) + 'px';
-            toolbar.style.bottom = 'auto';
-            toolbar.style.transform = 'none';
+            newLeft = Math.max(0, Math.min(rect.left, window.innerWidth - rect.width));
+            newTop = Math.max(0, Math.min(rect.top, window.innerHeight - rect.height));
+            needsAbsolute = true;
           }
+        }
+
+        if (needsAbsolute) {
+          toolbar.style.cssText += `; position: fixed !important; left: ${newLeft}px !important; top: ${newTop}px !important; bottom: auto !important; transform: none !important;`;
         }
       });
     });
