@@ -325,24 +325,23 @@ document.addEventListener('astro:page-load', () => {
     let startClientX = 0, startClientY = 0;
     let startLeft = 0, startTop = 0;
 
-    /** Convert the toolbar from CSS-positioned to JS-positioned */
+    /** Convert from CSS-controlled to JS-controlled positioning.
+     *  Inline styles always beat stylesheet !important, so we use cssText. */
     function anchorToAbsolute() {
       const el = targetEl!;
       const rect = el.getBoundingClientRect();
-      el.style.left = rect.left + 'px';
-      el.style.top = rect.top + 'px';
-      el.style.bottom = 'auto';
-      el.style.transform = 'none';
+      // Snapshot current visual position and switch fully to left/top JS control
+      el.style.cssText += `; position: fixed !important; left: ${rect.left}px !important; top: ${rect.top}px !important; bottom: auto !important; transform: none !important;`;
     }
 
     function clamp(value: number, min: number, max: number) {
       return Math.max(min, Math.min(max, value));
     }
 
+    let elWidth = 0, elHeight = 0;
+
     const start = (e: MouseEvent | TouchEvent) => {
-      // On mobile, only allow toolbar drag (not color picker)
       if (targetEl.id === 'custom-color-picker' && window.innerWidth <= 768) return;
-      // Switch from CSS bottom/transform anchoring to JS absolute positioning
       if (!targetEl.style.left || targetEl.style.transform !== 'none') {
         anchorToAbsolute();
       }
@@ -351,6 +350,10 @@ document.addEventListener('astro:page-load', () => {
       startClientY = touch ? touch.clientY : (e as MouseEvent).clientY;
       startLeft = parseFloat(targetEl.style.left) || 0;
       startTop = parseFloat(targetEl.style.top) || 0;
+      // Snapshot dimensions once so clamping stays consistent during move
+      const rect = targetEl.getBoundingClientRect();
+      elWidth = rect.width;
+      elHeight = rect.height;
       isDragging = true;
     };
 
@@ -361,11 +364,10 @@ document.addEventListener('astro:page-load', () => {
       const touch = (e as TouchEvent).touches?.[0];
       const clientX = touch ? touch.clientX : (e as MouseEvent).clientX;
       const clientY = touch ? touch.clientY : (e as MouseEvent).clientY;
-      const rect = targetEl.getBoundingClientRect();
-      const newLeft = clamp(startLeft + clientX - startClientX, 0, window.innerWidth - rect.width);
-      const newTop = clamp(startTop + clientY - startClientY, 0, window.innerHeight - rect.height);
-      targetEl.style.left = newLeft + 'px';
-      targetEl.style.top = newTop + 'px';
+      const newLeft = clamp(startLeft + clientX - startClientX, 0, window.innerWidth - elWidth);
+      const newTop = clamp(startTop + clientY - startClientY, 0, window.innerHeight - elHeight);
+      targetEl.style.setProperty('left', newLeft + 'px', 'important');
+      targetEl.style.setProperty('top', newTop + 'px', 'important');
     };
 
     const end = () => { isDragging = false; };
