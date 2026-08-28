@@ -1,0 +1,31 @@
+@import url('https://giscus.app/themes/light.css');
+
+main {
+  --color-canvas-default: transparent !important;
+  --color-canvas-overlay: transparent !important;
+  --color-canvas-inset: rgba(0, 0, 0, 0.04) !important;
+  --color-canvas-subtle: rgba(0, 0, 0, 0.04) !important;
+  background: transparent !important;
+  
+  --color-border-default: rgba(0, 0, 0, 0.1) !important;
+  --color-border-muted: rgba(0, 0, 0, 0.05) !important;
+  
+  --color-btn-primary-bg: #64748b !important;
+  --color-btn-primary-border: #64748b !important;
+  --color-btn-primary-hover-bg: #475569 !important;
+  --color-btn-primary-hover-border: #475569 !important;
+  --color-btn-primary-selected-bg: #334155 !important;
+  
+  --color-btn-hover-bg: rgba(0, 0, 0, 0.05) !important;
+  --color-btn-hover-border: rgba(0, 0, 0, 0.1) !important;
+
+  /* Explicitly define text colors to prevent Giscus OS-level dark mode overrides on initial load */
+  --color-fg-default: #24292f !important;
+  --color-fg-muted: #57606a !important;
+  --color-fg-subtle: #6e7781 !important;
+  --color-accent-fg: #0969da !important;
+}
+
+body {
+  background-color: transparent !important;
+}
