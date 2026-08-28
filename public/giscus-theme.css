@@ -26,6 +26,10 @@ main {
   --color-accent-fg: #0969da !important;
 }
 
-body {
+html, html[data-color-mode="dark"], html[data-color-mode="light"], body {
   background-color: transparent !important;
+  --color-fg-default: #24292f !important;
+  --color-fg-muted: #57606a !important;
+  --color-fg-subtle: #6e7781 !important;
+  color: var(--color-fg-default) !important;
 }
