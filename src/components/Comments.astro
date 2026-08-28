@@ -30,8 +30,8 @@ const baseUrl = import.meta.env.BASE_URL;
         const isDark = document.documentElement.getAttribute('data-theme-mode') === 'dark';
         const base = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
         return isDark
-          ? `${window.location.origin + base}giscus-dark.css`
-          : `${window.location.origin + base}giscus-theme.css`;
+          ? `${window.location.origin + base}giscus-dark.css?v=2`
+          : `${window.location.origin + base}giscus-theme.css?v=2`;
       }
 
       function sendTheme() {

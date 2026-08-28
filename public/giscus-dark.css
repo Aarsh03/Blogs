@@ -29,7 +29,7 @@ main {
   --color-accent-fg: #58a6ff !important;
 }
 
-html, html[data-color-mode="dark"], html[data-color-mode="light"], body {
+html, html[data-color-mode="dark"], html[data-color-mode="light"], body, main, .gsc-main {
   background-color: transparent !important;
   --color-fg-default: #c9d1d9 !important;
   --color-fg-muted: #8b949e !important;

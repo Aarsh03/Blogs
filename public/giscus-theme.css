@@ -26,7 +26,7 @@ main {
   --color-accent-fg: #0969da !important;
 }
 
-html, html[data-color-mode="dark"], html[data-color-mode="light"], body {
+html, html[data-color-mode="dark"], html[data-color-mode="light"], body, main, .gsc-main {
   background-color: transparent !important;
   --color-fg-default: #24292f !important;
   --color-fg-muted: #57606a !important;
