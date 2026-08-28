@@ -14,7 +14,7 @@ main {
   --color-btn-hover-border: rgba(255, 255, 255, 0.2) !important;
 
   /* Explicitly define border colors so they are visible on all dark themes */
-  --color-border-primary: rgba(255, 255, 255, 0.15) !important;
+  --color-border-default: rgba(255, 255, 255, 0.15) !important;
   --color-border-muted: rgba(255, 255, 255, 0.1) !important;
 
   /* Disabled primary button (Comment button) */
