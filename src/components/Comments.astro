@@ -34,14 +34,7 @@ const baseUrl = import.meta.env.BASE_URL;
         
         console.log(`[Giscus Debug] Initializing theme... data-theme-mode: ${themeMode}, data-theme: ${theme}, isDark: ${isDark}`);
         
-        // Use Giscus built-in themes for standard themes to eliminate custom CSS loading/caching bugs
-        if (theme !== 'custom') {
-          const url = isDark ? 'transparent_dark' : 'light';
-          console.log(`[Giscus Debug] Using native Giscus theme: ${url}`);
-          return url;
-        }
-
-        // Only use custom CSS for the actual "custom" theme picker
+        // We ALWAYS use our custom CSS to ensure we get transparent backgrounds on BOTH light and dark themes
         const cb = '?t=' + Date.now(); 
         const url = isDark
           ? `${origin}${cleanBase}giscus-dark.css${cb}`
