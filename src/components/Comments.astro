@@ -68,6 +68,12 @@ const baseUrl = import.meta.env.BASE_URL;
         
         if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
           syncTheme();
+          let attempts = 0;
+          const pulseInterval = setInterval(() => {
+            syncTheme();
+            attempts++;
+            if (attempts >= 4) clearInterval(pulseInterval);
+          }, 150);
         }
       };
       window.addEventListener('message', window._giscusReadyListener);
