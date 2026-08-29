@@ -27,9 +27,18 @@ const baseUrl = import.meta.env.BASE_URL;
       const cleanBase = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
       const origin = window.location.origin;
 
+      function getThemeMode() {
+        let mode = document.documentElement.getAttribute('data-theme-mode');
+        if (!mode) {
+          const savedTheme = localStorage.getItem('theme') || 'obsidian';
+          const darkThemes = ['obsidian', 'rose', 'nebula', 'midnight-black'];
+          mode = darkThemes.includes(savedTheme) ? 'dark' : 'light';
+        }
+        return mode;
+      }
+
       function getGiscusThemeUrl() {
-        const themeMode = document.documentElement.getAttribute('data-theme-mode');
-        const isDark = themeMode === 'dark';
+        const isDark = getThemeMode() === 'dark';
         return isDark
           ? `${origin}${cleanBase}giscus-dark.css`
           : `${origin}${cleanBase}giscus-theme.css`;
@@ -67,7 +76,10 @@ const baseUrl = import.meta.env.BASE_URL;
         if (typeof event.data !== 'object' || !event.data.giscus) return;
         
         if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
-          syncTheme();
+          // Send native theme first. If custom CSS is blocked (e.g. on localhost), it falls back safely to this native theme.
+          const isDark = getThemeMode() === 'dark';
+          sendThemeToIframe(isDark ? 'transparent_dark' : 'light');
+          
           let attempts = 0;
           const pulseInterval = setInterval(() => {
             syncTheme();
@@ -84,7 +96,7 @@ const baseUrl = import.meta.env.BASE_URL;
         window._giscusIntersectObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              const isDark = document.documentElement.getAttribute('data-theme-mode') === 'dark';
+              const isDark = getThemeMode() === 'dark';
               const initialNativeTheme = isDark ? 'transparent_dark' : 'light';
               
               const script = document.createElement('script');
