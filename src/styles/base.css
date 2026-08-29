@@ -120,6 +120,7 @@ h4 { font-size: 1.125rem; }
 
 .container--narrow {
   max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {

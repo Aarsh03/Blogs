@@ -5,7 +5,7 @@ document.addEventListener('astro:page-load', () => {
   const html = document.documentElement;
   const settingsBtn = document.getElementById('settings-toggle');
   const settingsPanel = document.getElementById('settings-panel');
-  const fontOptions = document.querySelectorAll('.font-option');
+  const fontOptions = document.querySelectorAll('.font-option:not(.layout-option)');
   const layoutOptions = document.querySelectorAll('.layout-option');
   const eyeComfortBtn = document.getElementById('eye-comfort-toggle');
 

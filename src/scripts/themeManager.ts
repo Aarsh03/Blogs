@@ -51,9 +51,11 @@ document.addEventListener('astro:page-load', () => {
   customToggleBtn?.addEventListener('click', () => {
     const isCurrentlyCustom = html.getAttribute('data-theme') === 'custom';
     if (!isCurrentlyCustom) {
+      localStorage.setItem('preCustomTheme', html.getAttribute('data-theme') || 'obsidian');
       window.applyTheme('custom');
     } else {
-      window.applyTheme('obsidian'); // fallback if toggled off
+      const prev = localStorage.getItem('preCustomTheme') || 'obsidian';
+      window.applyTheme(prev);
     }
   });
 });

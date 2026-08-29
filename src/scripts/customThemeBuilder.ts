@@ -340,6 +340,15 @@ document.addEventListener('astro:page-load', () => {
 
     let elWidth = 0, elHeight = 0;
 
+    const end = () => { 
+      if (!isDragging) return;
+      isDragging = false; 
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('touchmove', move);
+      document.removeEventListener('mouseup', end);
+      document.removeEventListener('touchend', end);
+    };
+
     const start = (e: MouseEvent | TouchEvent) => {
       if (targetEl.id === 'custom-color-picker' && window.innerWidth <= 768) return;
       if (!targetEl.style.left || targetEl.style.transform !== 'none') {
@@ -350,11 +359,15 @@ document.addEventListener('astro:page-load', () => {
       startClientY = touch ? touch.clientY : (e as MouseEvent).clientY;
       startLeft = parseFloat(targetEl.style.left) || 0;
       startTop = parseFloat(targetEl.style.top) || 0;
-      // Snapshot dimensions once so clamping stays consistent during move
       const rect = targetEl.getBoundingClientRect();
       elWidth = rect.width;
       elHeight = rect.height;
       isDragging = true;
+
+      document.addEventListener('mousemove', move, { passive: false });
+      document.addEventListener('touchmove', move, { passive: false });
+      document.addEventListener('mouseup', end);
+      document.addEventListener('touchend', end);
     };
 
     const move = (e: MouseEvent | TouchEvent) => {
@@ -370,22 +383,13 @@ document.addEventListener('astro:page-load', () => {
       targetEl.style.setProperty('top', newTop + 'px', 'important');
     };
 
-    const end = () => { isDragging = false; };
-
     handleEl.addEventListener('mousedown', start);
     handleEl.addEventListener('touchstart', start, { passive: true });
-    document.addEventListener('mousemove', move, { passive: false });
-    document.addEventListener('touchmove', move, { passive: false });
-    document.addEventListener('mouseup', end);
-    document.addEventListener('touchend', end);
 
     return () => {
       handleEl.removeEventListener('mousedown', start);
       handleEl.removeEventListener('touchstart', start);
-      document.removeEventListener('mousemove', move);
-      document.removeEventListener('touchmove', move);
-      document.removeEventListener('mouseup', end);
-      document.removeEventListener('touchend', end);
+      end();
     };
   }
 
