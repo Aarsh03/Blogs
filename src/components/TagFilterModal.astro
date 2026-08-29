@@ -180,6 +180,9 @@ const { tags } = Astro.props;
       border-color: var(--color-accent-2);
       color: var(--color-accent-2);
     }
+    .tag-modal-chip:hover .tag-modal-chip__icon {
+      opacity: 0.5;
+    }
   }
 
   .tag-modal-chip.selected {
@@ -189,7 +192,7 @@ const { tags } = Astro.props;
     font-weight: 600;
   }
 
-  .tag-modal-chip.selected :global(.tag-modal-chip__icon) {
+  .tag-modal-chip.selected .tag-modal-chip__icon {
     opacity: 1;
     transform: scale(1);
     width: 14px;

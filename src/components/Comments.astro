@@ -29,32 +29,23 @@ const baseUrl = import.meta.env.BASE_URL;
 
       function getGiscusThemeUrl() {
         const themeMode = document.documentElement.getAttribute('data-theme-mode');
-        const theme = document.documentElement.getAttribute('data-theme');
         const isDark = themeMode === 'dark';
-        
-        console.log(`[Giscus Debug] Initializing theme... data-theme-mode: ${themeMode}, data-theme: ${theme}, isDark: ${isDark}`);
-        
-        // We ALWAYS use our custom CSS to ensure we get transparent backgrounds on BOTH light and dark themes
         const cb = '?t=' + Date.now(); 
-        const url = isDark
+        return isDark
           ? `${origin}${cleanBase}giscus-dark.css${cb}`
           : `${origin}${cleanBase}giscus-theme.css${cb}`;
-          
-        console.log(`[Giscus Debug] Using custom CSS URL: ${url}`);
-        return url;
       }
 
       function sendThemeToIframe(themeUrl: string) {
         const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
         if (!iframe || !iframe.contentWindow) return;
         try {
-          console.log(`[Giscus Debug] Sending postMessage with theme: ${themeUrl}`);
           iframe.contentWindow.postMessage(
             { giscus: { setConfig: { theme: themeUrl } } },
             'https://giscus.app'
           );
         } catch (e) {
-          console.warn('[Giscus Debug] postMessage origin mismatch - iframe booting up');
+          // Ignore origin mismatch errors while iframe boots
         }
       }
 
@@ -62,39 +53,29 @@ const baseUrl = import.meta.env.BASE_URL;
         sendThemeToIframe(getGiscusThemeUrl());
       }
 
-      // 1. Observer for when the user manually switches themes
       window._giscusThemeObserver = new MutationObserver((mutations) => {
         let changed = false;
         mutations.forEach((m) => {
           if (m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode') changed = true;
         });
-        if (changed) {
-          console.log('[Giscus Debug] MutationObserver detected theme change!');
-          syncTheme();
-        }
+        if (changed) syncTheme();
       });
       window._giscusThemeObserver.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['data-theme', 'data-theme-mode'],
       });
 
-      // 2. Listener for when Giscus is completely ready
       window._giscusReadyListener = (event: MessageEvent) => {
         if (event.origin !== 'https://giscus.app') return;
         if (typeof event.data !== 'object' || !event.data.giscus) return;
         
         if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
-          console.log('[Giscus Debug] Giscus sent discussion/error event (Ready!)');
-          
           const targetThemeUrl = getGiscusThemeUrl();
           const isDark = document.documentElement.getAttribute('data-theme-mode') === 'dark';
           
-          // Force a state transition inside Giscus React App:
-          // 1. Switch to a standard built-in theme first to break any localStorage deadlocks
-          console.log('[Giscus Debug] Forcing state transition pulse...');
+          // Force a state transition inside Giscus React App to break localStorage deadlocks
           sendThemeToIframe(isDark ? 'dark' : 'light');
           
-          // 2. Then apply the custom CSS URL 200ms later, repeating to ensure it sticks
           let attempts = 0;
           const pulseInterval = setInterval(() => {
             sendThemeToIframe(targetThemeUrl);
@@ -105,15 +86,12 @@ const baseUrl = import.meta.env.BASE_URL;
       };
       window.addEventListener('message', window._giscusReadyListener);
 
-      // 3. Inject Giscus iframe lazily
       if (container.hasChildNodes()) {
-        console.log('[Giscus Debug] Container already has Giscus (View Transition). Syncing...');
         syncTheme();
       } else {
         window._giscusIntersectObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              console.log('[Giscus Debug] Container intersecting. Injecting script...');
               const script = document.createElement('script');
               script.src = 'https://giscus.app/client.js';
               script.setAttribute('data-repo', repo || '');
@@ -125,10 +103,7 @@ const baseUrl = import.meta.env.BASE_URL;
               script.setAttribute('data-reactions-enabled', '1');
               script.setAttribute('data-emit-metadata', '0');
               script.setAttribute('data-input-position', 'bottom');
-              
-              // Initial injection URL
-              const initialUrl = getGiscusThemeUrl();
-              script.setAttribute('data-theme', initialUrl);
+              script.setAttribute('data-theme', getGiscusThemeUrl());
               script.setAttribute('data-lang', 'en');
               script.setAttribute('crossorigin', 'anonymous');
               script.async = true;
