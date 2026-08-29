@@ -10,20 +10,14 @@ const baseUrl = import.meta.env.BASE_URL;
       const container = document.querySelector('.giscus-container') as HTMLElement;
       if (!container) return;
 
-      // Clean up previous instances fully to avoid any view transition artifacts
       if (window._giscusThemeObserver) {
         window._giscusThemeObserver.disconnect();
-      }
-      if (window._giscusReadyListener) {
-        window.removeEventListener('message', window._giscusReadyListener);
       }
       if (window._giscusIntersectObserver) {
         window._giscusIntersectObserver.disconnect();
       }
 
       const { repo, repoId, category, categoryId, baseUrl } = container.dataset;
-
-      // Ensure baseUrl is clean
       const cleanBase = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
       const origin = window.location.origin;
 
@@ -37,9 +31,7 @@ const baseUrl = import.meta.env.BASE_URL;
               try {
                 const parsed = JSON.parse(customTheme);
                 if (parsed.bg) {
-                  const r = parseInt(parsed.bg.slice(1,3), 16);
-                  const g = parseInt(parsed.bg.slice(3,5), 16);
-                  const b = parseInt(parsed.bg.slice(5,7), 16);
+                  const r = parseInt(parsed.bg.slice(1,3), 16), g = parseInt(parsed.bg.slice(3,5), 16), b = parseInt(parsed.bg.slice(5,7), 16);
                   return ((0.2126 * r + 0.7152 * g + 0.0722 * b) < 128) ? 'dark' : 'light';
                 }
               } catch(e) {}
@@ -54,70 +46,52 @@ const baseUrl = import.meta.env.BASE_URL;
 
       function getGiscusThemeUrl() {
         const isDark = getThemeMode() === 'dark';
-        
-        // Giscus STRICTLY rejects custom themes over http:// (localhost).
-        // If we send an http:// URL, Giscus crashes its theme state and falls back to a solid white box.
-        // To fix this, if we are testing locally (http:), we MUST fallback to Giscus's native themes.
         if (window.location.protocol === 'http:') {
           return isDark ? 'transparent_dark' : 'light';
         }
-        
-        return isDark
-          ? `${origin}${cleanBase}giscus-dark.css`
-          : `${origin}${cleanBase}giscus-theme.css`;
+        return isDark ? `${origin}${cleanBase}giscus-dark.css` : `${origin}${cleanBase}giscus-theme.css`;
       }
 
       function sendThemeToIframe(themeUrl: string) {
         const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
-        if (!iframe || !iframe.contentWindow) return;
+        if (!iframe || !iframe.contentWindow) return false;
         try {
-          iframe.contentWindow.postMessage(
-            { giscus: { setConfig: { theme: themeUrl } } },
-            'https://giscus.app'
-          );
-        } catch (e) {}
+          iframe.contentWindow.postMessage({ giscus: { setConfig: { theme: themeUrl } } }, 'https://giscus.app');
+          return true;
+        } catch (e) { return false; }
       }
 
-      function syncTheme() {
-        sendThemeToIframe(getGiscusThemeUrl());
+      function startThemePulse() {
+        if (window._giscusPulseInterval) clearInterval(window._giscusPulseInterval);
+        let attempts = 0;
+        window._giscusPulseInterval = setInterval(() => {
+          const success = sendThemeToIframe(getGiscusThemeUrl());
+          attempts++;
+          if (attempts >= 15) clearInterval(window._giscusPulseInterval);
+        }, 200);
       }
 
       window._giscusThemeObserver = new MutationObserver((mutations) => {
         let changed = false;
-        mutations.forEach((m) => {
-          if (m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode') changed = true;
-        });
-        if (changed) syncTheme();
+        mutations.forEach((m) => { if (m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode') changed = true; });
+        if (changed) startThemePulse();
       });
-      window._giscusThemeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme', 'data-theme-mode'],
-      });
+      window._giscusThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-theme-mode'] });
 
+      // Start pulse when giscus messages us (it's ready)
       window._giscusReadyListener = (event: MessageEvent) => {
-        if (event.origin !== 'https://giscus.app') return;
-        if (typeof event.data !== 'object' || !event.data.giscus) return;
-        
-        if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
-          let attempts = 0;
-          const pulseInterval = setInterval(() => {
-            syncTheme();
-            attempts++;
-            if (attempts >= 4) clearInterval(pulseInterval);
-          }, 150);
-        }
+        if (event.origin !== 'https://giscus.app' || typeof event.data !== 'object' || !event.data.giscus) return;
+        if ('discussion' in event.data.giscus || 'error' in event.data.giscus) startThemePulse();
       };
       window.addEventListener('message', window._giscusReadyListener);
 
       if (container.hasChildNodes()) {
-        syncTheme();
+        startThemePulse();
       } else {
         window._giscusIntersectObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              const isDark = getThemeMode() === 'dark';
-              const initialNativeTheme = isDark ? 'transparent_dark' : 'light';
-              
+              const initialNativeTheme = getThemeMode() === 'dark' ? 'transparent_dark' : 'light';
               const script = document.createElement('script');
               script.src = 'https://giscus.app/client.js';
               script.setAttribute('data-repo', repo || '');
@@ -133,30 +107,21 @@ const baseUrl = import.meta.env.BASE_URL;
               script.setAttribute('data-lang', 'en');
               script.setAttribute('crossorigin', 'anonymous');
               script.async = true;
-              
               container.appendChild(script);
               window._giscusIntersectObserver?.disconnect();
+              startThemePulse(); // Start pulsing immediately while it loads
             }
           });
         }, { rootMargin: '200px' });
-
         window._giscusIntersectObserver.observe(container);
       }
     });
 
     document.addEventListener('astro:before-swap', () => {
-      if (window._giscusThemeObserver) {
-        window._giscusThemeObserver.disconnect();
-        window._giscusThemeObserver = null;
-      }
-      if (window._giscusIntersectObserver) {
-        window._giscusIntersectObserver.disconnect();
-        window._giscusIntersectObserver = null;
-      }
-      if (window._giscusReadyListener) {
-        window.removeEventListener('message', window._giscusReadyListener);
-        window._giscusReadyListener = null;
-      }
+      if (window._giscusPulseInterval) clearInterval(window._giscusPulseInterval);
+      if (window._giscusThemeObserver) { window._giscusThemeObserver.disconnect(); window._giscusThemeObserver = null; }
+      if (window._giscusIntersectObserver) { window._giscusIntersectObserver.disconnect(); window._giscusIntersectObserver = null; }
+      if (window._giscusReadyListener) { window.removeEventListener('message', window._giscusReadyListener); window._giscusReadyListener = null; }
     });
   </script>
 </section>
