@@ -392,7 +392,7 @@ document.addEventListener('astro:page-load', () => {
   /* Wire up both drag handles (desktop inline + mobile strip) */
   const toolbarEl = document.getElementById('custom-theme-toolbar') as HTMLElement | null;
   const desktopHandle = document.getElementById('theme-toolbar-handle-desktop');
-  const mobileHandle = document.getElementById('theme-toolbar-handle-mobile');
+  const mobileHandle = document.getElementById('theme-toolbar-handle');
   let cleanupDesktopDrag = makeDraggable(desktopHandle, toolbarEl);
   let cleanupMobileDrag = makeDraggable(mobileHandle, toolbarEl);
   let cleanupPickerDrag = makeDraggable(
@@ -439,7 +439,7 @@ document.addEventListener('astro:page-load', () => {
       });
     });
   }
-  setupRotate('theme-toolbar-rotate-mobile');
+  setupRotate('theme-toolbar-rotate');
   setupRotate('theme-toolbar-rotate-desktop');
 
   document.addEventListener('astro:before-swap', () => {
