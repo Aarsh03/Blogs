@@ -10,88 +10,96 @@ const baseUrl = import.meta.env.BASE_URL;
       const container = document.querySelector('.giscus-container') as HTMLElement;
       if (!container) return;
 
-      if (window._giscusThemeObserver) {
-        window._giscusThemeObserver.disconnect();
-      }
-      if (window._giscusIntersectObserver) {
-        window._giscusIntersectObserver.disconnect();
-      }
+      // Cleanup previous instances
+      if (window._giscusThemeObserver) window._giscusThemeObserver.disconnect();
+      if (window._giscusIntersectObserver) window._giscusIntersectObserver.disconnect();
 
       const { repo, repoId, category, categoryId, baseUrl } = container.dataset;
       const cleanBase = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
       const origin = window.location.origin;
 
-      function getThemeMode() {
-        let mode = document.documentElement.getAttribute('data-theme-mode');
-        if (!mode) {
-          const savedTheme = localStorage.getItem('theme') || 'obsidian';
-          if (savedTheme === 'custom') {
-            const customTheme = localStorage.getItem('customTheme');
-            if (customTheme) {
-              try {
-                const parsed = JSON.parse(customTheme);
-                if (parsed.bg) {
-                  const r = parseInt(parsed.bg.slice(1,3), 16), g = parseInt(parsed.bg.slice(3,5), 16), b = parseInt(parsed.bg.slice(5,7), 16);
-                  return ((0.2126 * r + 0.7152 * g + 0.0722 * b) < 128) ? 'dark' : 'light';
-                }
-              } catch(e) {}
+      const DARK_THEMES = ['obsidian', 'rose', 'nebula', 'midnight-black'];
+
+      function isDarkMode(): boolean {
+        // First try the already-set attribute (set by BaseLayout inline script)
+        const mode = document.documentElement.getAttribute('data-theme-mode');
+        if (mode) return mode === 'dark';
+
+        // Fallback: calculate from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'obsidian';
+        if (savedTheme === 'custom') {
+          try {
+            const p = JSON.parse(localStorage.getItem('customTheme') || '{}');
+            if (p.bg) {
+              const r = parseInt(p.bg.slice(1,3), 16), g = parseInt(p.bg.slice(3,5), 16), b = parseInt(p.bg.slice(5,7), 16);
+              return (0.2126 * r + 0.7152 * g + 0.0722 * b) < 128;
             }
-            return 'light';
-          }
-          const darkThemes = ['obsidian', 'rose', 'nebula', 'midnight-black'];
-          mode = darkThemes.includes(savedTheme) ? 'dark' : 'light';
+          } catch(e) {}
+          return false;
         }
-        return mode;
+        return DARK_THEMES.includes(savedTheme);
       }
 
-      function getGiscusThemeUrl() {
-        const isDark = getThemeMode() === 'dark';
+      /**
+       * Returns the Giscus theme URL with a cache-busting query parameter.
+       * 
+       * WHY CACHE BUSTING IS CRITICAL:
+       * Giscus aggressively caches custom CSS URLs internally. If you switch
+       * from dark→light, Giscus may ignore the new URL because it thinks
+       * the CSS hasn't changed (same domain, similar path). By appending
+       * a unique `?t=<timestamp>` parameter, Giscus always treats it as
+       * a fresh theme request and re-fetches the CSS.
+       */
+      function getGiscusThemeUrl(): string {
+        const dark = isDarkMode();
+        // On localhost (http:), Giscus rejects custom CSS URLs, so use native themes
         if (window.location.protocol === 'http:') {
-          return isDark ? 'transparent_dark' : 'light';
+          return dark ? 'transparent_dark' : 'light';
         }
-        return isDark ? `${origin}${cleanBase}giscus-dark.css` : `${origin}${cleanBase}giscus-theme.css`;
+        const file = dark ? 'giscus-dark.css' : 'giscus-theme.css';
+        return `${origin}${cleanBase}${file}?t=${Date.now()}`;
       }
 
-      function sendThemeToIframe(themeUrl: string) {
+      function sendThemeToGiscus() {
         const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
-        if (!iframe || !iframe.contentWindow) return false;
-        try {
-          iframe.contentWindow.postMessage({ giscus: { setConfig: { theme: themeUrl } } }, 'https://giscus.app');
-          return true;
-        } catch (e) { return false; }
+        if (!iframe?.contentWindow) return;
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: getGiscusThemeUrl() } } },
+          'https://giscus.app'
+        );
       }
 
-      function startThemePulse() {
-        if (window._giscusPulseInterval) clearInterval(window._giscusPulseInterval);
-        let attempts = 0;
-        window._giscusPulseInterval = setInterval(() => {
-          const success = sendThemeToIframe(getGiscusThemeUrl());
-          attempts++;
-          if (attempts >= 15) clearInterval(window._giscusPulseInterval);
-        }, 200);
-      }
-
+      // Watch for theme changes on <html> and update Giscus
       window._giscusThemeObserver = new MutationObserver((mutations) => {
-        let changed = false;
-        mutations.forEach((m) => { if (m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode') changed = true; });
-        if (changed) startThemePulse();
+        if (mutations.some(m => m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode')) {
+          sendThemeToGiscus();
+        }
       });
-      window._giscusThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-theme-mode'] });
+      window._giscusThemeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme', 'data-theme-mode'],
+      });
 
-      // Start pulse when giscus messages us (it's ready)
+      // When Giscus signals it's ready, send the correct theme
       window._giscusReadyListener = (event: MessageEvent) => {
-        if (event.origin !== 'https://giscus.app' || typeof event.data !== 'object' || !event.data.giscus) return;
-        if ('discussion' in event.data.giscus || 'error' in event.data.giscus) startThemePulse();
+        if (event.origin !== 'https://giscus.app') return;
+        if (typeof event.data !== 'object' || !event.data.giscus) return;
+        if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
+          sendThemeToGiscus();
+        }
       };
       window.addEventListener('message', window._giscusReadyListener);
 
       if (container.hasChildNodes()) {
-        startThemePulse();
+        // Already loaded (e.g. view transition), just sync theme
+        sendThemeToGiscus();
       } else {
+        // Lazy-load Giscus when the container scrolls into view
         window._giscusIntersectObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              const initialNativeTheme = getThemeMode() === 'dark' ? 'transparent_dark' : 'light';
+              // Use native theme for initial load (no cache issue with native themes)
+              const initialTheme = isDarkMode() ? 'transparent_dark' : 'light';
               const script = document.createElement('script');
               script.src = 'https://giscus.app/client.js';
               script.setAttribute('data-repo', repo || '');
@@ -103,13 +111,12 @@ const baseUrl = import.meta.env.BASE_URL;
               script.setAttribute('data-reactions-enabled', '1');
               script.setAttribute('data-emit-metadata', '0');
               script.setAttribute('data-input-position', 'bottom');
-              script.setAttribute('data-theme', initialNativeTheme);
+              script.setAttribute('data-theme', initialTheme);
               script.setAttribute('data-lang', 'en');
               script.setAttribute('crossorigin', 'anonymous');
               script.async = true;
               container.appendChild(script);
               window._giscusIntersectObserver?.disconnect();
-              startThemePulse(); // Start pulsing immediately while it loads
             }
           });
         }, { rootMargin: '200px' });
@@ -118,7 +125,6 @@ const baseUrl = import.meta.env.BASE_URL;
     });
 
     document.addEventListener('astro:before-swap', () => {
-      if (window._giscusPulseInterval) clearInterval(window._giscusPulseInterval);
       if (window._giscusThemeObserver) { window._giscusThemeObserver.disconnect(); window._giscusThemeObserver = null; }
       if (window._giscusIntersectObserver) { window._giscusIntersectObserver.disconnect(); window._giscusIntersectObserver = null; }
       if (window._giscusReadyListener) { window.removeEventListener('message', window._giscusReadyListener); window._giscusReadyListener = null; }
