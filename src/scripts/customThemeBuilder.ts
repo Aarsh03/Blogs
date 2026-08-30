@@ -79,7 +79,10 @@ document.addEventListener('astro:page-load', () => {
         try {
           const r = parseInt(parsed.bg.slice(1,3), 16), g = parseInt(parsed.bg.slice(3,5), 16), b = parseInt(parsed.bg.slice(5,7), 16);
           const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-          document.documentElement.setAttribute('data-theme-mode', luma < 128 ? 'dark' : 'light');
+          // ONLY overwrite data-theme-mode if the active theme is actually custom!
+          if (document.documentElement.getAttribute('data-theme') === 'custom') {
+            document.documentElement.setAttribute('data-theme-mode', luma < 128 ? 'dark' : 'light');
+          }
         } catch(e) {}
       }
     }
