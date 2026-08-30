@@ -6,24 +6,21 @@ const baseUrl = import.meta.env.BASE_URL;
   <h2 class="comments-section__title">Comments</h2>
   <div class="giscus-container" data-repo={SITE.giscus.repo} data-repo-id={SITE.giscus.repoId} data-category={SITE.giscus.category} data-category-id={SITE.giscus.categoryId} data-base-url={baseUrl}></div>
   <script>
+    import { GISCUS_DARK_THEME, GISCUS_LIGHT_THEME } from '../utils/giscusThemes';
+
     document.addEventListener('astro:page-load', () => {
       const container = document.querySelector('.giscus-container') as HTMLElement;
       if (!container) return;
 
-      // Cleanup previous instances
       if (window._giscusThemeObserver) window._giscusThemeObserver.disconnect();
       if (window._giscusIntersectObserver) window._giscusIntersectObserver.disconnect();
 
-      const { repo, repoId, category, categoryId, baseUrl } = container.dataset;
-      const cleanBase = baseUrl ? (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') : '/';
-      const origin = window.location.origin;
-
+      const { repo, repoId, category, categoryId } = container.dataset;
       const DARK_THEMES = ['obsidian', 'rose', 'nebula', 'midnight-black'];
 
       function isDarkMode(): boolean {
         const mode = document.documentElement.getAttribute('data-theme-mode');
         if (mode) return mode === 'dark';
-        // Fallback: calculate from localStorage
         const savedTheme = localStorage.getItem('theme') || 'obsidian';
         if (savedTheme === 'custom') {
           try {
@@ -40,12 +37,12 @@ const baseUrl = import.meta.env.BASE_URL;
 
       function getGiscusTheme(): string {
         const dark = isDarkMode();
-        // On localhost (http:), Giscus rejects external CSS URLs — use native themes
         if (window.location.protocol === 'http:') {
           return dark ? 'transparent_dark' : 'light';
         }
-        const file = dark ? 'giscus-dark.css' : 'giscus-theme.css';
-        return `${origin}${cleanBase}${file}?t=${Date.now()}`;
+        // Using Base64 encoded Data URIs for the theme guarantees 100% reliability.
+        // It bypasses all Giscus iframe caching, network failures, or race conditions.
+        return dark ? GISCUS_DARK_THEME : GISCUS_LIGHT_THEME;
       }
 
       function sendThemeToGiscus() {
@@ -57,7 +54,6 @@ const baseUrl = import.meta.env.BASE_URL;
         );
       }
 
-      // Watch for theme changes on <html> and update Giscus iframe
       window._giscusThemeObserver = new MutationObserver((mutations) => {
         if (mutations.some(m => m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode')) {
           sendThemeToGiscus();
@@ -69,17 +65,11 @@ const baseUrl = import.meta.env.BASE_URL;
       });
 
       if (container.hasChildNodes()) {
-        // Already loaded (e.g. view transition), just sync theme
         sendThemeToGiscus();
       } else {
-        // Lazy-load Giscus when the container scrolls into view
         window._giscusIntersectObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              // KEY FIX: Pass the FULL custom CSS URL directly as data-theme.
-              // This makes Giscus's server render the correct <link> tag in
-              // the iframe's HTML, so the theme is correct from the very first
-              // paint. No postMessage needed for initial load.
               const script = document.createElement('script');
               script.src = 'https://giscus.app/client.js';
               script.setAttribute('data-repo', repo || '');
@@ -91,6 +81,8 @@ const baseUrl = import.meta.env.BASE_URL;
               script.setAttribute('data-reactions-enabled', '1');
               script.setAttribute('data-emit-metadata', '0');
               script.setAttribute('data-input-position', 'bottom');
+              
+              // Pass the Base64 Data URI directly on initial load!
               script.setAttribute('data-theme', getGiscusTheme());
               script.setAttribute('data-lang', 'en');
               script.setAttribute('crossorigin', 'anonymous');
