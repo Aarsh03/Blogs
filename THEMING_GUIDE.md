@@ -113,3 +113,23 @@ The blog includes a powerful runtime custom theme engine.
 - **Visual Color Picker (`CustomColorPicker.astro`)**: A fully custom 2D canvas with HSV Saturation/Value, Hue slider, and synchronized HEX/RGB/HSL/CMYK text inputs.
 - **Dynamic CSS**: 7 Custom Theme properties (`bg`, `card`, `text`, `accent1`, `accent2`, `accent3`, `accent4`) are saved to `localStorage`. The engine automatically computes derived variables (`--color-text-muted`, `--color-border`, etc.) using `color-mix()` and injects them into `<style id="custom-theme-vars">`.
 - **Giscus Transparency**: Custom themes dynamically calculate relative luminance. If dark, Giscus loads `giscus-dark.css` (inheriting `transparent_dark.css`). Both custom light and dark modes pass a transparent background to Giscus, seamlessly blending the comment box with your custom palette.
+
+---
+
+## 8. Known Gotchas & Notorious Bugs
+
+### The "Custom Theme Mode" Overwrite Bug
+**Symptom:** Giscus comment boxes (and potentially other elements) would load the dark mode variant on a light theme (like `serenity`), or the light mode variant on a dark theme (like `obsidian`). However, if the user actually switched to their "Custom" theme, the comment box would be correct.
+
+**Root Cause:** The script `customThemeBuilder.ts` initialized on *every* `astro:page-load` to set up the color picker. It would load the saved custom theme variables from `localStorage` and calculate the relative luminance of the custom background color. It would then *blindly* execute:
+```javascript
+document.documentElement.setAttribute('data-theme-mode', luma < 128 ? 'dark' : 'light');
+```
+This obliterated the correct `data-theme-mode` that had just been set by `BaseLayout` for the active theme, causing the page to adopt the dark/light state of the *inactive* custom theme. 
+
+**The Fix:** Always verify that the active theme is actually "custom" before overriding global state attributes:
+```javascript
+if (document.documentElement.getAttribute('data-theme') === 'custom') {
+  document.documentElement.setAttribute('data-theme-mode', luma < 128 ? 'dark' : 'light');
+}
+```
