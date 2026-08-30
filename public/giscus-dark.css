@@ -1,36 +1,13 @@
-@import url('https://giscus.app/themes/transparent_dark.css');
-
-/*
- * Force dark color-scheme so the browser never applies OS-level light mode
- * to native form elements (inputs, textareas) while CSS is loading.
+/*! Giscus Dark Theme - Self-contained (no @import)
+ * Based on GitHub's dark theme from primer/primitives.
+ * MIT License - Copyright (c) 2018 GitHub Inc.
  */
-main {
+main{
   color-scheme: dark;
+  --color-prettylights-syntax-comment:#8b949e;--color-prettylights-syntax-constant:#79c0ff;--color-prettylights-syntax-entity:#d2a8ff;--color-prettylights-syntax-storage-modifier-import:#c9d1d9;--color-prettylights-syntax-entity-tag:#7ee787;--color-prettylights-syntax-keyword:#ff7b72;--color-prettylights-syntax-string:#a5d6ff;--color-prettylights-syntax-variable:#ffa657;--color-prettylights-syntax-brackethighlighter-unmatched:#f85149;--color-prettylights-syntax-invalid-illegal-text:#f0f6fc;--color-prettylights-syntax-invalid-illegal-bg:#8e1519;--color-prettylights-syntax-carriage-return-text:#f0f6fc;--color-prettylights-syntax-carriage-return-bg:#b62324;--color-prettylights-syntax-string-regexp:#7ee787;--color-prettylights-syntax-markup-list:#f2cc60;--color-prettylights-syntax-markup-heading:#1f6feb;--color-prettylights-syntax-markup-italic:#c9d1d9;--color-prettylights-syntax-markup-bold:#c9d1d9;--color-prettylights-syntax-markup-deleted-text:#ffdcd7;--color-prettylights-syntax-markup-deleted-bg:#67060c;--color-prettylights-syntax-markup-inserted-text:#aff5b4;--color-prettylights-syntax-markup-inserted-bg:#033a16;--color-prettylights-syntax-markup-changed-text:#ffdfb6;--color-prettylights-syntax-markup-changed-bg:#5a1e02;--color-prettylights-syntax-markup-ignored-text:#c9d1d9;--color-prettylights-syntax-markup-ignored-bg:#1158c7;--color-prettylights-syntax-meta-diff-range:#d2a8ff;--color-prettylights-syntax-brackethighlighter-angle:#8b949e;--color-prettylights-syntax-sublimelinter-gutter-mark:#484f58;--color-prettylights-syntax-constant-other-reference-link:#a5d6ff;--color-btn-text:#c9d1d9;--color-btn-bg:#2d333bcc;--color-btn-border:#f0f6fc1a;--color-btn-shadow:0 0 #0000;--color-btn-inset-shadow:0 0 #0000;--color-btn-hover-bg:rgba(255, 255, 255, 0.1);--color-btn-hover-border:rgba(255, 255, 255, 0.2);--color-btn-active-bg:#282e3380;--color-btn-active-border:#6e7681;--color-btn-selected-bg:#2d333b80;--color-btn-primary-text:#fff;--color-btn-primary-bg:#475569;--color-btn-primary-border:#475569;--color-btn-primary-shadow:0 0 #0000;--color-btn-primary-inset-shadow:0 0 #0000;--color-btn-primary-hover-bg:#64748b;--color-btn-primary-hover-border:#64748b;--color-btn-primary-selected-bg:#94a3b8;--color-btn-primary-selected-shadow:0 0 #0000;--color-btn-primary-disabled-text:#f0f6fc80;--color-btn-primary-disabled-bg:rgba(71, 85, 105, 0.5);--color-btn-primary-disabled-border:transparent;--color-action-list-item-default-hover-bg:#909dab1f;--color-segmented-control-bg:#636e7b1a;--color-segmented-control-button-bg:#0000;--color-segmented-control-button-selected-border:#636e7b;--color-fg-default:#c9d1d9;--color-fg-muted:#8b949e;--color-fg-subtle:#484f58;--color-canvas-default:#0000;--color-canvas-overlay:#161b22e6;--color-canvas-inset:#0000;--color-canvas-subtle:#0000;--color-border-default:rgba(255, 255, 255, 0.15);--color-border-muted:rgba(255, 255, 255, 0.1);--color-neutral-muted:#6e76810d;--color-neutral-subtle:#6e76811a;--color-accent-fg:#58a6ff;--color-accent-emphasis:#1f6feb;--color-accent-muted:#388bfd66;--color-accent-subtle:#4184e41a;--color-success-fg:#3fb950;--color-attention-fg:#c69026;--color-attention-muted:#ae7c1466;--color-attention-subtle:#ae7c1426;--color-danger-fg:#f85149;--color-danger-muted:#e5534b66;--color-danger-subtle:#e5534b1a;--color-primer-shadow-inset:0 0 #0000;--color-scale-gray-7:#21262d;--color-scale-blue-8:#0c2d6b;
+  --color-social-reaction-bg-hover:var(--color-scale-gray-7);--color-social-reaction-bg-reacted-hover:var(--color-scale-blue-8);
   background: transparent !important;
-
-  /* Override the default primary button with Slate */
-  --color-btn-primary-bg: #475569 !important;
-  --color-btn-primary-border: #475569 !important;
-  --color-btn-primary-hover-bg: #64748b !important;
-  --color-btn-primary-hover-border: #64748b !important;
-  --color-btn-primary-selected-bg: #94a3b8 !important;
-  
-  /* Standard buttons on hover */
-  --color-btn-hover-bg: rgba(255, 255, 255, 0.1) !important;
-  --color-btn-hover-border: rgba(255, 255, 255, 0.2) !important;
-
-  /* Explicitly define border colors so they are visible on all dark themes */
-  --color-border-default: rgba(255, 255, 255, 0.15) !important;
-  --color-border-muted: rgba(255, 255, 255, 0.1) !important;
-
-  /* Disabled primary button (Comment button) */
-  --color-btn-primary-disabled-bg: rgba(71, 85, 105, 0.5) !important;
-  --color-btn-primary-disabled-border: transparent !important;
-  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.4) !important;
-
-  /* Explicit text colors — light text for dark backgrounds */
-  --color-fg-default: #c9d1d9 !important;
-  --color-fg-muted: #8b949e !important;
-  --color-fg-subtle: #484f58 !important;
-  --color-accent-fg: #58a6ff !important;
 }
+main .pagination-loader-container{background-image:url(https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg)}
+.gsc-pagination-button{background-color:var(--color-btn-bg)}
+main .gsc-loading-image{background-image:url(https://github.githubassets.com/images/mona-loading-dark.gif)}
