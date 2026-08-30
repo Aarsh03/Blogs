@@ -21,10 +21,8 @@ const baseUrl = import.meta.env.BASE_URL;
       const DARK_THEMES = ['obsidian', 'rose', 'nebula', 'midnight-black'];
 
       function isDarkMode(): boolean {
-        // First try the already-set attribute (set by BaseLayout inline script)
         const mode = document.documentElement.getAttribute('data-theme-mode');
         if (mode) return mode === 'dark';
-
         // Fallback: calculate from localStorage
         const savedTheme = localStorage.getItem('theme') || 'obsidian';
         if (savedTheme === 'custom') {
@@ -40,19 +38,9 @@ const baseUrl = import.meta.env.BASE_URL;
         return DARK_THEMES.includes(savedTheme);
       }
 
-      /**
-       * Returns the Giscus theme URL with a cache-busting query parameter.
-       * 
-       * WHY CACHE BUSTING IS CRITICAL:
-       * Giscus aggressively caches custom CSS URLs internally. If you switch
-       * from dark→light, Giscus may ignore the new URL because it thinks
-       * the CSS hasn't changed (same domain, similar path). By appending
-       * a unique `?t=<timestamp>` parameter, Giscus always treats it as
-       * a fresh theme request and re-fetches the CSS.
-       */
-      function getGiscusThemeUrl(): string {
+      function getGiscusTheme(): string {
         const dark = isDarkMode();
-        // On localhost (http:), Giscus rejects custom CSS URLs, so use native themes
+        // On localhost (http:), Giscus rejects external CSS URLs — use native themes
         if (window.location.protocol === 'http:') {
           return dark ? 'transparent_dark' : 'light';
         }
@@ -64,12 +52,12 @@ const baseUrl = import.meta.env.BASE_URL;
         const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
         if (!iframe?.contentWindow) return;
         iframe.contentWindow.postMessage(
-          { giscus: { setConfig: { theme: getGiscusThemeUrl() } } },
+          { giscus: { setConfig: { theme: getGiscusTheme() } } },
           'https://giscus.app'
         );
       }
 
-      // Watch for theme changes on <html> and update Giscus
+      // Watch for theme changes on <html> and update Giscus iframe
       window._giscusThemeObserver = new MutationObserver((mutations) => {
         if (mutations.some(m => m.attributeName === 'data-theme' || m.attributeName === 'data-theme-mode')) {
           sendThemeToGiscus();
@@ -80,16 +68,6 @@ const baseUrl = import.meta.env.BASE_URL;
         attributeFilter: ['data-theme', 'data-theme-mode'],
       });
 
-      // When Giscus signals it's ready, send the correct theme
-      window._giscusReadyListener = (event: MessageEvent) => {
-        if (event.origin !== 'https://giscus.app') return;
-        if (typeof event.data !== 'object' || !event.data.giscus) return;
-        if ('discussion' in event.data.giscus || 'error' in event.data.giscus) {
-          sendThemeToGiscus();
-        }
-      };
-      window.addEventListener('message', window._giscusReadyListener);
-
       if (container.hasChildNodes()) {
         // Already loaded (e.g. view transition), just sync theme
         sendThemeToGiscus();
@@ -98,8 +76,10 @@ const baseUrl = import.meta.env.BASE_URL;
         window._giscusIntersectObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              // Use native theme for initial load (no cache issue with native themes)
-              const initialTheme = isDarkMode() ? 'transparent_dark' : 'light';
+              // KEY FIX: Pass the FULL custom CSS URL directly as data-theme.
+              // This makes Giscus's server render the correct <link> tag in
+              // the iframe's HTML, so the theme is correct from the very first
+              // paint. No postMessage needed for initial load.
               const script = document.createElement('script');
               script.src = 'https://giscus.app/client.js';
               script.setAttribute('data-repo', repo || '');
@@ -111,7 +91,7 @@ const baseUrl = import.meta.env.BASE_URL;
               script.setAttribute('data-reactions-enabled', '1');
               script.setAttribute('data-emit-metadata', '0');
               script.setAttribute('data-input-position', 'bottom');
-              script.setAttribute('data-theme', initialTheme);
+              script.setAttribute('data-theme', getGiscusTheme());
               script.setAttribute('data-lang', 'en');
               script.setAttribute('crossorigin', 'anonymous');
               script.async = true;
@@ -127,7 +107,6 @@ const baseUrl = import.meta.env.BASE_URL;
     document.addEventListener('astro:before-swap', () => {
       if (window._giscusThemeObserver) { window._giscusThemeObserver.disconnect(); window._giscusThemeObserver = null; }
       if (window._giscusIntersectObserver) { window._giscusIntersectObserver.disconnect(); window._giscusIntersectObserver = null; }
-      if (window._giscusReadyListener) { window.removeEventListener('message', window._giscusReadyListener); window._giscusReadyListener = null; }
     });
   </script>
 </section>

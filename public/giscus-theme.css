@@ -1,6 +1,12 @@
 @import url('https://giscus.app/themes/light.css');
 
+/*
+ * Force light color-scheme so the browser never applies OS-level dark mode
+ * to native form elements (inputs, textareas) while CSS is loading.
+ */
 main {
+  color-scheme: light;
+
   --color-canvas-default: transparent !important;
   --color-canvas-overlay: transparent !important;
   --color-canvas-inset: rgba(0, 0, 0, 0.04) !important;
@@ -24,7 +30,7 @@ main {
   --color-btn-primary-disabled-border: transparent !important;
   --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.7) !important;
 
-  /* Explicitly define text colors to prevent Giscus OS-level dark mode overrides on initial load */
+  /* Explicit text colors — dark text for light backgrounds */
   --color-fg-default: #24292f !important;
   --color-fg-muted: #57606a !important;
   --color-fg-subtle: #6e7781 !important;

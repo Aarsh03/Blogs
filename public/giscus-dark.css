@@ -1,7 +1,13 @@
 @import url('https://giscus.app/themes/transparent_dark.css');
 
+/*
+ * Force dark color-scheme so the browser never applies OS-level light mode
+ * to native form elements (inputs, textareas) while CSS is loading.
+ */
 main {
+  color-scheme: dark;
   background: transparent !important;
+
   /* Override the default primary button with Slate */
   --color-btn-primary-bg: #475569 !important;
   --color-btn-primary-border: #475569 !important;
@@ -22,7 +28,7 @@ main {
   --color-btn-primary-disabled-border: transparent !important;
   --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.4) !important;
 
-  /* Explicitly define text colors to prevent Giscus OS-level light mode overrides on initial load */
+  /* Explicit text colors — light text for dark backgrounds */
   --color-fg-default: #c9d1d9 !important;
   --color-fg-muted: #8b949e !important;
   --color-fg-subtle: #484f58 !important;
