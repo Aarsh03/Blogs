@@ -46,18 +46,22 @@ function isActive(linkHref: string) {
       </div>
     </a>
 
-    <ul class="navbar__links">
-      {links.map(link => (
-        <li>
-          <a
-            class:list={['navbar__link', { active: isActive(link.href) }]}
-            href={link.href}
-          >
-            {link.label}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class="navbar__nav-switch" id="nav-switch">
+      <div class="nav-switch__glider" id="nav-switch-glider"></div>
+      <ul class="navbar__links">
+        {links.map(link => (
+          <li>
+            <a
+              class:list={['navbar__link', { active: isActive(link.href) }]}
+              href={link.href}
+              data-nav-link={link.label.toLowerCase()}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
 
     <div class="navbar__actions">
       <!-- Search Modal Toggle (Search Pill) -->

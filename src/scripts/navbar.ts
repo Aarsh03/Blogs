@@ -1,5 +1,34 @@
-// Navigation scrolling & mobile menu
+// Navigation scrolling, mobile menu, and elastic nav-switch glider
 let _navScrollListener: EventListener | null = null;
+let _navResizeListener: EventListener | null = null;
+
+function updateNavGlider(animate = true) {
+  const navSwitch = document.getElementById('nav-switch');
+  const glider = document.getElementById('nav-switch-glider');
+  if (!navSwitch || !glider) return;
+
+  const activeLink = navSwitch.querySelector('.navbar__link.active') as HTMLElement;
+  if (!activeLink) {
+    glider.style.opacity = '0';
+    return;
+  }
+
+  const switchRect = navSwitch.getBoundingClientRect();
+  const linkRect = activeLink.getBoundingClientRect();
+
+  const left = linkRect.left - switchRect.left;
+  const width = linkRect.width;
+
+  if (!animate) {
+    glider.style.transition = 'none';
+  } else {
+    glider.style.transition = '';
+  }
+
+  glider.style.transform = `translateX(${left}px)`;
+  glider.style.width = `${width}px`;
+  glider.style.opacity = '1';
+}
 
 document.addEventListener('astro:page-load', () => {
   if (_navScrollListener) {
@@ -62,11 +91,38 @@ document.addEventListener('astro:page-load', () => {
 
   btn?.addEventListener('click', toggleMenu);
   overlay?.addEventListener('click', toggleMenu);
+
+  /* ── Elastic Nav Glider ── */
+  updateNavGlider(false);
+
+  const navLinks = document.querySelectorAll('.navbar__nav-switch .navbar__link');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const glider = document.getElementById('nav-switch-glider');
+      glider?.classList.add('elastic-stretching');
+      updateNavGlider(true);
+      setTimeout(() => {
+        glider?.classList.remove('elastic-stretching');
+      }, 500);
+    });
+  });
+
+  if (_navResizeListener) {
+    window.removeEventListener('resize', _navResizeListener);
+  }
+  _navResizeListener = () => updateNavGlider(false);
+  window.addEventListener('resize', _navResizeListener, { passive: true });
 });
 
 document.addEventListener('astro:before-swap', () => {
   if (_navScrollListener) {
     window.removeEventListener('scroll', _navScrollListener);
     _navScrollListener = null;
+  }
+  if (_navResizeListener) {
+    window.removeEventListener('resize', _navResizeListener);
+    _navResizeListener = null;
   }
 });

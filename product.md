@@ -42,6 +42,7 @@ Blogs/
 |   |   +-- Comments.astro              # Lazy-loaded Giscus comments (IntersectionObserver)
 |   |   +-- CustomColorPicker.astro     # HSV/RGB/HEX/CMYK color picker UI
 |   |   +-- CustomThemeToolbar.astro    # Draggable theme-builder toolbar (mobile-optimized)
+|   |   +-- ElasticToggle.astro         # Reusable spring-animated elastic switch component
 |   |   +-- FloatingActions.astro       # FAB speed-dial (Scroll Top, Comments, Share)
 |   |   +-- Footer.astro                # Site footer
 |   |   +-- Icon.astro                  # Centralized inline SVG icon component
@@ -150,7 +151,7 @@ draft: false            # optional -- true excludes the post from the build enti
 
 ## 4. Pages & Navigation
 
-**Navbar:** Home | About. Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel. The settings panel integrates font selection, layout toggles, eye comfort sliders, and the **Custom Theme Builder** to configure personalized palettes.
+**Navbar:** Home | About. Features an **Elastic Segmented Pill Switch** (`.navbar__nav-switch`) where an underlying glider elastically stretches and slides between routes. Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel. The settings panel integrates font selection, layout toggles, eye comfort sliders, and the **Custom Theme Builder**, with spring-animated **Elastic Toggles** (`ElasticToggle.astro`) powering Custom Theme and Eye Comfort switches.
 
 ### 4.1 Home / Blog List
 

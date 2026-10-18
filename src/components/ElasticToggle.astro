@@ -1,0 +1,20 @@
+---
+export interface Props {
+  id: string;
+  label: string;
+  checked?: boolean;
+  class?: string;
+}
+
+const { id, label, checked = false, class: className = '' } = Astro.props;
+---
+
+<button
+  id={id}
+  class={`elastic-toggle eye-comfort-toggle ${checked ? 'on' : ''} ${className}`.trim()}
+  role="switch"
+  aria-checked={checked ? "true" : "false"}
+  aria-label={label}
+>
+  <span class="elastic-thumb eye-comfort-thumb"></span>
+</button>
