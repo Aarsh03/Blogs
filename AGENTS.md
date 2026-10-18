@@ -35,3 +35,20 @@ Consult these guides before working on related tasks:
 - **Memory Leaks & Event Listeners:** Always clean up scroll listeners, observers (`IntersectionObserver`, `MutationObserver`), and global `window`/`document` listeners on `astro:before-swap` to prevent memory leaks during client-side navigation.
 - **Performance:** Use `requestAnimationFrame` debouncing and `{ passive: true }` on window scroll listeners to maintain 120fps smooth scrolling.
 - **Search Index:** Pagefind search index generation is required during builds (`astro build && pagefind --site dist`).
+
+## Documentation & Architecture Rules
+
+- **Universal Documentation & Reference Synchronization**:
+  - Whenever code, architecture, design systems, workflows, configurations, or document structures are added, modified, renamed, or removed, you must identify and update all affected markdown files (`product.md`, `README.md`, `THEMING_GUIDE.md`, `DEPLOY.md`, `POSTING_GUIDE.md`, `AGENTS.md`) within the same task.
+  - **Self-Updating References**: If structural sections or source-of-truth references move (for example, moving the folder structure from `product.md` to a standalone tree file, or splitting posting rules), `AGENTS.md` and all cross-referencing markdown files must immediately update their internal references and file paths to match. Never leave broken or stale references.
+  - **Feature-Specific Markdown Mapping**:
+    - Adding or modifying themes, CSS variables, or visual pickers -> update `THEMING_GUIDE.md`, `product.md`, and `README.md`.
+    - Adding, modifying, or extending posting functionalities (frontmatter schema, markdown/MDX plugins, callouts, Shiki code highlighting, image handling, series logic, content loaders) -> update `POSTING_GUIDE.md` and `product.md`.
+    - Updates to Cloudflare Workers, KV, or backend endpoints -> update `DEPLOY.md`, `product.md`, and `README.md`.
+    - Updates to pages, navigation, components, or layout features -> update `product.md` and `README.md`.
+    - Updates to development rules, lifecycle scripts, or agent workflows -> update `AGENTS.md`.
+
+- **Targeted Architecture Navigation & Folder Tree Maintenance**:
+  - **Read First for Scope**: When planning or executing tasks, refer directly to `3. Content Model -> 3.1 Folder Structure` in `product.md` (or wherever the project folder structure is maintained) to understand the project structure and scope out what files to change, add, or delete. Do NOT guess or waste unnecessary tokens reading everything across the codebase.
+  - **Maintain Folder Structure Integrity**: Whenever any file or folder is added, renamed, or removed in the project, you MUST immediately update `3.1 Folder Structure` in `product.md` (and any related tree docs) to reflect the exact current workspace state.
+

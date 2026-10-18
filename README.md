@@ -29,56 +29,9 @@ Personal blog built with Astro, hosted on GitHub Pages.
 
 ## Writing a New Post
 
-Writing a new post is incredibly simple. The blog uses Astro's Content Collections for type-safe Markdown parsing.
+Writing a new post is as simple as dropping a `.md` or `.mdx` file into `src/content/posts/` and pushing to `main`.
 
-### 1. Create your file
-Create a `.md` or `.mdx` file in `src/content/posts/`:
-
-```markdown
----
-title: "My Post Title"
-date: 2026-08-01
-tags: ["tag1", "tag2"]
-description: "A short summary shown on post cards and SEO metadata."
-draft: false
-series: "My Optional Series" # Optional: Links multi-part posts together with a navigation box
----
-
-Your post content here...
-
-### Alerts / Callouts
-The blog natively supports GitHub-style Markdown alerts. Use them to highlight important information:
-
-> [!NOTE]
-> This is a helpful note that renders with a blue accent and icon.
-
-> [!WARNING]
-> This is a warning alert. Also supports `[!TIP]`, `[!IMPORTANT]`, and `[!CAUTION]`.
-
-### Code Blocks
-Syntax highlighting is handled by Shiki. It automatically switches between `github-light` and `github-dark-dimmed` based on the user's active theme (or custom theme luminance). The blog automatically injects IDE-style language badges and hover copy-to-clipboard buttons.
-
-```typescript
-const isAwesome = true;
-console.log(isAwesome);
-```
-
-### Image Optimization
-To take advantage of Astro's automatic image optimization (WebP/AVIF generation, resizing, lazy-loading), place your images in `src/assets/` and use relative paths in your markdown:
-
-![My Image](../../assets/my-image.jpg)
-```
-
-### 2. Publish
-Push to `main`. GitHub Actions will automatically build the site, index it with Pagefind, and deploy it to GitHub Pages in ~60 seconds.
-
-```bash
-git add .
-git commit -m "Add post: my-post-title"
-git push
-```
-
-Everything else—the Open Graph images, Table of Contents, View Counters, Like Buttons, Related Posts, RSS Feed, and Giscus Comments—is generated **automatically**!
+👉 For complete instructions on frontmatter schema, callouts, Shiki code syntax highlighting, series navigation, and image optimization, read the **[Posting Guide](./POSTING_GUIDE.md)**.
 
 ---
 
@@ -99,29 +52,7 @@ npm run dev        # 🚀 http://localhost:4321/Blogs/
 
 ## Project Structure
 
-```text
-src/
-  config.ts             ⚙️ site metadata, author bio, social links, Giscus config
-  content.config.ts     ⚙️ Content Collections Zod schema & glob loader
-  content/posts/        📝 drop .md / .mdx files here to publish
-  pages/                🗺️ routing (index, blog/[slug], about, open-graph, rss)
-  components/           🧩 Navbar, PostCard, CustomColorPicker, SearchModal, etc.
-  layouts/              🖼️ BaseLayout, PostLayout
-  scripts/              📜 client scripts (customThemeBuilder.ts, themeManager.ts)
-  styles/
-    global.css          🎨 base styles and CSS imports
-    themes/             🎨 12 modular CSS preset stylesheets
-  utils/                🛠️ post queries, date formatting, reading time calculation
-public/
-  og-image.png      🖼️ Default SEO Open Graph image
-  giscus-theme.css  🎨 custom Giscus light comment box theme
-  giscus-dark.css   🎨 custom Giscus dark comment box theme
-workers/
-  likes-worker.js   ☁️ Cloudflare Worker for like & view counts
-  wrangler.toml
-.github/workflows/
-  deploy.yml        🚀 GitHub Actions CI/CD
-```
+For the complete, up-to-date repository structure and component layout, see **[3.1 Folder Structure in product.md](./product.md#31-folder-structure)**.
 
 ---
 

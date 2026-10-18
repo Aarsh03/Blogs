@@ -1,4 +1,4 @@
-﻿# Product Spec: Aarsh's Blog (GitHub Pages)
+# Product Spec: Aarsh's Blog (GitHub Pages)
 
 ## 1. Overview
 
@@ -108,8 +108,14 @@ Blogs/
 |   +-- workflows/
 |       +-- deploy.yml                  # GitHub Actions CI/CD: build + pagefind + deploy
 +-- astro.config.mjs                    # Astro config: Shiki dual-theme, MDX, sitemap
++-- AGENTS.md                           # AI Agent behavior rules, lifecycle & maintenance guidelines
++-- DEPLOY.md                           # Cloudflare Worker deployment & KV configuration guide
++-- POSTING_GUIDE.md                    # Guide to authoring posts, frontmatter schema, & markdown syntax
 +-- product.md                          # This product specification document
++-- README.md                           # Public repository overview & quickstart
++-- THEMING_GUIDE.md                    # Theming architecture, variables checklist, & gotchas
 +-- package.json
++-- tsconfig.json
 ```
 
 ### 3.2 Frontmatter Schema
