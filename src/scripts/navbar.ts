@@ -2,7 +2,7 @@
 let _navScrollListener: EventListener | null = null;
 let _navResizeListener: EventListener | null = null;
 let _hasInitialPlacement = false;
-let _lastLeft = 0;
+let _lastLeft = -1;
 
 function syncActiveNavLinks() {
   const navSwitch = document.getElementById('nav-switch');
@@ -47,6 +47,11 @@ function updateNavGlider(animate = true) {
   const targetLeft = linkRect.left - switchRect.left;
   const targetWidth = linkRect.width;
 
+  // If already at target position and visible, don't restart transition
+  if (Math.abs(targetLeft - _lastLeft) < 1 && glider.style.opacity === '1') {
+    return;
+  }
+
   if (!animate) {
     glider.style.transition = 'none';
     glider.style.transform = `translateX(${targetLeft}px)`;
@@ -56,24 +61,10 @@ function updateNavGlider(animate = true) {
     return;
   }
 
-  // Directional elastic squash & stretch physics
-  const delta = targetLeft - _lastLeft;
-  if (Math.abs(delta) > 5) {
-    if (delta > 0) {
-      glider.classList.add('stretch-right');
-    } else {
-      glider.classList.add('stretch-left');
-    }
-  }
-
   glider.style.transition = '';
   glider.style.transform = `translateX(${targetLeft}px)`;
   glider.style.width = `${targetWidth}px`;
   glider.style.opacity = '1';
-
-  setTimeout(() => {
-    glider.classList.remove('stretch-right', 'stretch-left');
-  }, 450);
 
   _lastLeft = targetLeft;
 }
@@ -153,20 +144,24 @@ document.addEventListener('astro:page-load', () => {
   updateNavGlider(_hasInitialPlacement);
   _hasInitialPlacement = true;
 
-  const navLinks = document.querySelectorAll('.navbar__nav-switch .navbar__link');
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-      updateNavGlider(true);
-    });
-  });
-
   if (_navResizeListener) {
     window.removeEventListener('resize', _navResizeListener);
   }
   _navResizeListener = () => updateNavGlider(false);
   window.addEventListener('resize', _navResizeListener, { passive: true });
+});
+
+// Single event delegation for persisted nav-switch links (avoids duplicate listeners)
+document.addEventListener('click', (e) => {
+  const link = (e.target as HTMLElement)?.closest('.navbar__nav-switch .navbar__link') as HTMLElement;
+  if (!link) return;
+  const navSwitch = document.getElementById('nav-switch');
+  if (!navSwitch) return;
+
+  const navLinks = navSwitch.querySelectorAll('.navbar__link');
+  navLinks.forEach(l => l.classList.remove('active'));
+  link.classList.add('active');
+  updateNavGlider(true);
 });
 
 document.addEventListener('astro:before-swap', () => {
