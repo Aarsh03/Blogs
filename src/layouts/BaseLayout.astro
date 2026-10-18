@@ -175,7 +175,7 @@ const imageURL = new URL(image, Astro.site).href;
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>
   <Navbar />
-  <main id="main-content" class="page-content">
+  <main id="main-content" class="page-content" style="view-transition-name: page-content;">
     <div class="container">
       <slot />
     </div>

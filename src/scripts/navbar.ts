@@ -1,6 +1,33 @@
 // Navigation scrolling, mobile menu, and elastic nav-switch glider
 let _navScrollListener: EventListener | null = null;
 let _navResizeListener: EventListener | null = null;
+let _hasInitialPlacement = false;
+
+function syncActiveNavLinks() {
+  const navSwitch = document.getElementById('nav-switch');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const curPath = window.location.pathname;
+
+  function updateLinks(container: Element | null, selector: string) {
+    if (!container) return;
+    const links = container.querySelectorAll(selector);
+    links.forEach(link => {
+      const href = (link as HTMLAnchorElement).getAttribute('href') || '';
+      // Home link check (exact match or trailing slash)
+      const isHome = href.endsWith('/Blogs/') || href.endsWith('/Blogs') || href === '/';
+      let active = false;
+      if (isHome) {
+        active = curPath === href || curPath === href + '/' || curPath.replace(/\/$/, '') === href.replace(/\/$/, '');
+      } else {
+        active = curPath.startsWith(href);
+      }
+      link.classList.toggle('active', active);
+    });
+  }
+
+  updateLinks(navSwitch, '.navbar__link');
+  updateLinks(mobileMenu, '.mobile-link');
+}
 
 function updateNavGlider(animate = true) {
   const navSwitch = document.getElementById('nav-switch');
@@ -89,11 +116,21 @@ document.addEventListener('astro:page-load', () => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
   }
 
-  btn?.addEventListener('click', toggleMenu);
-  overlay?.addEventListener('click', toggleMenu);
+  // Remove existing listeners if any to prevent duplicate triggers on persisted elements
+  const newBtn = btn?.cloneNode(true) as HTMLElement;
+  btn?.parentNode?.replaceChild(newBtn, btn);
+  newBtn?.addEventListener('click', toggleMenu);
 
-  /* ── Elastic Nav Glider ── */
-  updateNavGlider(false);
+  const newOverlay = overlay?.cloneNode(true) as HTMLElement;
+  overlay?.parentNode?.replaceChild(newOverlay, overlay);
+  newOverlay?.addEventListener('click', toggleMenu);
+
+  /* ── Sync Links & Elastic Nav Glider ── */
+  syncActiveNavLinks();
+
+  // If first time load, position instantly. If navigating across persisted navbar, animate fluidly!
+  updateNavGlider(_hasInitialPlacement);
+  _hasInitialPlacement = true;
 
   const navLinks = document.querySelectorAll('.navbar__nav-switch .navbar__link');
   navLinks.forEach(link => {

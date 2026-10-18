@@ -151,7 +151,7 @@ draft: false            # optional -- true excludes the post from the build enti
 
 ## 4. Pages & Navigation
 
-**Navbar:** Home | About. Features an **Elastic Segmented Pill Switch** (`.navbar__nav-switch`) where an underlying glider elastically stretches and slides between routes. Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel. The settings panel integrates font selection, layout toggles, eye comfort sliders, and the **Custom Theme Builder**, with spring-animated **Elastic Toggles** (`ElasticToggle.astro`) powering Custom Theme and Eye Comfort switches.
+**Navbar:** Home | About. Persisted across page loads using Astro's `transition:persist="main-navbar"` so the top bar never reloads, flashes, or resets. Features an **Elastic Segmented Pill Switch** (`.navbar__nav-switch`) where an underlying glider elastically stretches and slides between routes uninterrupted across View Transitions. Features auto-hiding (hides on downward scroll, reveals on upward scroll), a search icon to trigger the Quick Search Modal, and a Settings gear icon for a slide-down settings panel. The settings panel integrates font selection, layout toggles, eye comfort sliders, and the **Custom Theme Builder**, with spring-animated **Elastic Toggles** (`ElasticToggle.astro`) powering Custom Theme and Eye Comfort switches.
 
 ### 4.1 Home / Blog List
 

@@ -17,7 +17,7 @@ function isActive(linkHref: string) {
   return pathname.startsWith(linkHref);
 }
 ---
-<nav class="navbar">
+<nav class="navbar" transition:persist="main-navbar">
   <div class="navbar__inner">
     <a class="navbar__logo" href={base} aria-label="Aarsh's blogs home">
       <div class="logo-monogram">
