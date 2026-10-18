@@ -3,6 +3,7 @@ let _navScrollListener: EventListener | null = null;
 let _navResizeListener: EventListener | null = null;
 let _hasInitialPlacement = false;
 let _lastLeft = -1;
+let _currentAnimation: Animation | null = null;
 
 function syncActiveNavLinks() {
   const navSwitch = document.getElementById('nav-switch');
@@ -44,17 +45,19 @@ function updateNavGlider(animate = true) {
   const switchRect = navSwitch.getBoundingClientRect();
   const linkRect = activeLink.getBoundingClientRect();
 
-  const targetLeft = linkRect.left - switchRect.left;
-  const targetWidth = linkRect.width;
+  const targetLeft = Math.round(linkRect.left - switchRect.left);
+  const targetWidth = Math.round(linkRect.width);
 
-  // If already at target position and visible, don't restart transition
+  // If already at target position and visible, don't restart
   if (Math.abs(targetLeft - _lastLeft) < 1 && glider.style.opacity === '1') {
     return;
   }
 
   if (!animate) {
-    glider.classList.remove('is-animating');
-    glider.style.transition = 'none';
+    if (_currentAnimation) {
+      _currentAnimation.cancel();
+      _currentAnimation = null;
+    }
     glider.style.transform = `translateX(${targetLeft}px)`;
     glider.style.width = `${targetWidth}px`;
     glider.style.opacity = '1';
@@ -62,21 +65,128 @@ function updateNavGlider(animate = true) {
     return;
   }
 
-  // Trigger multi-frame squash & stretch deformation
-  glider.classList.remove('is-animating');
-  void glider.offsetWidth; // Force reflow to instantly restart keyframes
-  glider.classList.add('is-animating');
+  const startLeft = _lastLeft >= 0 ? _lastLeft : targetLeft;
+  const startWidth = parseFloat(glider.style.width) || targetWidth;
+  const delta = targetLeft - startLeft;
 
-  glider.style.transition = '';
-  glider.style.transform = `translateX(${targetLeft}px)`;
-  glider.style.width = `${targetWidth}px`;
+  if (Math.abs(delta) < 2) {
+    glider.style.transform = `translateX(${targetLeft}px)`;
+    glider.style.width = `${targetWidth}px`;
+    glider.style.opacity = '1';
+    _lastLeft = targetLeft;
+    return;
+  }
+
+  if (_currentAnimation) {
+    _currentAnimation.cancel();
+    _currentAnimation = null;
+  }
+
+  const dist = Math.abs(delta);
+  // Stretches smoothly across ~80-85% of total distance, eliminating the isolated middle oval
+  const maxSpan = dist + targetWidth;
+  const stretchWidth = Math.round(Math.min(maxSpan, targetWidth * 1.52));
+  const duration = 380; // Snappy, fluid 380ms
+
+  let keyframes: Keyframe[] = [];
+
+  if (delta > 0) {
+    // Moving Right (Home -> About)
+    // 1. Left stays anchored at Home, right edge shoots into About
+    // 2. Left snaps forward to catch up
+    // 3. Impact squash and slight rebound into rest
+    keyframes = [
+      {
+        transform: `translateX(${startLeft}px) scaleY(1)`,
+        width: `${startWidth}px`,
+        easing: 'cubic-bezier(0.2, 0, 0.38, 1)'
+      },
+      {
+        transform: `translateX(${startLeft}px) scaleY(0.90)`,
+        width: `${stretchWidth}px`,
+        offset: 0.32,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft - (stretchWidth - targetWidth)}px) scaleY(0.94)`,
+        width: `${stretchWidth}px`,
+        offset: 0.65,
+        easing: 'cubic-bezier(0.34, 1.3, 0.64, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft + 3}px) scaleY(1.06)`,
+        width: `${targetWidth - 4}px`,
+        offset: 0.84,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft - 1}px) scaleY(0.99)`,
+        width: `${targetWidth + 1}px`,
+        offset: 0.94,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft}px) scaleY(1)`,
+        width: `${targetWidth}px`,
+        offset: 1
+      }
+    ];
+  } else {
+    // Moving Left (About -> Home)
+    // 1. Right stays anchored at About, left edge shoots into Home
+    // 2. Right snaps forward to catch up
+    // 3. Impact squash and slight rebound into rest
+    keyframes = [
+      {
+        transform: `translateX(${startLeft}px) scaleY(1)`,
+        width: `${startWidth}px`,
+        easing: 'cubic-bezier(0.2, 0, 0.38, 1)'
+      },
+      {
+        transform: `translateX(${startLeft - (stretchWidth - startWidth)}px) scaleY(0.90)`,
+        width: `${stretchWidth}px`,
+        offset: 0.32,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft}px) scaleY(0.94)`,
+        width: `${stretchWidth}px`,
+        offset: 0.65,
+        easing: 'cubic-bezier(0.34, 1.3, 0.64, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft - 3}px) scaleY(1.06)`,
+        width: `${targetWidth - 4}px`,
+        offset: 0.84,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft + 1}px) scaleY(0.99)`,
+        width: `${targetWidth + 1}px`,
+        offset: 0.94,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      },
+      {
+        transform: `translateX(${targetLeft}px) scaleY(1)`,
+        width: `${targetWidth}px`,
+        offset: 1
+      }
+    ];
+  }
+
   glider.style.opacity = '1';
-
   _lastLeft = targetLeft;
 
-  setTimeout(() => {
-    glider.classList.remove('is-animating');
-  }, 450);
+  _currentAnimation = glider.animate(keyframes, {
+    duration,
+    fill: 'forwards'
+  });
+
+  _currentAnimation.onfinish = () => {
+    glider.style.transform = `translateX(${targetLeft}px)`;
+    glider.style.width = `${targetWidth}px`;
+    _currentAnimation = null;
+  };
 }
 
 document.addEventListener('astro:page-load', () => {
@@ -175,6 +285,10 @@ document.addEventListener('click', (e) => {
 });
 
 document.addEventListener('astro:before-swap', () => {
+  if (_currentAnimation) {
+    _currentAnimation.finish();
+    _currentAnimation = null;
+  }
   if (_navScrollListener) {
     window.removeEventListener('scroll', _navScrollListener);
     _navScrollListener = null;

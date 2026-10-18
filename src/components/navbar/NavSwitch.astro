@@ -64,9 +64,7 @@ function isActive(href: string) {
     pointer-events: none;
     z-index: 1;
     opacity: 0;
-    transition: transform 0.44s cubic-bezier(0.34, 1.45, 0.64, 1),
-                width 0.25s ease,
-                opacity 0.15s ease;
+    transform-origin: center center;
   }
 
   /* ─── Glider Visual Surface ─── */
@@ -86,40 +84,9 @@ function isActive(href: string) {
     box-shadow: var(--shadow-card-hover);
   }
 
-  /* ─── Multi-Frame Squash & Stretch Physics ─── */
-  @keyframes elastic-stretch {
-    0% {
-      transform: scale(1, 1);
-    }
-    35% {
-      /* Peak velocity: Elongate horizontally, slim vertically (volume conservation) */
-      transform: scale(1.26, 0.84);
-    }
-    65% {
-      /* Catch-up phase */
-      transform: scale(1.08, 0.95);
-    }
-    82% {
-      /* Impact & overshoot squash against boundary */
-      transform: scale(0.88, 1.10);
-    }
-    92% {
-      /* Elastic rebound */
-      transform: scale(1.04, 0.98);
-    }
-    100% {
-      /* Rest */
-      transform: scale(1, 1);
-    }
-  }
-
-  .nav-switch__glider.is-animating::before {
-    animation: elastic-stretch 0.44s cubic-bezier(0.2, 0, 0, 1) forwards;
-  }
-
   /* Squish on active press */
   .navbar__nav-switch:active .nav-switch__glider::before {
-    transform: scale(1.12, 0.92);
+    transform: scale(1.08, 0.94);
   }
 
   /* ─── Links List ─── */
