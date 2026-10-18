@@ -2,6 +2,7 @@
 let _navScrollListener: EventListener | null = null;
 let _navResizeListener: EventListener | null = null;
 let _hasInitialPlacement = false;
+let _lastLeft = 0;
 
 function syncActiveNavLinks() {
   const navSwitch = document.getElementById('nav-switch');
@@ -43,18 +44,38 @@ function updateNavGlider(animate = true) {
   const switchRect = navSwitch.getBoundingClientRect();
   const linkRect = activeLink.getBoundingClientRect();
 
-  const left = linkRect.left - switchRect.left;
-  const width = linkRect.width;
+  const targetLeft = linkRect.left - switchRect.left;
+  const targetWidth = linkRect.width;
 
   if (!animate) {
     glider.style.transition = 'none';
-  } else {
-    glider.style.transition = '';
+    glider.style.transform = `translateX(${targetLeft}px)`;
+    glider.style.width = `${targetWidth}px`;
+    glider.style.opacity = '1';
+    _lastLeft = targetLeft;
+    return;
   }
 
-  glider.style.transform = `translateX(${left}px)`;
-  glider.style.width = `${width}px`;
+  // Directional elastic squash & stretch physics
+  const delta = targetLeft - _lastLeft;
+  if (Math.abs(delta) > 5) {
+    if (delta > 0) {
+      glider.classList.add('stretch-right');
+    } else {
+      glider.classList.add('stretch-left');
+    }
+  }
+
+  glider.style.transition = '';
+  glider.style.transform = `translateX(${targetLeft}px)`;
+  glider.style.width = `${targetWidth}px`;
   glider.style.opacity = '1';
+
+  setTimeout(() => {
+    glider.classList.remove('stretch-right', 'stretch-left');
+  }, 450);
+
+  _lastLeft = targetLeft;
 }
 
 document.addEventListener('astro:page-load', () => {
@@ -137,12 +158,7 @@ document.addEventListener('astro:page-load', () => {
     link.addEventListener('click', () => {
       navLinks.forEach(l => l.classList.remove('active'));
       link.classList.add('active');
-      const glider = document.getElementById('nav-switch-glider');
-      glider?.classList.add('elastic-stretching');
       updateNavGlider(true);
-      setTimeout(() => {
-        glider?.classList.remove('elastic-stretching');
-      }, 500);
     });
   });
 

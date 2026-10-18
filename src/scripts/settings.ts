@@ -1,45 +1,61 @@
-let _navSettingsClickListener: EventListener | null = null;
-let _navSettingsKeydownListener: EventListener | null = null;
+// Settings panel interactions & user preferences
+let _settingsDelegated = false;
+
+function closeSettings() {
+  const settingsPanel = document.getElementById('settings-panel');
+  const settingsBtn = document.getElementById('settings-toggle');
+  settingsPanel?.setAttribute('aria-hidden', 'true');
+  settingsBtn?.setAttribute('aria-expanded', 'false');
+  settingsBtn?.classList.remove('active');
+}
+
+function openSettings() {
+  const settingsPanel = document.getElementById('settings-panel');
+  const settingsBtn = document.getElementById('settings-toggle');
+  settingsPanel?.setAttribute('aria-hidden', 'false');
+  settingsBtn?.setAttribute('aria-expanded', 'true');
+  settingsBtn?.classList.add('active');
+}
+
+// Global delegated click handler (attached once permanently)
+if (!_settingsDelegated && typeof window !== 'undefined') {
+  _settingsDelegated = true;
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+
+    // Toggle button click
+    const toggleBtn = target.closest('#settings-toggle');
+    if (toggleBtn) {
+      e.stopPropagation();
+      const settingsPanel = document.getElementById('settings-panel');
+      const isOpen = settingsPanel?.getAttribute('aria-hidden') === 'false';
+      if (isOpen) closeSettings(); else openSettings();
+      return;
+    }
+
+    // Inside panel click -> don't close
+    const insidePanel = target.closest('#settings-panel');
+    if (insidePanel) {
+      return;
+    }
+
+    // Outside click -> close
+    closeSettings();
+  });
+
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') closeSettings();
+  });
+}
 
 document.addEventListener('astro:page-load', () => {
   const html = document.documentElement;
-  const settingsBtn = document.getElementById('settings-toggle');
-  const settingsPanel = document.getElementById('settings-panel');
   const fontOptions = document.querySelectorAll('.font-option:not(.layout-option)');
   const layoutOptions = document.querySelectorAll('.layout-option');
   const eyeComfortBtn = document.getElementById('eye-comfort-toggle');
-
-  function closeSettings() {
-    settingsPanel?.setAttribute('aria-hidden', 'true');
-    settingsBtn?.setAttribute('aria-expanded', 'false');
-    settingsBtn?.classList.remove('active');
-  }
-
-  function openSettings() {
-    settingsPanel?.setAttribute('aria-hidden', 'false');
-    settingsBtn?.setAttribute('aria-expanded', 'true');
-    settingsBtn?.classList.add('active');
-  }
-
-  settingsBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = settingsPanel?.getAttribute('aria-hidden') === 'false';
-    if (isOpen) closeSettings(); else openSettings();
-  });
-
-  settingsPanel?.addEventListener('click', (e) => e.stopPropagation());
-
-  if (_navSettingsClickListener) {
-    document.removeEventListener('click', _navSettingsClickListener);
-  }
-  _navSettingsClickListener = () => closeSettings();
-  document.addEventListener('click', _navSettingsClickListener);
-
-  if (_navSettingsKeydownListener) {
-    document.removeEventListener('keydown', _navSettingsKeydownListener);
-  }
-  _navSettingsKeydownListener = (e: Event) => { if ((e as KeyboardEvent).key === 'Escape') closeSettings(); };
-  document.addEventListener('keydown', _navSettingsKeydownListener);
+  const eyeComfortSliderContainer = document.getElementById('eye-comfort-slider-container');
+  const eyeComfortSlider = document.getElementById('eye-comfort-slider') as HTMLInputElement;
 
   /* Font picker */
   function applyFont(font: string) {
@@ -80,9 +96,6 @@ document.addEventListener('astro:page-load', () => {
   });
 
   /* Eye Comfort */
-  const eyeComfortSliderContainer = document.getElementById('eye-comfort-slider-container');
-  const eyeComfortSlider = document.getElementById('eye-comfort-slider') as HTMLInputElement;
-  
   function applyEyeComfort(on: boolean) {
     html.setAttribute('data-eye-comfort', on ? 'on' : 'off');
     localStorage.setItem('eye-comfort', on ? 'on' : 'off');
@@ -115,15 +128,4 @@ document.addEventListener('astro:page-load', () => {
   eyeComfortSlider?.addEventListener('input', (e) => {
     applyEyeComfortIntensity((e.target as HTMLInputElement).value);
   });
-});
-
-document.addEventListener('astro:before-swap', () => {
-  if (_navSettingsClickListener) {
-    document.removeEventListener('click', _navSettingsClickListener);
-    _navSettingsClickListener = null;
-  }
-  if (_navSettingsKeydownListener) {
-    document.removeEventListener('keydown', _navSettingsKeydownListener);
-    _navSettingsKeydownListener = null;
-  }
 });
