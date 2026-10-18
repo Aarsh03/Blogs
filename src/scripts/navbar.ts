@@ -53,6 +53,7 @@ function updateNavGlider(animate = true) {
   }
 
   if (!animate) {
+    glider.classList.remove('is-animating');
     glider.style.transition = 'none';
     glider.style.transform = `translateX(${targetLeft}px)`;
     glider.style.width = `${targetWidth}px`;
@@ -61,12 +62,21 @@ function updateNavGlider(animate = true) {
     return;
   }
 
+  // Trigger multi-frame squash & stretch deformation
+  glider.classList.remove('is-animating');
+  void glider.offsetWidth; // Force reflow to instantly restart keyframes
+  glider.classList.add('is-animating');
+
   glider.style.transition = '';
   glider.style.transform = `translateX(${targetLeft}px)`;
   glider.style.width = `${targetWidth}px`;
   glider.style.opacity = '1';
 
   _lastLeft = targetLeft;
+
+  setTimeout(() => {
+    glider.classList.remove('is-animating');
+  }, 450);
 }
 
 document.addEventListener('astro:page-load', () => {

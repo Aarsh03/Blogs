@@ -60,6 +60,7 @@ Blogs/
 |   |   +-- ViewCounter.astro           # Dynamic view count display (Cloudflare Worker)
 |   |   +-- navbar/
 |   |       +-- MobileMenu.astro        # Mobile hamburger nav drawer
+|   |       +-- NavSwitch.astro         # Segmented elastic toggle for Home / About navigation
 |   |       +-- SettingsPanel.astro     # Settings panel: Font, Theme, Layout, Eye Comfort
 |   +-- layouts/
 |   |   +-- BaseLayout.astro            # Root HTML shell with FOUC-prevention inline script
