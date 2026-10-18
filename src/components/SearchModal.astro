@@ -122,7 +122,9 @@ const base = import.meta.env.BASE_URL;
     }
 
     // Toggle logic
-    openBtn?.addEventListener('click', openModal);
+    const newOpenBtn = openBtn?.cloneNode(true) as HTMLElement;
+    openBtn?.parentNode?.replaceChild(newOpenBtn, openBtn);
+    newOpenBtn?.addEventListener('click', openModal);
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
 

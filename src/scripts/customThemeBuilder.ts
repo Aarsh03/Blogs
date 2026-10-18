@@ -132,7 +132,9 @@ document.addEventListener('astro:page-load', () => {
     localStorage.setItem('customTheme', JSON.stringify(config));
     closeToolbar();
   });
-  openBtn?.addEventListener('click', openToolbar);
+  const newOpenBtn = openBtn?.cloneNode(true) as HTMLElement;
+  openBtn?.parentNode?.replaceChild(newOpenBtn, openBtn);
+  newOpenBtn?.addEventListener('click', openToolbar);
 
   let isVertical = false;
   // Rotation is wired via setupRotate() later in this file.
