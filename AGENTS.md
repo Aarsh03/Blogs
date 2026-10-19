@@ -23,7 +23,7 @@ Consult these guides before working on related tasks:
 
 ## Architecture & Lifecycle Rules
 
-- **Modular Client Scripts**: Maintain clean boundaries (`navbar.ts` for nav/mobile, `settings.ts` for settings/font/layout/comfort, `themeManager.ts` for theme switching, `customThemeBuilder.ts` for dock/picker).
+- **Modular Client Scripts**: Maintain clean boundaries (`navbar.ts` for nav/mobile, `navSwitch.ts` for segmented switch and glider physics, `settings.ts` for settings/font/layout/comfort, `themeManager.ts` for theme switching, `customThemeBuilder.ts` for dock/picker).
 - **Draggable UI & Listener Cleanups**: Clean up drag/pointer listeners, color picker listeners, and keydown handlers strictly in `astro:before-swap` to prevent memory leaks on client-side navigation.
 - **Command Palette & MutationObserver**: Search modal command interceptors use `MutationObserver` on Pagefind input to avoid race conditions and must disconnect properly.
 - **Dynamic Theme Style Element**: Ensure `#custom-theme-vars` persists or is re-evaluated accurately across View Transitions.
@@ -35,7 +35,7 @@ Consult these guides before working on related tasks:
 - **Memory Leaks & Event Listeners:** Always clean up scroll listeners, observers (`IntersectionObserver`, `MutationObserver`), and global `window`/`document` listeners on `astro:before-swap` to prevent memory leaks during client-side navigation.
 - **Performance:** Use `requestAnimationFrame` debouncing and `{ passive: true }` on window scroll listeners to maintain 120fps smooth scrolling.
 - **Search Index:** Pagefind search index generation is required during builds (`astro build && pagefind --site dist`).
-- **Persisted Navbar (`transition:persist`):** `Navbar.astro` uses `transition:persist="main-navbar"` so the top navigation bar stays mounted and never blinks or reloads during View Transitions. Client scripts in `navbar.ts` must sync active link states (`.navbar__link.active`) dynamically on `astro:page-load` without relying on server re-renders, and animate underlying components (like `.nav-switch__glider`) smoothly between routes.
+- **Persisted Navbar (`transition:persist`):** `Navbar.astro` uses `transition:persist="main-navbar"` so the top navigation bar stays mounted and never blinks or reloads during View Transitions. Client scripts in `navSwitch.ts` animate the underlying glider (`.nav-switch__glider`) smoothly between routes without aborting during `astro:before-swap` or freezing during page navigation. Client scripts in `navbar.ts` handle scroll hide/show and mobile menu drawers.
 
 ## Documentation & Architecture Rules
 

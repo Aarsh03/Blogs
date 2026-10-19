@@ -65,6 +65,7 @@ function isActive(href: string) {
     z-index: 1;
     opacity: 0;
     transform-origin: center center;
+    will-change: transform, width;
   }
 
   /* ─── Glider Visual Surface ─── */
@@ -82,11 +83,6 @@ function isActive(href: string) {
   :global([data-theme-mode="dark"]) .nav-switch__glider::before {
     background: var(--color-nav-links-border);
     box-shadow: var(--shadow-card-hover);
-  }
-
-  /* Squish on active press */
-  .navbar__nav-switch:active .nav-switch__glider::before {
-    transform: scale(1.08, 0.94);
   }
 
   /* ─── Links List ─── */

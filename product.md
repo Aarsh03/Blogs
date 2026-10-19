@@ -62,6 +62,7 @@ Blogs/
 |   |       +-- MobileMenu.astro        # Mobile hamburger nav drawer
 |   |       +-- NavSwitch.astro         # Segmented elastic toggle for Home / About navigation
 |   |       +-- SettingsPanel.astro     # Settings panel: Font, Theme, Layout, Eye Comfort
+|   +-- globals.d.ts                    # Ambient type definitions for global observers
 |   +-- layouts/
 |   |   +-- BaseLayout.astro            # Root HTML shell with FOUC-prevention inline script
 |   |   +-- PostLayout.astro            # Full post layout wrapping BaseLayout
@@ -70,6 +71,7 @@ Blogs/
 |   |   +-- customThemeBuilder.ts       # Custom theme builder: drag, color picker, bubble logic
 |   |   +-- heading-links.ts            # Heading anchor link copy buttons
 |   |   +-- navbar.ts                   # Navbar hide/show, mobile menu, scroll handling
+|   |   +-- navSwitch.ts                # Segmented Home/About elastic glider & decoupled navigation
 |   |   +-- post-filter.ts              # Home page post filtering and IntersectionObserver pagination
 |   |   +-- settings.ts                 # Settings panel: font, layout, eye comfort management
 |   |   +-- themeManager.ts             # Theme lifecycle, dark/light switching, swatch updates
