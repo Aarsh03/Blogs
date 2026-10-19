@@ -34,8 +34,7 @@ Consult these guides before working on related tasks:
 - **Client Scripts & View Transitions:** Client-side scripts must attach to `astro:page-load` rather than `DOMContentLoaded` because the site uses Astro `ClientRouter`.
 - **Memory Leaks & Event Listeners:** Always clean up scroll listeners, observers (`IntersectionObserver`, `MutationObserver`), and global `window`/`document` listeners on `astro:before-swap` to prevent memory leaks during client-side navigation.
 - **Performance:** Use `requestAnimationFrame` debouncing and `{ passive: true }` on window scroll listeners to maintain 120fps smooth scrolling.
-- **Search Index:** Pagefind search index generation is required during builds (`astro build && pagefind --site dist`).
-- **Persisted Navbar (`transition:persist`):** `Navbar.astro` uses `transition:persist="main-navbar"` so the top navigation bar stays mounted and never blinks or reloads during View Transitions. Client scripts in `navSwitch.ts` animate the underlying glider (`.nav-switch__glider`) smoothly between routes without aborting during `astro:before-swap` or freezing during page navigation. Client scripts in `navbar.ts` handle scroll hide/show and mobile menu drawers.
+- **Persisted Navbar (`transition:persist`):** `Navbar.astro` uses `transition:persist="main-navbar"` so the top navigation bar stays mounted and never blinks or reloads during View Transitions. Client scripts in `navSwitch.ts` animate the underlying glider (`.nav-switch__glider`) smoothly between routes using the FLIP lifecycle pattern (`astro:before-swap` coordinate snapshot, `astro:after-swap` pure GPU elastic spring animation) without browser render freeze, navigation interference, or double reloads. Client scripts in `navbar.ts` handle scroll hide/show and mobile menu drawers.
 
 ## Documentation & Architecture Rules
 
