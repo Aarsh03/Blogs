@@ -1,12 +1,9 @@
-import { navigate } from 'astro:transitions/client';
+// Segmented Home / About nav-switch controller using FLIP lifecycle on persisted navbar
 
-// Segmented Home / About nav-switch controller with pure GPU compositor spring physics
-let _navSwitchResizeListener: EventListener | null = null;
+let _prevGliderLeft = -1;
 let _hasInitialPlacement = false;
-let _lastLeft = -1;
 let _currentAnimation: Animation | null = null;
-let _navigatingHref: string | null = null;
-let _navTimeout: number | null = null;
+let _resizeListener: EventListener | null = null;
 
 export function syncActiveNavSwitch() {
   const navSwitch = document.getElementById('nav-switch');
@@ -24,26 +21,6 @@ export function syncActiveNavSwitch() {
       active = curPath.startsWith(href);
     }
     link.classList.toggle('active', active);
-  });
-}
-
-/**
- * Prefetch target route into browser cache so View Transitions swap in <10ms
- */
-function prefetchNavLinks() {
-  const navSwitch = document.getElementById('nav-switch');
-  if (!navSwitch) return;
-  const links = navSwitch.querySelectorAll('.navbar__link');
-  links.forEach(link => {
-    const href = (link as HTMLAnchorElement).getAttribute('href');
-    if (!href) return;
-    const prefetchTag = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
-    if (!prefetchTag) {
-      const p = document.createElement('link');
-      p.rel = 'prefetch';
-      p.href = href;
-      document.head.appendChild(p);
-    }
   });
 }
 
@@ -69,28 +46,24 @@ export function updateNavGlider(animate = true) {
     return;
   }
 
-  // Set width once on the DOM layout (layout reflow happens only once, not per frame)
+  // Set width once on the DOM layout
   glider.style.width = `${targetWidth}px`;
 
-  // Already resting at target position
-  if (Math.abs(targetLeft - _lastLeft) < 1 && glider.style.opacity === '1' && !_currentAnimation) {
-    return;
-  }
-
-  if (!animate) {
+  // First time placement or static positioning
+  if (!animate || _prevGliderLeft < 0) {
     if (_currentAnimation) {
       _currentAnimation.cancel();
       _currentAnimation = null;
     }
     glider.style.transform = `translateX(${targetLeft}px) scaleX(1) scaleY(1)`;
     glider.style.opacity = '1';
-    _lastLeft = targetLeft;
+    _prevGliderLeft = targetLeft;
     return;
   }
 
-  let startLeft = _lastLeft >= 0 ? _lastLeft : targetLeft;
+  let startLeft = _prevGliderLeft;
 
-  // If an animation is currently in-flight, smoothly catch its live visual coordinates
+  // If an animation is already in flight, catch live visual coordinates smoothly
   if (_currentAnimation && _currentAnimation.playState === 'running') {
     const currentGliderRect = glider.getBoundingClientRect();
     startLeft = Math.round(currentGliderRect.left - switchRect.left);
@@ -103,15 +76,14 @@ export function updateNavGlider(animate = true) {
   if (Math.abs(delta) < 2) {
     glider.style.transform = `translateX(${targetLeft}px) scaleX(1) scaleY(1)`;
     glider.style.opacity = '1';
-    _lastLeft = targetLeft;
+    _prevGliderLeft = targetLeft;
     return;
   }
 
   const dist = Math.abs(delta);
-  // Snappy, silky 220ms spring duration
-  const duration = 220;
+  const duration = 260; // 260ms silky smooth fluid spring
 
-  // Pure GPU Compositor Keyframes (translateX, scaleX, scaleY only — 0 layout reflows!)
+  // Pure GPU Compositor Keyframes (translateX, scaleX, scaleY only — 0 layout reflows)
   let keyframes: Keyframe[] = [];
 
   if (delta > 0) {
@@ -122,12 +94,12 @@ export function updateNavGlider(animate = true) {
         easing: 'cubic-bezier(0.2, 0, 0.2, 1)'
       },
       {
-        transform: `translateX(${Math.round(startLeft + dist * 0.22)}px) scaleX(1.48) scaleY(0.91)`,
+        transform: `translateX(${Math.round(startLeft + dist * 0.22)}px) scaleX(1.45) scaleY(0.91)`,
         offset: 0.26,
         easing: 'cubic-bezier(0.25, 1, 0.45, 1)'
       },
       {
-        transform: `translateX(${Math.round(startLeft + dist * 0.70)}px) scaleX(1.22) scaleY(0.94)`,
+        transform: `translateX(${Math.round(startLeft + dist * 0.70)}px) scaleX(1.20) scaleY(0.94)`,
         offset: 0.54,
         easing: 'cubic-bezier(0.3, 1.2, 0.6, 1)'
       },
@@ -154,12 +126,12 @@ export function updateNavGlider(animate = true) {
         easing: 'cubic-bezier(0.2, 0, 0.2, 1)'
       },
       {
-        transform: `translateX(${Math.round(startLeft - dist * 0.22)}px) scaleX(1.48) scaleY(0.91)`,
+        transform: `translateX(${Math.round(startLeft - dist * 0.22)}px) scaleX(1.45) scaleY(0.91)`,
         offset: 0.26,
         easing: 'cubic-bezier(0.25, 1, 0.45, 1)'
       },
       {
-        transform: `translateX(${Math.round(startLeft - dist * 0.70)}px) scaleX(1.22) scaleY(0.94)`,
+        transform: `translateX(${Math.round(startLeft - dist * 0.70)}px) scaleX(1.20) scaleY(0.94)`,
         offset: 0.54,
         easing: 'cubic-bezier(0.3, 1.2, 0.6, 1)'
       },
@@ -181,7 +153,7 @@ export function updateNavGlider(animate = true) {
   }
 
   glider.style.opacity = '1';
-  _lastLeft = targetLeft;
+  _prevGliderLeft = targetLeft;
 
   _currentAnimation = glider.animate(keyframes, {
     duration,
@@ -191,103 +163,50 @@ export function updateNavGlider(animate = true) {
   _currentAnimation.onfinish = () => {
     glider.style.transform = `translateX(${targetLeft}px) scaleX(1) scaleY(1)`;
     _currentAnimation = null;
-    _navigatingHref = null;
   };
 }
 
-// Single delegated click listener for persisted nav-switch links
-document.addEventListener('click', (e) => {
-  const link = (e.target as HTMLElement)?.closest('.navbar__nav-switch .navbar__link') as HTMLAnchorElement | null;
-  if (!link) return;
-  const navSwitch = document.getElementById('nav-switch');
-  if (!navSwitch) return;
+// Ensure lifecycle listeners are registered exactly once
+if (!(window as any).__navSwitchInitialized) {
+  (window as any).__navSwitchInitialized = true;
 
-  const href = link.getAttribute('href');
-  if (!href) return;
-
-  // Let browser handle new tab or modifier clicks (Ctrl/Cmd/Shift + Click)
-  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as MouseEvent).button !== 0) {
-    return;
-  }
-
-  // If clicking currently active link or an already pending navigation, ignore
-  if (link.classList.contains('active') || _navigatingHref === href) {
-    e.preventDefault();
-    return;
-  }
-
-  // Intercept navigation to coordinate fluid visual transit
-  e.preventDefault();
-  _navigatingHref = href;
-
-  if (_navTimeout) {
-    clearTimeout(_navTimeout);
-    _navTimeout = null;
-  }
-
-  // 1. Immediately toggle active classes on the switch tabs
-  const navLinks = navSwitch.querySelectorAll('.navbar__link');
-  navLinks.forEach(l => l.classList.remove('active'));
-  link.classList.add('active');
-
-  // 2. Launch fluid GPU spring animation immediately (0 layout reflows)
-  updateNavGlider(true);
-
-  // 3. Landing-Coordinated Navigation:
-  // Trigger navigate() at 180ms when the glider has ALREADY crossed the track
-  // and is soft-settling into the target tab.
-  // Because the glider is already at the destination, the subsequent View Transition
-  // snapshot NEVER freezes the glider in the middle of transit!
-  _navTimeout = window.setTimeout(() => {
-    _navTimeout = null;
-    navigate(href);
-  }, 180);
-});
-
-// Prefetch route on hover to ensure instant sub-5ms HTML load
-document.addEventListener('pointerenter', (e) => {
-  const link = (e.target as HTMLElement)?.closest('.navbar__nav-switch .navbar__link') as HTMLAnchorElement | null;
-  if (!link) return;
-  const href = link.getAttribute('href');
-  if (href) {
-    const prefetchTag = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
-    if (!prefetchTag) {
-      const p = document.createElement('link');
-      p.rel = 'prefetch';
-      p.href = href;
-      document.head.appendChild(p);
+  // 1. Just before page swap: snapshot the glider's exact on-screen position (FLIP "First")
+  document.addEventListener('astro:before-swap', () => {
+    const navSwitch = document.getElementById('nav-switch');
+    const glider = document.getElementById('nav-switch-glider');
+    if (navSwitch && glider) {
+      const switchRect = navSwitch.getBoundingClientRect();
+      const gliderRect = glider.getBoundingClientRect();
+      _prevGliderLeft = Math.round(gliderRect.left - switchRect.left);
     }
-  }
-}, true);
+    if (_resizeListener) {
+      window.removeEventListener('resize', _resizeListener);
+      _resizeListener = null;
+    }
+  });
 
-document.addEventListener('astro:before-swap', () => {
-  // CRITICAL: DO NOT call _currentAnimation.finish() or cancel()!
-  // Because the navbar has transition:persist="main-navbar", the #nav-switch-glider
-  // DOM element remains alive and mounted.
-  if (_navSwitchResizeListener) {
-    window.removeEventListener('resize', _navSwitchResizeListener);
-    _navSwitchResizeListener = null;
-  }
-});
+  // 2. Immediately after page swap: DOM is updated, browser is unconstrained (FLIP "Play")
+  document.addEventListener('astro:after-swap', () => {
+    syncActiveNavSwitch();
+    // Smoothly spring from the previous position to the new active tab
+    updateNavGlider(true);
+  });
 
-document.addEventListener('astro:page-load', () => {
-  syncActiveNavSwitch();
-  prefetchNavLinks();
+  // 3. Initial page load or browser history traversal
+  document.addEventListener('astro:page-load', () => {
+    syncActiveNavSwitch();
 
-  // If an elastic animation is in-flight across the view transition,
-  // do not snap or reset styles. Let onfinish lock the resting state.
-  if (!_currentAnimation || _currentAnimation.playState !== 'running') {
-    updateNavGlider(_hasInitialPlacement);
-  }
-  _hasInitialPlacement = true;
-
-  if (_navSwitchResizeListener) {
-    window.removeEventListener('resize', _navSwitchResizeListener);
-  }
-  _navSwitchResizeListener = () => {
-    if (!_currentAnimation || _currentAnimation.playState !== 'running') {
+    if (!_hasInitialPlacement) {
       updateNavGlider(false);
+      _hasInitialPlacement = true;
     }
-  };
-  window.addEventListener('resize', _navSwitchResizeListener, { passive: true });
-});
+
+    if (_resizeListener) {
+      window.removeEventListener('resize', _resizeListener);
+    }
+    _resizeListener = () => {
+      updateNavGlider(false);
+    };
+    window.addEventListener('resize', _resizeListener, { passive: true });
+  });
+}
